@@ -1,8 +1,7 @@
-
 export interface MenuItem {
-    icon?: React.ReactNode;
-    label: string;
-    path: string;
-    children?: MenuItem[];
-    role?: string[]; // Giữ lại role
+  icon?: any;
+  label: string;
+  path: string;
+  children?: MenuItem[];
+  role?: string[]; // Giữ lại role
 }

@@ -1,11 +1,17 @@
-"use client";
 import { num } from "@/cons/cons";
-import { Box, List, ListItemButton } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import { MenuItems } from "./SideBarMenu";
 import { colors } from "@/styles/config-file";
+import React from "react";
 
 const NavBar = () => {
   const pathName = usePathname();
@@ -25,14 +31,13 @@ const NavBar = () => {
       }}
     >
       <List>
-        <>
-          <Logo />
-        </>
+        <Logo />
+
         {MenuItems.map((itemNav, index) => (
           <Link
             key={index}
             style={{ textDecoration: "none", color: "black" }}
-            href={itemNav?.path}
+            href={itemNav.path}
           >
             <ListItemButton
               sx={{
@@ -41,9 +46,9 @@ const NavBar = () => {
                   : "transparent",
                 height: "60px",
               }}
-              key={index}
             >
-              {itemNav.label}
+              {itemNav.icon && React.createElement(itemNav.icon)}
+              <ListItemText primary={itemNav.label} />
             </ListItemButton>
           </Link>
         ))}

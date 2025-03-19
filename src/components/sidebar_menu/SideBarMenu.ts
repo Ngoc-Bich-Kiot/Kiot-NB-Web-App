@@ -13,7 +13,7 @@ export const MenuItems: MenuItem[] = [
     },
     {
         label: "Người dùng",
-        path: "/admin/manage_users",
+        path: "",
         children: [
             {
                 label: "Menu con 1",

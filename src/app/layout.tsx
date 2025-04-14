@@ -1,5 +1,5 @@
 "use client";
-import { MenuItems } from "@/components/sidebar_menu/SideBarMenu";
+import { MenuItems } from "@/container/sidebar_menu/SideBarMenu";
 import { MenuItem } from "@/types/MenuItemType";
 import "./globals.css";
 import OverrideMuiTheme from "@/theme/override";

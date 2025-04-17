@@ -123,53 +123,20 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
     }
     if (column.format && column.format == "images") {
       if (value) {
-        return <img src={value} alt="product" />;
-      }
-    }
-
-
-    if (column.format && column.format == "statusDetailHopot") {
-      switch (value) {
-        case "Available":
-          return (
-            <Chip
-              label="Khả dụng"
-              color="success"
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: "90px" }}
-            />
-          );
-        case "Damaged":
-          return (
-            <Chip
-              label="Bị hư"
-              color="error"
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: "90px" }}
-            />
-          );
-        case "Rented":
-          return (
-            <Chip
-              label="Đang Cho thuê"
-              color="primary"
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: "90px" }}
-            />
-          );
-        default:
-          return (
-            <Chip
-              label="-"
-              color="default"
-              variant="outlined"
-              size="small"
-              sx={{ minWidth: "90px" }}
-            />
-          );
+        console.log("value", value);
+        return value.map((item: any, index: number) => (
+          <img
+            key={index}
+            src={item?.urlPath}
+            alt="product"
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "8px",
+              marginRight: "5px",
+            }}
+          />
+        ));
       }
     }
 
@@ -234,33 +201,9 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     <TableCell>{page * size + index + 1}</TableCell>
                     {tableHeaderTitle.map((column: any) => (
                       <TableCell key={column.id} align={column.align || "left"}>
-                        {column.id == "imageURL" ? (
-                          <img
-                            src={getNestedValue(row, column.id)}
-                            alt="Thumbnail"
-                            style={{
-                              width: 50,
-                              height: 50,
-                              borderRadius: "8px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : column.id == "imageURLs" ? (
-                          <img
-                            src={getNestedValue(row, column.id)?.[0]}
-                            alt="Thumbnail"
-                            style={{
-                              width: 50,
-                              height: 50,
-                              borderRadius: "8px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : getNestedValue(row, column.id) ? (
-                          formatValue(getNestedValue(row, column.id), column)
-                        ) : (
-                          "-"
-                        )}
+                        {getNestedValue(row, column.id)
+                          ? formatValue(getNestedValue(row, column.id), column)
+                          : "-"}
                       </TableCell>
                     ))}
                     <TableCell
@@ -282,8 +225,9 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
-                  }`;
+                return `${from}–${to} trên ${
+                  count !== -1 ? count : `nhiều hơn ${to}`
+                }`;
               }}
             />
           </StyledTableContainer>

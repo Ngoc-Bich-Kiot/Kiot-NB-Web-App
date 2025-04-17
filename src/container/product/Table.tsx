@@ -25,7 +25,7 @@ export default function ProductTable() {
         { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
         { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
         {
-            id: "images.urlPath",
+            id: "images",
             label: "Hình ảnh",
             align: "center",
             format: "images",
@@ -97,9 +97,6 @@ export default function ProductTable() {
         <>
             <IconButton color="primary">
                 <EditIcon />
-            </IconButton>
-            <IconButton color="error">
-                <DeleteIcon />
             </IconButton>
         </>
     );

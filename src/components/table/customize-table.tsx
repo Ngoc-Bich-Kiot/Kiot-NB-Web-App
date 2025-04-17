@@ -113,14 +113,20 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
     //status
     if (column.format && column.format == "status") {
       switch (value) {
-        case "Pending":
-          return "Đang chờ";
-        case "Complete":
-          return "Hoàn thành";
+        case "Active":
+          return "Hoạt động";
+        case "UnActive":
+          return "Không hoạt động";
         default:
           return "-";
       }
     }
+    if (column.format && column.format == "images") {
+      if (value) {
+        return <img src={value} alt="product" />;
+      }
+    }
+
 
     if (column.format && column.format == "statusDetailHopot") {
       switch (value) {
@@ -276,9 +282,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${
-                  count !== -1 ? count : `nhiều hơn ${to}`
-                }`;
+                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
               }}
             />
           </StyledTableContainer>

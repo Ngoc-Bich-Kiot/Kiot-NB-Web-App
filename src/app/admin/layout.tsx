@@ -17,7 +17,7 @@ export default function AdminLayout({
           <NavBar />
           <Box width={"100%"}>
             <Nav />
-            <Box sx={{ bgcolor: colors.white, p: 5 }}>{children}</Box>
+            <Box sx={{ bgcolor: colors.white }}>{children}</Box>
           </Box>
         </Box>
       </OverrideMuiTheme>

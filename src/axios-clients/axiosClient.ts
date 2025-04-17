@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `https://hpty.vinhuser.one/api`,
+  baseURL: `https://dung.vinhuser.one/api`,
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Methods": "*",
@@ -44,7 +44,7 @@ axiosClient.interceptors.response.use(
               refreshToken: userData.tokenModel.refreshToken,
               accessToken: userData.tokenModel.accessToken,
             },
-            { baseURL: "https://hpty.vinhuser.one/api" }
+            { baseURL: "https://dung.vinhuser.one/api" }
           );
 
           const newToken = res?.data?.accessToken;

@@ -12,8 +12,18 @@ const nameApi = {
     });
   },
 
+  //POST api (multipart/form-data)
+  postSomeThingMulFormdata: (body: any) => {
+    const url = "/api/v1/someThing";
+    return axiosClient.post(url, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
+
   //POST api
-  postSomeThing: (body: any) => {
+  postSomeThingNor: (body: any) => {
     const url = "/api/v1/someThing";
     return axiosClient.post(url, body);
   },

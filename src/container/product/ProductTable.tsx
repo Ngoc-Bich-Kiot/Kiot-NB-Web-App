@@ -1,13 +1,11 @@
 'use client'
 
-import { Box, Button, IconButton, TextField } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Button, TextField } from "@mui/material";
 import CustomizeTable from "@/components/table/customize-table";
 import React from "react";
 import productApi from "@/axios-clients/auth_api/productAPI";
 import { Product, ProductListResponse } from "@/types/ProductType";
-import { format } from "path";
+import MenuActionTableProduct from "./MenuActionTableProduct";
 
 export default function ProductTable() {
     const [products, setProducts] = React.useState<Product[]>([]);
@@ -15,22 +13,23 @@ export default function ProductTable() {
     const [pageSize, setPageSize] = React.useState(10);
     const [total, setTotal] = React.useState(0);
     const [searchTerm, setSearchTerm] = React.useState('');
+    const [selectedRow, setSelectedRow] = React.useState<Product | null>(null);
 
     const tableHeaderTitle = [
-        { id: "name", label: "Tên sản phẩm", align: "center" },
-        { id: "category", label: "Loại", align: "center" },
-        { id: "originalPrice", label: "Giá gốc", align: "center", format: "price" },
-        { id: "sellingPrice", label: "Giá bán", align: "center", format: "price" },
-        { id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
-        { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
-        { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
         {
             id: "images",
             label: "Hình ảnh",
             align: "center",
             format: "images",
         },
-        { id: "status", label: "Trạng thái", align: "center", format: "status" },
+        { id: "name", label: "Tên sản phẩm", align: "center" },
+        { id: "category", label: "Loại", align: "center" },
+        // { id: "originalPrice", label: "Giá gốc", align: "center", format: "price" },
+        { id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
+        { id: "sellingPrice", label: "Giá bán", align: "center", format: "price" },
+        { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
+        { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
+        { id: "isDeleted", label: "Trạng thái", align: "center", format: "deleted" },
     ];
 
     const fetchProducts = async () => {
@@ -40,7 +39,7 @@ export default function ProductTable() {
                 // PageIndex: page + 1,
                 // PageSize: pageSize,
             });
-
+            console.log(data.items[1].isDeleted);
             if (data) {
                 const { items, totalItemsCount } = data;
                 setProducts(items);
@@ -94,11 +93,7 @@ export default function ProductTable() {
     );
 
     const menuAction = (
-        <>
-            <IconButton color="primary">
-                <EditIcon />
-            </IconButton>
-        </>
+        <MenuActionTableProduct id={selectedRow?.id as string} status={selectedRow?.status} />
     );
     return (
         <div>
@@ -111,6 +106,7 @@ export default function ProductTable() {
                 page={page}
                 searchTool={searchTool}
                 menuAction={menuAction}
+                selectedData={(row: Product) => setSelectedRow(row)}
                 data={products}
                 title="Danh sách sản phẩm"
             />

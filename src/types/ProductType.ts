@@ -1,3 +1,17 @@
+export interface ProductImage {
+    id: number;
+    urlPath: string;
+}
+
+export interface ProductLog {
+    id: number;
+    productId: number;
+    quantity: number;
+    type: string;
+    name: string;
+    phone: string;
+    address: string;
+}
 export interface Product {
     id: string;
     name: string;
@@ -6,10 +20,11 @@ export interface Product {
     sellingPrice: number;
     sourceOfProducts: string;
     importCosts: number;
+    isDeleted: boolean;
     stockQuantity: number;
     status: string;
-    images: string[];
-    logs: any[];
+    images: ProductImage[];
+    logs: ProductLog[];
 }
 
 export interface ProductListResponse {

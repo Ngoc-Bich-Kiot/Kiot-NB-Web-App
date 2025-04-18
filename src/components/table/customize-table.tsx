@@ -110,6 +110,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           return "-";
       }
     }
+
     //status
     if (column.format && column.format == "status") {
       switch (value) {
@@ -121,9 +122,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           return "-";
       }
     }
+
+    //image
     if (column.format && column.format == "images") {
       if (value) {
-        console.log("value", value);
         return value.map((item: any, index: number) => (
           <img
             key={index}
@@ -144,6 +146,50 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
     if (column.format && column.format == "price") {
       if (value === undefined || value === null) return "N/A";
       return value.toLocaleString("vi-VN") + " VND";
+    }
+
+    //date
+    if (column.format && column.format == "createDate") {
+      if (value) {
+        return moment(value).utcOffset(7).format("DD/MM/YYYY HH:mm:ss");
+      }
+    }
+
+    //phoneNumber
+    if (column.format && column.format === "phoneNumber") {
+      if (!value) return "-";
+
+      const digits = value.replace(/\D/g, "");
+
+      if (digits.length === 10) {
+        return `${digits.slice(0, 4)}.${digits.slice(4, 7)}.${digits.slice(7)}`;
+      }
+
+      return digits;
+    }
+
+    //quantity
+    if (column.format && column.format === "quantity") {
+      if (value) {
+        return value.toLocaleString("vi-VN");
+      }
+    }
+
+    //Import&Export
+    if (column.format && column.format === "type") {
+      switch (value) {
+        case "Import":
+          return "Nhập hàng";
+        case "Export":
+          return "Xuất hàng";
+        default:
+          return "-";
+      }
+    }
+
+    //isDeleted
+    if (column.format && column.format === "deleted") {
+      return value ? "Ngừng" : "Hoạt động";
     }
 
     return value;
@@ -201,9 +247,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     <TableCell>{page * size + index + 1}</TableCell>
                     {tableHeaderTitle.map((column: any) => (
                       <TableCell key={column.id} align={column.align || "left"}>
-                        {getNestedValue(row, column.id)
+                        {/* {getNestedValue(row, column.id)
                           ? formatValue(getNestedValue(row, column.id), column)
-                          : "-"}
+                          : "-"} */}
+                        {formatValue(getNestedValue(row, column.id), column)}
                       </TableCell>
                     ))}
                     <TableCell
@@ -225,9 +272,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${
-                  count !== -1 ? count : `nhiều hơn ${to}`
-                }`;
+                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
               }}
             />
           </StyledTableContainer>

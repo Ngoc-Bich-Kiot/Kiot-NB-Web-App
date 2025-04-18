@@ -41,10 +41,20 @@ const productApi = {
         return axiosClient.put(url, body);
     },
 
-    UpdateStock: (params: { productId: number; quantity: number; type: string }): Promise<{ message: string }> => {
+    UpdateStock: (params: { productId: string; quantity: number; type: string }): Promise<{ message: string }> => {
         const url = `/Products/UpdateStock`;
         return axiosClient.put(url, null, {
             params,
+        });
+    },
+
+    DeleteOrEnable: (productId: string, isDeleted: number): Promise<{ message: string }> => {
+        const url = `/Products/DeleteOrEnable`;
+        return axiosClient.put(url, null, {
+            params: {
+                productId,
+                isDeleted,
+            },
         });
     },
 

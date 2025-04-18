@@ -39,7 +39,6 @@ export default function ProductTable() {
                 // PageIndex: page + 1,
                 // PageSize: pageSize,
             });
-            console.log(data.items[1].isDeleted);
             if (data) {
                 const { items, totalItemsCount } = data;
                 setProducts(items);
@@ -93,7 +92,7 @@ export default function ProductTable() {
     );
 
     const menuAction = (
-        <MenuActionTableProduct id={selectedRow?.id as string} status={selectedRow?.status} />
+        <MenuActionTableProduct id={selectedRow?.id as string} isDeleted={selectedRow?.isDeleted as boolean} onActionSuccess={fetchProducts} />
     );
     return (
         <div>

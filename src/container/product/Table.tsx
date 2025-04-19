@@ -1,122 +1,121 @@
-'use client'
+"use client";
 
-import { Box, Button, IconButton, TextField } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CustomizeTable from "@/components/table/customize-table";
-import React from "react";
 import productApi from "@/axios-clients/auth_api/productAPI";
-import { Product, ProductListResponse } from "@/types/ProductType";
-import { format } from "path";
+import CustomizeTable from "@/components/table/customize-table";
+import { ProductListType, ProducType } from "@/types/ProductType";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import React from "react";
 
 export default function ProductTable() {
-    const [products, setProducts] = React.useState<Product[]>([]);
-    const [page, setPage] = React.useState(0);
-    const [pageSize, setPageSize] = React.useState(10);
-    const [total, setTotal] = React.useState(0);
-    const [searchTerm, setSearchTerm] = React.useState('');
+  const [products, setProducts] = React.useState<ProducType[]>([]);
+  const [page, setPage] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [total, setTotal] = React.useState(0);
+  const [searchTerm, setSearchTerm] = React.useState("");
 
-    const tableHeaderTitle = [
-        { id: "name", label: "Tên sản phẩm", align: "center" },
-        { id: "category", label: "Loại", align: "center" },
-        { id: "originalPrice", label: "Giá gốc", align: "center", format: "price" },
-        { id: "sellingPrice", label: "Giá bán", align: "center", format: "price" },
-        { id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
-        { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
-        { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
-        {
-            id: "images.urlPath",
-            label: "Hình ảnh",
-            align: "center",
-            format: "images",
-        },
-        { id: "status", label: "Trạng thái", align: "center", format: "status" },
-    ];
+  const tableHeaderTitle = [
+    { id: "name", label: "Tên sản phẩm", align: "center" },
+    { id: "category", label: "Loại", align: "center" },
+    { id: "originalPrice", label: "Giá gốc", align: "center", format: "price" },
+    { id: "sellingPrice", label: "Giá bán", align: "center", format: "price" },
+    { id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
+    { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
+    { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
+    {
+      id: "images",
+      label: "Hình ảnh",
+      align: "center",
+      format: "images",
+    },
+    { id: "status", label: "Trạng thái", align: "center", format: "status" },
+  ];
 
-    const fetchProducts = async () => {
-        try {
-            const data: ProductListResponse = await productApi.getProductList({
-                SearchTerm: searchTerm,
-                // PageIndex: page + 1,
-                // PageSize: pageSize,
-            });
+  const fetchProducts = async () => {
+    try {
+      const data: ProductListType = await productApi.getProductList({
+        SearchTerm: searchTerm,
+        // PageIndex: page + 1,
+        // PageSize: pageSize,
+      });
 
-            if (data) {
-                const { items, totalItemsCount } = data;
-                setProducts(items);
-                setTotal(totalItemsCount);
-            }
-        } catch (error) {
-            console.error("Lỗi khi lấy danh sách sản phẩm:", error);
-        }
-    };
+      console.log("data", data?.items);
 
-    React.useEffect(() => {
-        fetchProducts();
-    }, [page, pageSize, searchTerm]);
+      if (data) {
+        const { items, totalItemsCount } = data;
+        setProducts(items);
+        setTotal(totalItemsCount);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách sản phẩm:", error);
+    }
+  };
 
-    const handleSearchInputChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setSearchTerm(event.target.value);
-        setPage(0);
-    };
+  React.useEffect(() => {
+    fetchProducts();
+  }, [page, pageSize, searchTerm]);
 
-    const handleChangePage = (
-        _event: React.MouseEvent<HTMLButtonElement> | null,
-        newPage: number
-    ) => {
-        setPage(newPage);
-    };
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchTerm(event.target.value);
+    setPage(0);
+  };
 
-    const handleChangeRowsPerPage = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        setPageSize(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+  const handleChangePage = (
+    _event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
 
-    const searchTool = (
-        <Box
-            sx={{ display: 'flex', gap: 2, alignItems: 'center', px: 2, mb: 2 }}
-        >
-            <TextField
-                size="small"
-                label="Tìm kiếm sản phẩm"
-                variant="outlined"
-                value={searchTerm}
-                onChange={handleSearchInputChange}
-            />
-            <Button variant="contained" color="primary">
-                Thêm mới
-            </Button>
-        </Box>
-    );
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
-    const menuAction = (
-        <>
-            <IconButton color="primary">
-                <EditIcon />
-            </IconButton>
-            <IconButton color="error">
-                <DeleteIcon />
-            </IconButton>
-        </>
-    );
-    return (
-        <div>
-            <CustomizeTable
-                tableHeaderTitle={tableHeaderTitle}
-                handleChangePage={handleChangePage}
-                handleChangeRowsPerPage={handleChangeRowsPerPage}
-                total={total}
-                size={pageSize}
-                page={page}
-                searchTool={searchTool}
-                menuAction={menuAction}
-                data={products}
-                title="Danh sách sản phẩm"
-            />
-        </div>
-    );
+  const searchTool = (
+    <Box sx={{ display: "flex", gap: 2, alignItems: "center", px: 2, mb: 2 }}>
+      <TextField
+        size="small"
+        label="Tìm kiếm sản phẩm"
+        variant="outlined"
+        value={searchTerm}
+        onChange={handleSearchInputChange}
+      />
+      <Button variant="contained" color="primary">
+        Thêm mới
+      </Button>
+    </Box>
+  );
+
+  const menuAction = (
+    <>
+      <IconButton color="primary">
+        <EditIcon />
+      </IconButton>
+      <IconButton color="error">
+        <DeleteIcon />
+      </IconButton>
+    </>
+  );
+  return (
+    <div>
+      <CustomizeTable
+        tableHeaderTitle={tableHeaderTitle}
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
+        total={total}
+        size={pageSize}
+        page={page}
+        searchTool={searchTool}
+        menuAction={menuAction}
+        data={products}
+        title="Danh sách sản phẩm"
+      />
+    </div>
+  );
 }

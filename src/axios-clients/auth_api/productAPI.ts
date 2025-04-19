@@ -1,5 +1,6 @@
 import { Product, ProductListResponse } from "@/types/ProductType";
 import axiosClient from "../axiosClient";
+import { AxiosResponse } from "axios";
 
 const productApi = {
     //GET api
@@ -17,9 +18,9 @@ const productApi = {
     },
 
     //POST api
-    CreateProduct: (body: any): Promise<Product> => {
+    CreateProduct: (body: any): Promise<AxiosResponse<Product>> => {
         const url = "/Products/CreateProduct";
-        return axiosClient.post(url, body, {
+        return axiosClient.post<Product>(url, body, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -41,10 +42,14 @@ const productApi = {
         return axiosClient.put(url, body);
     },
 
-    UpdateStock: (params: { productId: string; quantity: number; type: string }): Promise<{ message: string }> => {
+    UpdateStock: (productId: string, quantity: number, type: string, body: any): Promise<{ message: string }> => {
         const url = `/Products/UpdateStock`;
-        return axiosClient.put(url, null, {
-            params,
+        return axiosClient.put(url, body, {
+            params: {
+                productId,
+                quantity,
+                type,
+            },
         });
     },
 

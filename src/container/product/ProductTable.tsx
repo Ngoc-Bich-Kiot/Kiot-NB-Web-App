@@ -6,6 +6,7 @@ import React from "react";
 import productApi from "@/axios-clients/auth_api/productAPI";
 import { Product, ProductListResponse } from "@/types/ProductType";
 import MenuActionTableProduct from "./MenuActionTableProduct";
+import { useRouter } from "next/navigation";
 
 export default function ProductTable() {
     const [products, setProducts] = React.useState<Product[]>([]);
@@ -14,6 +15,7 @@ export default function ProductTable() {
     const [total, setTotal] = React.useState(0);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selectedRow, setSelectedRow] = React.useState<Product | null>(null);
+    const router = useRouter();
 
     const tableHeaderTitle = [
         {
@@ -85,7 +87,11 @@ export default function ProductTable() {
                 value={searchTerm}
                 onChange={handleSearchInputChange}
             />
-            <Button variant="contained" color="primary">
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => router.push('/admin/manage_product/create')}
+            >
                 Thêm mới
             </Button>
         </Box>

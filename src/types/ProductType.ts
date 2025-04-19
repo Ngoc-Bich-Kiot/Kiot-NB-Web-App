@@ -1,5 +1,5 @@
 export interface ProductImage {
-    id: number;
+    id?: number;
     urlPath: string;
 }
 
@@ -12,6 +12,23 @@ export interface ProductLog {
     phone: string;
     address: string;
 }
+
+export interface CreateProductFormInput {
+    name: string;
+    category: string;
+    originalPrice: number;
+    sellingPrice: number;
+    sourceOfProducts: string;
+    userName: string;
+    phone: string;
+    address: string;
+    importCosts: number;
+    stockQuantity: number;
+    unit: string;
+    status: string;
+    //productImages: ProductImage[];
+}
+
 export interface Product {
     id: string;
     name: string;

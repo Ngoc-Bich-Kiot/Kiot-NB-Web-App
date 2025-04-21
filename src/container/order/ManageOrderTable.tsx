@@ -1,7 +1,9 @@
 "use client";
 import orderApi from "@/axios-clients/order_api/orderAPI";
 import CustomizeTable from "@/components/table/customize-table";
+import useDebounce from "@/hook/useDebounce";
 import { Order } from "@/types/OrderType";
+import { Box, TextField } from "@mui/material";
 import React from "react";
 import { toast } from "react-toastify";
 import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
@@ -13,10 +15,14 @@ interface SearchToolProps {
 
 const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
   return (
-    <div>
-      <input type="text" placeholder="Search..." />
-      <button>Search</button>
-    </div>
+    <Box sx={{ p: 2 }}>
+      <TextField
+        label="Tìm kiếm"
+        variant="outlined"
+        size="small"
+        onChange={(e) => setFilter({ ...filter, SearchTerm: e.target.value })}
+      />
+    </Box>
   );
 };
 
@@ -28,6 +34,7 @@ const ManageOrderTable = () => {
   const [pageIndex, setPageIndex] = React.useState<number>(0);
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
+  const debounce = useDebounce(filter, 1000);
 
   //Call the API to get the orders
   const getOrders = async () => {
@@ -39,6 +46,7 @@ const ManageOrderTable = () => {
         totalItemsCount,
       });
       setOrders(res.items);
+      setTotalItemsCount(res.totalItemsCount);
     } catch (error) {
       toast.error("Có lỗi xay ra trong quá trình lấy danh sách đơn hàng");
     }
@@ -46,7 +54,7 @@ const ManageOrderTable = () => {
 
   React.useEffect(() => {
     getOrders();
-  }, [pageIndex, pageSize, filter]);
+  }, [pageIndex, pageSize, debounce]);
 
   //select data
   const selectedData = (row: any) => {
@@ -70,9 +78,9 @@ const ManageOrderTable = () => {
 
   //TableHeader
   const tableHeader = [
-    { id: "orderDate", label: "Order Date", format: "date" },
-    { id: "orderStatus", label: "Order Status", format: "orderStatus" },
-    { id: "orderAmount", label: "Order Amount", format: "price" },
+    { id: "orderDate", label: "Ngày đặt", format: "date" },
+    { id: "orderStatus", label: "Trạng thái", format: "orderStatus" },
+    { id: "orderAmount", label: "Đơn giá", format: "price" },
   ];
 
   return (

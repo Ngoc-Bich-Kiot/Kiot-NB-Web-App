@@ -1,18 +1,22 @@
 'use client'
 
 import React from "react";
-import { Box, Button, IconButton, TextField } from "@mui/material";
 import CustomizeTable from "@/components/table/customize-table";
-import productApi from "@/axios-clients/auth_api/productAPI";
-import { Product, ProductListResponse, ProductLog } from "@/types/ProductType";
-import MenuActionTableProduct from "./MenuActionTableProduct";
-import { format } from "path";
+import { ProductLog } from "@/types/ProductType";
 
 export default function LogTable({ props }: { props: ProductLog[] }) {
-    console.log(props)
-    const [page, setPage] = React.useState(0);
-    const [pageSize, setPageSize] = React.useState(10);
-    const [total, setTotal] = React.useState(0);
+    const [page, setPage] = React.useState(0); // Page index
+    const [pageSize, setPageSize] = React.useState(5);
+
+    const dataToDisplay = React.useMemo(() => {
+        const start = page * pageSize;
+        const end = start + pageSize;
+        return props.slice(start, end);
+    }, [props, page, pageSize]);
+
+    React.useEffect(() => {
+        setPage(0);
+    }, [props]);
 
     const tableHeaderTitle = [
         { id: "name", label: "Tên", align: "center" },
@@ -43,10 +47,10 @@ export default function LogTable({ props }: { props: ProductLog[] }) {
                 tableHeaderTitle={tableHeaderTitle}
                 handleChangePage={handleChangePage}
                 handleChangeRowsPerPage={handleChangeRowsPerPage}
-                total={total}
+                total={props.length}
                 size={pageSize}
                 page={page}
-                data={props}
+                data={dataToDisplay}
             />
         </div>
     );

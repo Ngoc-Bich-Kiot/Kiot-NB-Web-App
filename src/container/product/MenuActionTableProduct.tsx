@@ -48,10 +48,10 @@ export default function MenuActionTableProduct({
             },
         },
         {
-            label: "Cập nhật",
+            label: "Chỉnh sửa",
             icon: <EditOutlinedIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
             action: () => {
-                console.log("Cập nhật:", id);
+                router.push(`/admin/manage_product/${id}/edit?from=table`)
             },
         },
         {

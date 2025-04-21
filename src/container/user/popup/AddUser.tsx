@@ -38,20 +38,17 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
     Phone: "",
     Address: "",
     UserImages: [],
-    RoleId: 0,
+    RoleId: "",
   };
 
   //Yup validation schema
   const validationSchema = Yup.object().shape({
-    Name: Yup.string().trim().min(1, "Tối thiểu 1 kí tự"),
-    Email: Yup.string()
-      .trim()
-      .required("Bắt buộc có email")
-      .min(5, "Tối thiểu 5 kí tự"),
-    Password: Yup.string().trim().min(6, "Tối thiểu 6 kí tự"),
-    Phone: Yup.string().trim().min(10, "Tối thiểu 10 kí tự"),
-    Address: Yup.string().trim().min(5, "Tối thiểu 5 kí tự"),
-    RoleId: Yup.number().required("Bắt buộc có vị trí"),
+    Name: Yup.string(),
+    Email: Yup.string(),
+    Password: Yup.string(),
+    Phone: Yup.string(),
+    Address: Yup.string(),
+    RoleId: Yup.string(),
   });
 
   //handle submit
@@ -126,7 +123,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
             <Grid2 size={12}>
               <RHFSelect name="RoleId" label="Vai trò" sx={{ mb: 2 }}>
                 {ListRole?.map((i) => (
-                  <option key={i.roleId} value={i.roleId}>
+                  <option key={i.roleId} value={i.roleName}>
                     {i.roleName}
                   </option>
                 ))}

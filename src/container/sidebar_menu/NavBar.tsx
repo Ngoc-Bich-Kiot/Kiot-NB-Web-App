@@ -27,7 +27,9 @@ const NavBar = () => {
         maxWidth: num.SIDEBAR_WITH,
         bgcolor: colors.sideBarBG,
         width: "100%",
-        height: "100vh",
+        height: "100%",
+        zIndex: 2,
+        position: "fixed",
         borderRight: "1px solid #e0e0e0",
       }}
     >

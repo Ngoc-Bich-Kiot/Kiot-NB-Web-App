@@ -13,6 +13,9 @@ const Nav = () => {
         bgcolor: colors.navBG,
         borderBottom: "1px solid #e0e0e0",
         height: "4rem",
+        position: "fixed",
+        zIndex: 1,
+        width: "100%",
       }}
     >
       <Box

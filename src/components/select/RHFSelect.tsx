@@ -25,13 +25,17 @@ export default function RHFSelect({ name, children, ...other }: Props) {
           {...field}
           select
           fullWidth
-          //SelectProps={{ native: true }}
+          slotProps={{
+            select: {
+              native: true,
+            },
+          }}
           error={!!error}
           helperText={error?.message}
           {...other}
           InputLabelProps={{
             shrink: true,
-            required: true,
+            // required: true,
             sx: {
               "& .MuiInputLabel-asterisk": {
                 color: "red",

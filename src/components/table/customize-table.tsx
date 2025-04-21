@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import {
   Box,
   Card,
@@ -18,6 +19,8 @@ import TablePagination from "@mui/material/TablePagination";
 import { alpha, styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 import moment from "moment"; // Import moment.js for date formatting
+import { colors, font_weight } from "@/styles/config-file";
+import { OrderStatus } from "@/enum/OrderStatus";
 
 interface CTbaleProps {
   tableHeaderTitle?: any;
@@ -115,9 +118,27 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
     if (column.format && column.format == "status") {
       switch (value) {
         case "Active":
-          return "Hoạt động";
+          return (
+            <Chip
+              label="Hoạt động"
+              sx={{
+                bgcolor: colors.green_200,
+                color: colors.green_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
         case "UnActive":
-          return "Không hoạt động";
+          return (
+            <Chip
+              label="Không hoạt động"
+              sx={{
+                bgcolor: colors.red_200,
+                color: colors.red_600,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
         default:
           return "-";
       }
@@ -188,7 +209,73 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
 
     //isDeleted
     if (column.format && column.format === "deleted") {
-      return value ? "Ngừng" : "Hoạt động";
+      switch (value) {
+        case true:
+          return (
+            <Chip
+              label="Không khả dụng"
+              sx={{
+                bgcolor: colors.red_200,
+                color: colors.red_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case false:
+          return (
+            <Chip
+              label="Đang khả dụng"
+              sx={{
+                bgcolor: colors.green_200,
+                color: colors.green_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
+    }
+
+    //Order status
+    if (column.format && column.format === "orderStatus") {
+      switch (value) {
+        case OrderStatus.PENDING:
+          return (
+            <Chip
+              label="Chờ xử lý"
+              sx={{
+                bgcolor: colors.yellow_200,
+                color: colors.yellow_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.PAID:
+          return (
+            <Chip
+              label="Đã thanh toán"
+              sx={{
+                bgcolor: colors.green_200,
+                color: colors.green_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.CANCELED:
+          return (
+            <Chip
+              label="Đã hủy"
+              sx={{
+                bgcolor: colors.red_200,
+                color: colors.red_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
     }
 
     return value;
@@ -271,8 +358,9 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
-                  }`;
+                return `${from}–${to} trên ${
+                  count !== -1 ? count : `nhiều hơn ${to}`
+                }`;
               }}
             />
           </StyledTableContainer>

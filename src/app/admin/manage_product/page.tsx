@@ -1,4 +1,4 @@
-import ProductTable from "@/container/product/Table";
+import ProductTable from "@/container/product/ProductTable";
 import React from "react";
 
 const ManageProductPage = () => {

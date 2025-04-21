@@ -1,7 +1,12 @@
+import ManageUserTable from "@/container/user/ManageUserTable";
 import React from "react";
 
 const ManageUserPage = () => {
-  return <div>Quản lí người dùng</div>;
+  return (
+    <div>
+      <ManageUserTable />
+    </div>
+  );
 };
 
 export default ManageUserPage;

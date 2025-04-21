@@ -1,15 +1,60 @@
-export const colors = { 
-    white: "#fff",
-    grey:"#686D76",
-    itemNavBG: "#9EDDFF",
-    navBG: "#BEFFF7",
-    sideBarBG: "#BEFFF7",
-    buttonColor:"#9EDDFF",
-    buttonTextColor:"#282A3A",
-    bgCardColor: "#F7F7F7"
-
-}
+export const colors = {
+  primary: "#9EDDFF",
+  secondary: "#BEFFF7",
+  tertiary: "#F7F7F7",
+  quaternary: "#F7FAFC",
+  quinary: "#F7FAFC",
+  white: "#fff",
+  dark: "black",
+  grey: "#686D76",
+  itemNavBG: "#9EDDFF",
+  navBG: "#BEFFF7",
+  sideBarBG: "#BEFFF7",
+  buttonColor: "#9EDDFF",
+  buttonTextColor: "#282A3A",
+  bgCardColor: "#F7F7F7",
+  red_200: "#ef9a9a",
+  red_300: "#e57373",
+  red_400: "#ef5350",
+  red_500: "#F44336",
+  red_600: "#E53935",
+  red_700: "#D32F2F",
+  red_800: "#C62828",
+  gray_600: "#757575",
+  gray_500: "#8B96A5",
+  gray_400: "#BDC4CD",
+  gray_300: "#DEE2E7",
+  gray_200: "#EFF2F4",
+  gray_100: "#F7FAFC",
+  green_200: "#a5d6a7",
+  green_300: "#81c784",
+  green_400: "#66bb6a",
+  green_500: "#4caf50",
+  green_600: "#43a047",
+  green_700: "#388e3c",
+  green_800: "#2e7d32",
+  cyan_300: "#55BDC3",
+  orange_300: "#F38332",
+  orange_500: "#f56811",
+  blue_100: "#E5F1FF",
+  blue_500: "#3665f3",
+  yellow_200: "#FFE8BA",
+  yellow_300: "#FFD54F",
+  yellow_400: "#FFCA28",
+  yellow_500: "#FFC107",
+  yellow_600: "#FFB300",
+  yellow_700: "#FFA000",
+  yellow_800: "#FF8F00",
+};
 
 export const font_size = {
-    buttonFontSize: 18
-}
+  buttonFontSize: 18,
+};
+
+export const font_weight = {
+  light: 300,
+  regular: 400,
+  medium: 500,
+  semiBold: 600,
+  bold: 700,
+};

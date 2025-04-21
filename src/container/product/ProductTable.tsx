@@ -1,47 +1,49 @@
 "use client";
 
-import productApi from "@/axios-clients/auth_api/productAPI";
+import { Box, Button, TextField } from "@mui/material";
 import CustomizeTable from "@/components/table/customize-table";
-import { ProductListType, ProducType } from "@/types/ProductType";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, IconButton, TextField } from "@mui/material";
 import React from "react";
+import productApi from "@/axios-clients/auth_api/productAPI";
+import { Product, ProductListResponse } from "@/types/ProductType";
+import MenuActionTableProduct from "./MenuActionTableProduct";
 
 export default function ProductTable() {
-  const [products, setProducts] = React.useState<ProducType[]>([]);
+  const [products, setProducts] = React.useState<Product[]>([]);
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [total, setTotal] = React.useState(0);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedRow, setSelectedRow] = React.useState<Product | null>(null);
 
   const tableHeaderTitle = [
-    { id: "name", label: "Tên sản phẩm", align: "center" },
-    { id: "category", label: "Loại", align: "center" },
-    { id: "originalPrice", label: "Giá gốc", align: "center", format: "price" },
-    { id: "sellingPrice", label: "Giá bán", align: "center", format: "price" },
-    { id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
-    { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
-    { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
     {
       id: "images",
       label: "Hình ảnh",
       align: "center",
       format: "images",
     },
-    { id: "status", label: "Trạng thái", align: "center", format: "status" },
+    { id: "name", label: "Tên sản phẩm", align: "center" },
+    { id: "category", label: "Loại", align: "center" },
+    // { id: "originalPrice", label: "Giá gốc", align: "center", format: "price" },
+    { id: "sourceOfProducts", label: "Nguồn nhập", align: "center" },
+    { id: "sellingPrice", label: "Giá bán", align: "center", format: "price" },
+    { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
+    { id: "stockQuantity", label: "Số lượng tồn", align: "center" },
+    {
+      id: "isDeleted",
+      label: "Trạng thái",
+      align: "center",
+      format: "deleted",
+    },
   ];
 
   const fetchProducts = async () => {
     try {
-      const data: ProductListType = await productApi.getProductList({
+      const data: ProductListResponse = await productApi.getProductList({
         SearchTerm: searchTerm,
         // PageIndex: page + 1,
         // PageSize: pageSize,
       });
-
-      console.log("data", data?.items);
-
       if (data) {
         const { items, totalItemsCount } = data;
         setProducts(items);
@@ -93,14 +95,11 @@ export default function ProductTable() {
   );
 
   const menuAction = (
-    <>
-      <IconButton color="primary">
-        <EditIcon />
-      </IconButton>
-      <IconButton color="error">
-        <DeleteIcon />
-      </IconButton>
-    </>
+    <MenuActionTableProduct
+      id={selectedRow?.id as string}
+      isDeleted={selectedRow?.isDeleted as boolean}
+      onActionSuccess={fetchProducts}
+    />
   );
   return (
     <div>
@@ -113,6 +112,7 @@ export default function ProductTable() {
         page={page}
         searchTool={searchTool}
         menuAction={menuAction}
+        selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
         title="Danh sách sản phẩm"
       />

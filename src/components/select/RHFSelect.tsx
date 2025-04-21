@@ -31,7 +31,7 @@ export default function RHFSelect({ name, children, ...other }: Props) {
           {...other}
           InputLabelProps={{
             shrink: true,
-            required: true,
+            // required: true,
             sx: {
               "& .MuiInputLabel-asterisk": {
                 color: "red",

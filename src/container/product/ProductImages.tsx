@@ -19,29 +19,31 @@ export default function ProductImageGallery({ images }: { images: ProductImage[]
                 />
             </Card>
             {images.length > 1 && (
-                <Grid container spacing={1}>
-                    {images.map((img) => (
-                        <Grid item key={img.id}>
-                            <Card
-                                sx={{
-                                    width: 80,
-                                    height: 80,
-                                    border:
-                                        selectedImage === img.urlPath ? '2px solid #1976d2' : '1px solid #ccc',
-                                    cursor: 'pointer',
-                                }}
-                                onClick={() => setSelectedImage(img.urlPath)}
-                            >
-                                <CardMedia
-                                    component="img"
-                                    image={img.urlPath}
-                                    alt={`Thumbnail ${img.id}`}
-                                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Grid container spacing={1} justifyContent="center">
+                        {images.map((img) => (
+                            <Grid item key={img.id}>
+                                <Card
+                                    sx={{
+                                        width: 80,
+                                        height: 80,
+                                        border:
+                                            selectedImage === img.urlPath ? '2px solid #1976d2' : '1px solid #ccc',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={() => setSelectedImage(img.urlPath)}
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        image={img.urlPath}
+                                        alt={`Thumbnail ${img.id}`}
+                                        sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
             )}
         </Box>
     );

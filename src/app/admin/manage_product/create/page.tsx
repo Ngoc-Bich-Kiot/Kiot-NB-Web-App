@@ -10,6 +10,7 @@ import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 import { FormProvider, RHFTextField, RHFTextFieldNumber } from "@/components/hook_form";
 import RHFPhoneField from "@/components/text_field/RHFTextFieldPhone";
 import productApi from "@/axios-clients/auth_api/productAPI";
+import RHFMultiImageUpload from "@/components/text_field/RHFMultiImageUpload";
 
 
 const validationSchema = Yup.object().shape({
@@ -64,15 +65,15 @@ const validationSchema = Yup.object().shape({
         .required('Số lượng tồn là bắt buộc'),
     unit: Yup.string().required('Đơn vị là bắt buộc'),
     status: Yup.string().required('Trạng thái là bắt buộc'),
-    // productImages: Yup.array()
-    //     .of(
-    //         Yup.object().shape({
-    //             id: Yup.number().optional(),
-    //             urlPath: Yup.string().required("Đường dẫn ảnh là bắt buộc"),
-    //         })
-    //     )
-    //     .required("Ảnh sản phẩm là bắt buộc")
-    //     .min(1, "Cần ít nhất 1 ảnh"),
+    productImages: Yup.array()
+        .of(
+            Yup.mixed<File | string>()
+                .test("is-valid", "Chỉ chấp nhận ảnh hợp lệ", (value) =>
+                    typeof value === "string" || value instanceof File
+                )
+                .defined()
+        )
+        .required("Ảnh là bắt buộc")
 });
 
 const CreateProduct = () => {
@@ -80,6 +81,7 @@ const CreateProduct = () => {
 
     const methods = useForm<CreateProductFormInput>({
         resolver: yupResolver(validationSchema),
+        mode: "onChange",
         defaultValues: {
             name: '',
             category: '',
@@ -92,91 +94,134 @@ const CreateProduct = () => {
             importCosts: 0,
             stockQuantity: 0,
             unit: '',
-            status: '',
-            // productImages: [],
+            status: 'Available',
+            productImages: [],
         },
     });
 
     const {
         handleSubmit,
-        formState: { isSubmitting },
+        formState: { isSubmitting, isValid },
+        watch
     } = methods;
 
+    const productImages = watch("productImages");
     const convertToFormData = (data: Record<string, any>): FormData => {
         const formData = new FormData();
+
         for (const [key, value] of Object.entries(data)) {
-            formData.append(key, value.toString());
+            if (key === "productImages") {
+                value.forEach((file: File) => formData.append("ProductImages", file));
+            } else {
+                formData.append(key, value.toString());
+            }
         }
+
         return formData;
     };
 
     const onSubmit = async (data: CreateProductFormInput) => {
         try {
             const formData = convertToFormData(data);
+            //console.log("Data:", data);
+            // console.log("FormData:", formData);
             await productApi.CreateProduct(formData);
             router.push("/admin/manage_product");
         } catch (error) {
-            console.error("Failed to create product:", error);
+            console.error("Nhập sản phẩm thất bại:", error);
         }
     };
     return (
-        <Container maxWidth="md" sx={{ mt: 4 }}>
-            <Paper elevation={3} sx={{ p: 4 }}>
-                <Typography variant="h5" gutterBottom>
+        <Container maxWidth="md" sx={{ my: 4 }}>
+            <Paper elevation={3}
+                sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    border: '1px solid #e0e0e0',
+                }}>
+                <Typography variant="h4" gutterBottom>
                     Nhập sản phẩm mới
                 </Typography>
 
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextField name="name" label="Tên sản phẩm" />
+                            <RHFTextField name="name" label="Tên sản phẩm" placeholder="Nhập tên sản phẩm" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextField name="category" label="Loại" />
+                            <RHFTextField name="category" label="Loại" placeholder="Nhập loại sản phẩm" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextFieldNumber name="originalPrice" label="Giá gốc" type="number" />
+                            <RHFTextFieldNumber name="originalPrice" label="Giá gốc" placeholder="Ví dụ: 100000" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextFieldNumber name="sellingPrice" label="Giá bán" type="number" />
+                            <RHFTextFieldNumber name="sellingPrice" label="Giá bán" placeholder="Ví dụ: 120000" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextFieldNumber name="importCosts" label="Giá nhập" type="number" />
+                            <RHFTextFieldNumber name="importCosts" label="Giá nhập" placeholder="Giá nhập từ nhà cung cấp" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextFieldNumber name="stockQuantity" label="Số lượng tồn" type="number" />
+                            <RHFTextField name="unit" label="Đơn vị" placeholder="VD: chiếc, hộp, kg..." />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextField name="unit" label="Đơn vị" />
+                            <RHFTextField name="sourceOfProducts" label="Nguồn nhập" placeholder="Tên nhà cung cấp hoặc nguồn hàng" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextField name="status" label="Trạng thái" />
+                            <RHFTextFieldNumber name="stockQuantity" label="Số lượng tồn" placeholder="Ví dụ: 50" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextField name="sourceOfProducts" label="Nguồn nhập" />
+                            <RHFTextField name="userName" label="Người nhập" placeholder="Tên nhân viên nhập hàng" />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <RHFTextField name="userName" label="Người tạo" />
+                            <RHFPhoneField name="phone" label="Số điện thoại" placeholder="Ví dụ: 0797302367" />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RHFPhoneField name="phone" label="Số điện thoại" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <RHFTextField name="address" label="Địa chỉ" />
+                        <Grid item xs={12}>
+                            <RHFTextField name="address" label="Địa chỉ" placeholder="Địa chỉ kho hoặc nơi nhập hàng" />
                         </Grid>
 
-                        {/* <Grid item xs={12}>
-                            <RHFTextField name="productImages" label="Ảnh sản phẩm (URL cách nhau bằng dấu phẩy)" />
-                        </Grid> */}
+                        <Grid item xs={12}>
+                            <RHFMultiImageUpload name="productImages" label="Ảnh sản phẩm" />
+                        </Grid>
                     </Grid>
 
-                    <Box mt={4} display="flex" justifyContent="flex-end">
+                    <Box
+                        mt={4}
+                        display="flex"
+                        flexDirection={{ xs: "column", lg: "row" }}
+                        justifyContent="flex-end"
+                        alignItems="center"
+                        gap={2}
+                    >
                         <Button
                             type="submit"
                             variant="contained"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || !isValid || productImages.length === 0}
+                            sx={{
+                                width: { xs: "100%", sm: "auto" },
+                                order: { xs: 1, lg: 2 },
+                            }}
                         >
-                            {isSubmitting ? 'Đang tạo...' : 'Nhập sản phẩm'}
+                            {isSubmitting ? "Đang tạo..." : "Nhập sản phẩm"}
+                        </Button>
+
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={() => router.push("/admin/manage_product")}
+                            sx={{
+                                borderColor: "secondary.main",
+                                color: "secondary.main",
+                                ":hover": {
+                                    backgroundColor: (theme) => theme.palette.secondary.light,
+                                    borderColor: "secondary.dark",
+                                    color: "white",
+                                },
+                                width: { xs: "100%", sm: "auto" },
+                                order: { xs: 2, lg: 1 },
+                            }}
+                        >
+                            Quay lại
                         </Button>
                     </Box>
                 </FormProvider>

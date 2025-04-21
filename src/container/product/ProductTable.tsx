@@ -38,8 +38,8 @@ export default function ProductTable() {
         try {
             const data: ProductListResponse = await productApi.getProductList({
                 SearchTerm: searchTerm,
-                // PageIndex: page + 1,
-                // PageSize: pageSize,
+                PageIndex: page,
+                PageSize: pageSize,
             });
             if (data) {
                 const { items, totalItemsCount } = data;

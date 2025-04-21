@@ -26,8 +26,21 @@ export interface CreateProductFormInput {
     stockQuantity: number;
     unit: string;
     status: string;
-    //productImages: ProductImage[];
+    productImages: (File | string)[];
 }
+
+export interface EditProductFormInput {
+    name: string;
+    category: string;
+    originalPrice: number;
+    sellingPrice: number;
+    sourceOfProducts: string;
+    importCosts: number;
+    stockQuantity: number;
+    status: string;
+    productImages: (File | string)[];
+}
+
 
 export interface Product {
     id: string;

@@ -124,21 +124,20 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
     }
 
     //image
-    if (column.format && column.format == "images") {
-      if (value) {
-        return value.map((item: any, index: number) => (
+    if (column.format && column.format === "images") {
+      if (Array.isArray(value) && value.length > 0) {
+        return (
           <img
-            key={index}
-            src={item?.urlPath}
+            src={value[0]?.urlPath}
             alt="product"
             style={{
               width: "50px",
               height: "50px",
               borderRadius: "8px",
-              marginRight: "5px",
+              objectFit: "cover",
             }}
           />
-        ));
+        );
       }
     }
 
@@ -196,7 +195,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
   }
 
   return (
-    <Box sx={{ minWidth: "600px", mx: "auto", p: 2 }}>
+    <Box sx={{ minWidth: "auto", mx: "auto", p: 2, width: "auto" }}>
       <StyledCard>
         <Box
           sx={{
@@ -263,7 +262,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               </TableBody>
             </Table>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 50]}
+              rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={total ?? 0}
               rowsPerPage={size ?? 10}

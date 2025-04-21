@@ -1,9 +1,10 @@
 "use client";
-import { MenuItems } from "@/container/sidebar_menu/SideBarMenu";
-import { MenuItem } from "@/types/MenuItemType";
-import "./globals.css";
 import OverrideMuiTheme from "@/theme/override";
 import { Box } from "@mui/material";
+import "./globals.css";
+//toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -30,7 +31,20 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <OverrideMuiTheme>
-            <Box>{children}</Box>
+            <Box>
+              {children}
+              <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </Box>
           </OverrideMuiTheme>
         </body>
       </html>

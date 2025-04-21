@@ -1,7 +1,8 @@
 import { Dashboard as DashboardIcon } from "@mui/icons-material";
-import GroupIcon from '@mui/icons-material/Group';
+import GroupIcon from "@mui/icons-material/Group";
 import { MenuItem } from "@/types/MenuItemType";
-import ListIcon from '@mui/icons-material/List';
+import ListIcon from "@mui/icons-material/List";
+import AllInboxIcon from "@mui/icons-material/AllInbox";
 
 export const MenuItems: MenuItem[] = [
   {
@@ -11,21 +12,27 @@ export const MenuItems: MenuItem[] = [
     role: ["admin", "user"],
   },
   {
+    icon: AllInboxIcon,
+    label: "Đơn hàng",
+    path: "/admin/manage_orders",
+    role: ["admin", "user"],
+  },
+  {
     icon: GroupIcon,
     label: "Người dùng",
     path: "",
     children: [
       {
-        icon:ListIcon,
+        icon: ListIcon,
         label: "Danh sách",
         path: "/admin/manage_users",
         role: ["admin"],
       },
-    //   {
-    //     label: "Menu con 2",
-    //     path: "/parent/child2",
-    //     role: ["user"],
-    //   },
+      //   {
+      //     label: "Menu con 2",
+      //     path: "/parent/child2",
+      //     role: ["user"],
+      //   },
     ],
   },
   {

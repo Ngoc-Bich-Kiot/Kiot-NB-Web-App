@@ -26,7 +26,7 @@ export default function RHFTextField({ name, ...other }: Props) {
           helperText={error?.message}
           {...other}
           InputLabelProps={{
-            required: true,
+            // required: true,
             sx: {
               "& .MuiInputLabel-asterisk": {
                 color: "red",

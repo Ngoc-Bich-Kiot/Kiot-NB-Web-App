@@ -17,19 +17,9 @@ const orderApi = {
     return axiosClient.get(url);
   },
 
-  //POST api (multipart/form-data)
-  createNewUser: (body: any) => {
-    const url = "/Users/CreateUser";
-    return axiosClient.post(url, body, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  },
-
   //POST api
-  postSomeThingNor: (body: any) => {
-    const url = "/api/v1/someThing";
+  createOrder: (body: any) => {
+    const url = "/Orders/CreateOrder";
     return axiosClient.post(url, body);
   },
 

@@ -3,10 +3,12 @@ import orderApi from "@/axios-clients/order_api/orderAPI";
 import CustomizeTable from "@/components/table/customize-table";
 import useDebounce from "@/hook/useDebounce";
 import { Order } from "@/types/OrderType";
-import { Box, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import { toast } from "react-toastify";
 import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
+import CreateOrder from "./popup/CreateOrder";
 
 interface SearchToolProps {
   filter: any;
@@ -78,13 +80,45 @@ const ManageOrderTable = () => {
 
   //TableHeader
   const tableHeader = [
+    { id: "name", label: "Khách hàng" },
+    { id: "phone", label: "Điện thoại" },
     { id: "orderDate", label: "Ngày đặt", format: "date" },
     { id: "orderStatus", label: "Trạng thái", format: "orderStatus" },
     { id: "orderAmount", label: "Đơn giá", format: "price" },
   ];
 
+  //Event action
+  const CreateOrderAction = () => {
+    return (
+      <Box>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleClickOpen}
+        >
+          Tạo đơn hàng
+        </Button>
+      </Box>
+    );
+  };
+
+  //Handle open create order popup
+  const [openCreateOrder, setOpenCreateOrder] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpenCreateOrder(true);
+  };
+  const handleClose = () => {
+    setOpenCreateOrder(false);
+  };
+
   return (
     <div>
+      <CreateOrder
+        open={openCreateOrder}
+        handleClose={handleClose}
+        fetchData={getOrders}
+      />
       <CustomizeTable
         data={orders}
         tableHeaderTitle={tableHeader}
@@ -96,6 +130,7 @@ const ManageOrderTable = () => {
             onOpenDetail={selectedData}
           />
         }
+        eventAction={<CreateOrderAction />}
         page={pageIndex}
         size={pageSize}
         total={totalItemsCount}

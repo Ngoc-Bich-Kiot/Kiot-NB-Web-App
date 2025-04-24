@@ -47,14 +47,14 @@ export const colors = {
   yellow_800: "#FF8F00",
 };
 
-export const font_size = {
-  buttonFontSize: 18,
-};
+export enum font_size {
+  buttonFontSize = 18,
+}
 
-export const font_weight = {
-  light: 300,
-  regular: 400,
-  medium: 500,
-  semiBold: 600,
-  bold: 700,
-};
+export enum font_weight {
+  light = 300,
+  regular = 400,
+  medium = 500,
+  semiBold = 600,
+  bold = 700,
+}

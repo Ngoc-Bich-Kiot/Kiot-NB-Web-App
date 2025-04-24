@@ -18,16 +18,16 @@ interface Log {
   quantity: number;
   type: string;
   createDate: string | null;
-  name: string;
-  phone: string;
-  address: string;
 }
 
 export interface OrderDetailType {
   id: number;
   orderAmount: number;
   orderDate: string;
-  orderStatus: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+  orderStatus: string;
+  name: string | null;
+  phone: string | null;
+  address: string | null;
   orderDetails: OrderInf[];
   logs: Log[];
 }

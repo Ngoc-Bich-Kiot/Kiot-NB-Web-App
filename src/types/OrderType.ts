@@ -4,7 +4,7 @@ interface Product {
   sellingPrice: number;
 }
 
-export interface OrderDetail {
+interface OrderDetail {
   productId: number;
   quantity: number;
   unitPrice: number;
@@ -16,11 +16,8 @@ interface Log {
   id: number;
   productId: number;
   quantity: number;
-  type: "Export" | "Import" | string;
-  createDate: string | null;
-  name: string;
-  phone: string;
-  address: string;
+  type: string;
+  createDate: string;
 }
 
 export interface Order {
@@ -28,6 +25,9 @@ export interface Order {
   orderAmount: number;
   orderDate: string;
   orderStatus: string;
+  name: string;
+  phone: string;
+  address: string;
   orderDetails: OrderDetail[];
   logs: Log[];
 }

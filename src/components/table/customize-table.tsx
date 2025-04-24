@@ -310,7 +310,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
         </Box>
         <Box>{searchTool}</Box>
         <CardContent>
-          <StyledTableContainer>
+          <StyledTableContainer sx={{ minWidth: 650 }}>
             <Table>
               <TableHead>
                 <TableRow>

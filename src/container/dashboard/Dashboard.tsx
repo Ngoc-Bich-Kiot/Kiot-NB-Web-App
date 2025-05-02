@@ -378,7 +378,7 @@ const TopCustomersChart: React.FC<{ customers: Customer[] }> = ({
     <StyledCard>
       <CardHeader>
         <Typography variant="h6" component="div">
-          Top Customers by Spending
+          Khách hàng đặt hàng nhiều
         </Typography>
       </CardHeader>
       <StatsCardContent>
@@ -470,10 +470,10 @@ const Dashboard: React.FC = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Store Dashboard
+          Bảng thống kê cửa hàng
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Overview of your store performance and sales data
+          Sơ bộ về thống kê bán hàng của cửa hàng
         </Typography>
       </Box>
 

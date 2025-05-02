@@ -35,7 +35,7 @@ import {
   MonthlyStats,
   Product,
 } from "@/types/DashboardType";
-import { log } from "console";
+import dashboardApi from "@/axios-clients/dashboard_api/dashboardAPI";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -97,19 +97,19 @@ const StatsSummary: React.FC<{ dashboardData: DashboardData }> = ({
   dashboardData,
 }) => {
   // Calculate summary statistics
-  const totalRevenue = dashboardData.revenueByYear.reduce(
+  const totalRevenue = dashboardData?.revenueByYears?.reduce(
     (sum, item) => sum + item.totalRevenue,
     0
   );
-  const totalOrders = dashboardData.monthlyOrderStats.reduce(
+  const totalOrders = dashboardData?.monthlyOrderStats?.reduce(
     (sum, item) => sum + item.orderCount,
     0
   );
-  const totalProducts = dashboardData.topSellingProducts.reduce(
+  const totalProducts = dashboardData?.topSellingProducts?.reduce(
     (sum, item) => sum + item.totalQuantitySold,
     0
   );
-  const totalCustomers = dashboardData.topCustomers.length;
+  const totalCustomers = dashboardData?.topCustomers?.length;
 
   const stats = [
     {
@@ -135,7 +135,7 @@ const StatsSummary: React.FC<{ dashboardData: DashboardData }> = ({
                   sx={{ bgcolor: stat.color, width: 48, height: 48, mr: 2 }}
                 ></Avatar>
                 <Typography variant="h6" gutterBottom component="div">
-                  {stat.title}
+                  {stat.title == ""}
                 </Typography>
               </Box>
               <Typography
@@ -213,7 +213,6 @@ const TopSellingProductsChart: React.FC<{ products: Product[] }> = ({
             <Tooltip
               formatter={(value, name) => {
                 if (name === "doanhThu") {
-                  console.log(name, "sêeling");
                   return [formatCurrency(value as number), "Doanh thu"];
                 }
                 if (name === "soLuongBan") {
@@ -321,7 +320,7 @@ const MonthlyRevenueChart: React.FC<{ monthlyStats: MonthlyStats[] }> = ({
     <StyledCard>
       <CardHeader>
         <Typography variant="h6" component="div">
-          Monthly Revenue & Orders
+          Doanh thu tháng và tổng đơn hàng
         </Typography>
       </CardHeader>
       <StatsCardContent>
@@ -430,111 +429,11 @@ const Dashboard: React.FC = () => {
     // Simulate API fetch
     const fetchData = async () => {
       try {
-        // In a real app, you would fetch from an API
-        // This simulates the API response with the provided data
-        const data: DashboardData = {
-          topSellingProducts: [
-            {
-              productId: 3,
-              productName: "7up",
-              category: "Nước Uống",
-              sellingPrice: 12000,
-              totalQuantitySold: 18,
-              imageUrls: [
-                "https://res.cloudinary.com/ducxotvyo/image/upload/v1744640838/ngocbichkiot/products/wjsgivch1my8ftvtcu6p.jpg",
-              ],
-            },
-            {
-              productId: 4,
-              productName: "MountainDew",
-              category: "Nước Uống",
-              sellingPrice: 12000,
-              totalQuantitySold: 17,
-              imageUrls: [
-                "https://res.cloudinary.com/ducxotvyo/image/upload/v1744641269/ngocbichkiot/products/qb08atdezywxe75ost4j.jpg",
-              ],
-            },
-            {
-              productId: 8,
-              productName: "Corona",
-              category: "Nước uống",
-              sellingPrice: 20000,
-              totalQuantitySold: 12,
-              imageUrls: [],
-            },
-            {
-              productId: 6,
-              productName: "Pepsi",
-              category: "Nước Uống",
-              sellingPrice: 12000,
-              totalQuantitySold: 10,
-              imageUrls: [
-                "https://res.cloudinary.com/ducxotvyo/image/upload/v1744790505/ngocbichkiot/products/fhupdrujqa3feirlxfmg.png",
-              ],
-            },
-            {
-              productId: 7,
-              productName: "Coca",
-              category: "Nước Uống",
-              sellingPrice: 12000,
-              totalQuantitySold: 10,
-              imageUrls: [
-                "https://res.cloudinary.com/ducxotvyo/image/upload/v1744790596/ngocbichkiot/products/msyu5f2mlc8iu8rcnfiw.jpg",
-              ],
-            },
-          ],
-          revenueByYear: [
-            {
-              year: 2025,
-              totalRevenue: 936000,
-            },
-          ],
-          monthlyOrderStats: [
-            { month: 1, orderCount: 0, totalRevenue: 0 },
-            { month: 2, orderCount: 0, totalRevenue: 0 },
-            { month: 3, orderCount: 0, totalRevenue: 0 },
-            { month: 4, orderCount: 6, totalRevenue: 936000 },
-            { month: 5, orderCount: 0, totalRevenue: 0 },
-            { month: 6, orderCount: 0, totalRevenue: 0 },
-            { month: 7, orderCount: 0, totalRevenue: 0 },
-            { month: 8, orderCount: 0, totalRevenue: 0 },
-            { month: 9, orderCount: 0, totalRevenue: 0 },
-            { month: 10, orderCount: 0, totalRevenue: 0 },
-            { month: 11, orderCount: 0, totalRevenue: 0 },
-            { month: 12, orderCount: 0, totalRevenue: 0 },
-          ],
-          topCustomers: [
-            {
-              name: "É lí da bét",
-              phone: "0321568468",
-              address: "TP HCM",
-              orderCount: 3,
-              totalSpent: 540000,
-            },
-            {
-              name: "Toàn",
-              phone: "0376462826",
-              address: "LA",
-              orderCount: 3,
-              totalSpent: 48000,
-            },
-            {
-              name: "Duy",
-              phone: "0376462512",
-              address: "LA",
-              orderCount: 1,
-              totalSpent: 24000,
-            },
-          ],
-        };
-
-        // Simulate network delay
-        setTimeout(() => {
-          setDashboardData(data);
-          setLoading(false);
-        }, 800);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        const response: any = await dashboardApi.dashboard();
+        setDashboardData(response);
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
         setLoading(false);
       }
     };
@@ -587,12 +486,14 @@ const Dashboard: React.FC = () => {
       <Grid container spacing={3}>
         {/* Monthly Revenue Chart */}
         <Grid size={{ xs: 12, md: 12 }}>
-          <MonthlyRevenueChart monthlyStats={dashboardData.monthlyOrderStats} />
+          <MonthlyRevenueChart
+            monthlyStats={dashboardData?.monthlyOrderStats}
+          />
         </Grid>
 
         {/* Top Customers Pie Chart */}
         <Grid size={{ xs: 12, md: 12 }}>
-          <TopCustomersChart customers={dashboardData.topCustomers} />
+          <TopCustomersChart customers={dashboardData?.topCustomers} />
         </Grid>
 
         {/* Top Selling Products Chart */}

@@ -28,7 +28,7 @@ export interface Customer {
 
 export interface DashboardData {
   topSellingProducts: Product[];
-  revenueByYear: YearlyRevenue[];
+  revenueByYears: YearlyRevenue[];
   monthlyOrderStats: MonthlyStats[];
   topCustomers: Customer[];
 }

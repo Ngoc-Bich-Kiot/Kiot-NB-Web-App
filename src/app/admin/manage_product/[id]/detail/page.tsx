@@ -3,5 +3,5 @@ import DetailProduct from "@/container/product/DetailProduct";
 export default async function DetailProductPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const id = params.id;
-    return <div><DetailProduct id={id} /></div>
+    return <><DetailProduct id={id} /></>
 } 

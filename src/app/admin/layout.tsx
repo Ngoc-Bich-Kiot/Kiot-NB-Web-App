@@ -1,13 +1,21 @@
 "use client";
 //toastify
-import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Nav from "@/container/nav/Nav";
-import NavBar from "@/container/sidebar_menu/NavBar";
+
 import { colors } from "@/styles/config-file";
 import OverrideMuiTheme from "@/theme/override";
 import { Box } from "@mui/material";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import LoadingAdminLayout from "./loading";
+
+const AuthProviderClientOnly = dynamic(
+  () => import("../../context/AuthContext").then((mod) => mod.AuthProvider),
+  { ssr: false }
+);
 
 export default function AdminLayout({
   children,
@@ -16,29 +24,52 @@ export default function AdminLayout({
 }>) {
   return (
     <>
-      <OverrideMuiTheme>
-        <Box sx={{ display: "flex" }}>
-          <NavBar />
-          <Box width={"100%"}>
-            <Nav />
-            <Box sx={{ bgcolor: colors.white, pl: 33, pt: 10 }}>
-              {children}
-              <ToastContainer
-                position="top-center"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-              />
+      <AuthProviderClientOnly>
+        <OverrideMuiTheme>
+          <Box sx={{ display: "flex" }}>
+            {/* <NavBar /> */}
+            <Box width={"100%"}>
+              <Nav />
+              <Box
+                sx={(theme) => ({
+                  bgcolor: colors.white,
+
+                  [theme.breakpoints.down("mobile")]: {
+                    pt: 8,
+                    p: 4,
+                  },
+
+                  [theme.breakpoints.between("mobile", "desktop")]: {
+                    pt: 8,
+                    p: 4,
+                  },
+
+                  [theme.breakpoints.up("desktop")]: {
+                    pt: 8,
+                    pl: 33,
+                  },
+                })}
+              >
+                <Suspense fallback={<LoadingAdminLayout />}>
+                  {children}
+                </Suspense>
+                <ToastContainer
+                  position="top-center"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </OverrideMuiTheme>
+        </OverrideMuiTheme>
+      </AuthProviderClientOnly>
     </>
   );
 }

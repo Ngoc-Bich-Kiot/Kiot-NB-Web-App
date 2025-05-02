@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import ConfirmOrder from "@/container/order/popup/ConfirmOrder";
+import UpdateOrder from "@/container/order/popup/UpdateOrder";
+import { OrderStatusType } from "@/enum/OrderStatus";
 import BlockIcon from "@mui/icons-material/Block";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
-import ListAltIcon from "@mui/icons-material/ListAlt";
+import DoneIcon from '@mui/icons-material/Done';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -25,12 +28,14 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   onOpenDelete,
   fetchData,
 }) => {
-  console.log("data dc chọn: ", orderData);
+  //console.log("data dc chọn: ", orderData);
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
   const [openDetail, setOpenDetail] = React.useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = React.useState<boolean>(false);
   const [openDelete, setOpenDelete] = React.useState<boolean>(false);
   const [openAssign, setOpenAssign] = React.useState<boolean>(false);
+  const [openConfirm, setOpenConfirm] = React.useState<boolean>(false);
+  const [selectedType, setSelectedType] = React.useState<string>("");
   const open = Boolean(anchorEl);
 
   //func
@@ -42,7 +47,6 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   };
 
   const handleUpdate = () => {
-    onOpenUpdate(orderData);
     setOpenUpdate(true);
     setAnchorEl(null);
   };
@@ -64,6 +68,14 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
+  const handleConfirm = (type: OrderStatusType) => {
+    setSelectedType(type);
+    setOpenConfirm(true);
+    setAnchorEl(null);
+  }
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  }
 
   return (
     <div>
@@ -100,15 +112,26 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
           <InfoIcon sx={{ mr: "4px" }} color="info" />
           <span>Chi Tiết</span>
         </MenuItem>
-        <MenuItem onClick={() => handleUpdate()}>
-          <EditIcon sx={{ mr: "4px", color: "#9ADE7B" }} />
-          <span>Cập nhật</span>
-        </MenuItem>
-
-        <MenuItem onClick={() => handleDelete()}>
+        {orderData?.orderStatus === "Pending" && (
+          <MenuItem onClick={() => handleUpdate()}>
+            <EditIcon sx={{ mr: "4px", color: "#9ADE7B" }} />
+            <span>Cập nhật</span>
+          </MenuItem>
+        )}
+        {/* <MenuItem onClick={() => handleDelete()}>
           <BlockIcon sx={{ mr: "4px" }} color="error" />
           <span>Xóa</span>
-        </MenuItem>
+        </MenuItem> */}
+        {orderData?.orderStatus === "Pending" && [
+          <MenuItem key="paid" onClick={() => handleConfirm("Paid")}>
+            <DoneIcon sx={{ mr: "4px" }} color="success" />
+            <span>Hoàn thành</span>
+          </MenuItem>,
+          <MenuItem key="cancel" onClick={() => handleConfirm("Canceled")}>
+            <BlockIcon sx={{ mr: "4px" }} color="error" />
+            <span>Hủy</span>
+          </MenuItem>
+        ]}
       </Menu>
       {/* {openDetail == true && (
         <DetailPopup
@@ -116,17 +139,17 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
           handleClose={handleCloseDetail}
           orderData={orderData}
         />
-      )}
+      )} */}
 
       {openUpdate == true && (
-        <UpdatePopup
-          onOpen={openUpdate}
-          onClose={handleCloseUpdate}
+        <UpdateOrder
+          open={openUpdate}
+          handleClose={handleCloseUpdate}
           orderData={orderData}
           fetchData={fetchData}
         />
       )}
-      {openDelete == true && (
+      {/* {openDelete == true && (
         <DeleteUser
           onOpen={openDelete}
           onClose={handleCloseDelete}
@@ -134,6 +157,15 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
           fetchData={fetchData}
         />
       )} */}
+      {openConfirm == true && (
+        <ConfirmOrder
+          type={selectedType}
+          onOpen={openConfirm}
+          handleClose={handleCloseConfirm}
+          data={orderData}
+          fetchData={fetchData}
+        />
+      )}
     </div>
   );
 };

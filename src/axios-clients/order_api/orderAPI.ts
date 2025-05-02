@@ -24,8 +24,13 @@ const orderApi = {
   },
 
   //PUT api
-  putSomeThing: (body: any) => {
-    const url = "/api/v1/someThing";
+  updateOrder: (id: any, body: any) => {
+    const url = `/Orders/UpdateOrder/${id}`;
+    return axiosClient.put(url, body);
+  },
+
+  updateOrderStatus: (id: any, body: any) => {
+    const url = `/Orders/UpdateOrderStatus/${id}`;
     return axiosClient.put(url, body);
   },
 

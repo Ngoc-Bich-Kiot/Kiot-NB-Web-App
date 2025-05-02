@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Grid, Card, CardMedia } from '@mui/material';
+import { Box, Grid2, Card, CardMedia } from '@mui/material';
 import { ProductImage } from '@/types/ProductType';
 
 
@@ -20,9 +20,9 @@ export default function ProductImageGallery({ images }: { images: ProductImage[]
             </Card>
             {images.length > 1 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Grid container spacing={1} justifyContent="center">
+                    <Grid2 container spacing={1} justifyContent="center">
                         {images.map((img) => (
-                            <Grid item key={img.id}>
+                            <Grid2 key={img.id}>
                                 <Card
                                     sx={{
                                         width: 80,
@@ -40,9 +40,9 @@ export default function ProductImageGallery({ images }: { images: ProductImage[]
                                         sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
                                 </Card>
-                            </Grid>
+                            </Grid2>
                         ))}
-                    </Grid>
+                    </Grid2>
                 </Box>
             )}
         </Box>

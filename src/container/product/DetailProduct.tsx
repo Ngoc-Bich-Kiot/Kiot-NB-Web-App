@@ -3,11 +3,12 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/types/ProductType';
-import { Box, Button, Chip, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid2, MenuItem, Select, TextField, Typography } from '@mui/material';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import productApi from '@/axios-clients/auth_api/productAPI';
 import ProductImageGallery from './ProductImages';
 import LogTable from './LogTable';
+import { toast } from 'react-toastify';
 
 export default function DetailProduct({ id }: { id: string }) {
     const [product, setProduct] = React.useState<Product | null>(null);
@@ -30,15 +31,27 @@ export default function DetailProduct({ id }: { id: string }) {
         Damaged: { label: 'Hư hỏng', color: 'error' },
         Expired: { label: 'Hết hạn', color: 'error' },
     };
+    const hasExportError = editType === 'Export' && (
+        product?.stockQuantity === 0 ||
+        editQuantity > (product?.stockQuantity ?? 0)
+    );
+
+    const exportHelperText = editType === 'Export' && product
+        ? product.stockQuantity === 0
+            ? "Không thể xuất khi hết kho"
+            : editQuantity > product.stockQuantity
+                ? `Số lượng xuất vượt quá tồn kho (${product.stockQuantity})`
+                : ""
+        : "";
 
     const fetchProduct = async () => {
         try {
             const data: Product = await productApi.getProductById(id);
-
             if (data) {
                 setProduct(data);
             }
         } catch (error) {
+            toast.error("Lấy thông tin sản phẩm thất bại");
             console.error("Lỗi khi lấy sản phẩm:", error);
         }
     };
@@ -74,8 +87,10 @@ export default function DetailProduct({ id }: { id: string }) {
             setEditQuantity(0);
             setRawQuantity('0');
             setOpenEditDialog(false);
+            toast.success("Cập nhật tồn kho thành công");
             fetchProduct();
         } catch (error) {
+            toast.error("Cập nhật tồn kho thất bại");
             console.error("Lỗi khi cập nhật tồn kho:", error);
         }
     };
@@ -94,8 +109,10 @@ export default function DetailProduct({ id }: { id: string }) {
     const handleDelete = async () => {
         try {
             await productApi.DeleteOrEnable(id, !product?.isDeleted ? 1 : 0);
+            toast.success("Đổi trạng thái sản phẩm thành công");
             fetchProduct();
         } catch (error) {
+            toast.error("Đổi trạng thái sản phẩm thất bại");
             console.error("Lỗi khi xoá/khôi phục sản phẩm:", error);
         } finally {
             setOpenDeleteDialog(false);
@@ -105,7 +122,7 @@ export default function DetailProduct({ id }: { id: string }) {
     if (!product) return <Typography>Đang tải...</Typography>;
 
     return (
-        <Container sx={{
+        <Box sx={{
             width: 'auto',
             mx: 1,
             my: 1,
@@ -123,13 +140,13 @@ export default function DetailProduct({ id }: { id: string }) {
                 Chi tiết sản phẩm: {product.name}
             </Typography>
 
-            <Grid container spacing={4}>
-                <Grid item xs={12} md={6}>
+            <Grid2 container spacing={4}>
+                <Grid2 size={{ xs: 12, sm: 6 }}>
                     {product.images.length > 0 && (
                         <ProductImageGallery images={product.images} />
                     )}
-                </Grid>
-                <Grid item xs={12} md={6}>
+                </Grid2>
+                <Grid2 size={{ xs: 12, sm: 6 }}>
                     <Box display="flex" flexDirection="column">
                         <Box display="flex" justifyContent="space-between">
                             <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Danh mục:</Typography>
@@ -171,16 +188,22 @@ export default function DetailProduct({ id }: { id: string }) {
                                 sx={{ width: "200px", textAlign: "center", fontSize: "16px", fontFamily: "sans-serif" }}
                             />
                         </Box>
-                        <Box display="flex" justifyContent="space-between">
+                        {/* <Box display="flex" justifyContent="space-between">
                             <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Trạng thái:</Typography>
-                            <Typography variant='subtitle1' sx={{
-                                width: "200px",
-                                textAlign: "center",
-                                color: product.isDeleted ? "error.main" : "success.main",
-                                fontWeight: 600,
-                                fontFamily: "sans-serif",
-                            }}>{product.isDeleted ? "NGỪNG" : "Hoạt động"}</Typography>
-                        </Box>
+                            <Chip
+                                label={product.isDeleted ? "Không hoạt động" : "Đang Hoạt động"}
+                                variant="outlined"
+                                sx={{
+                                    width: "200px",
+                                    textAlign: "center",
+                                    fontSize: "16px",
+                                    fontFamily: "sans-serif",
+                                    backgroundColor: product.isDeleted ? "#ef9a9a" : "#a5d6a7",
+                                    color: product.isDeleted ? "#E53935" : "#2e7d32",
+                                    borderColor: product.isDeleted ? "#E53935" : "#2e7d32",
+                                }}
+                            />
+                        </Box> */}
                         <Divider sx={{ my: 2 }} />
                         <Box
                             display="flex"
@@ -193,7 +216,7 @@ export default function DetailProduct({ id }: { id: string }) {
                                 variant="contained"
                                 color="primary"
                                 fullWidth
-                                onClick={() => router.push(`/admin/manage_product/${id}/edit?from=detail`)}
+                                onClick={() => router.push(`/admin/manage_product/${id}/edit`)}
                                 sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
                             >
                                 Chỉnh sửa sản phẩm
@@ -221,8 +244,8 @@ export default function DetailProduct({ id }: { id: string }) {
                         </Box>
 
                     </Box>
-                </Grid>
-            </Grid>
+                </Grid2>
+            </Grid2>
 
             <Box mt={5}>
                 <Typography variant="h5" gutterBottom>Lịch sử sản phẩm</Typography>
@@ -273,7 +296,8 @@ export default function DetailProduct({ id }: { id: string }) {
                         type="text"
                         value={rawQuantity}
                         onChange={handleQuantityChange}
-
+                        error={hasExportError}
+                        helperText={exportHelperText}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -308,6 +332,6 @@ export default function DetailProduct({ id }: { id: string }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Container >
+        </Box >
     );
 }

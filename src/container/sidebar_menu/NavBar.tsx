@@ -7,6 +7,10 @@ import React, { useState } from "react";
 import Logo from "./Logo";
 import { MenuItems } from "./SideBarMenu";
 
+// interface NavBarProps {
+//   openDrawer: boolean;
+// }
+
 const NavBar = () => {
   const pathName = usePathname();
 
@@ -37,89 +41,91 @@ const NavBar = () => {
         <>
           <Logo />
         </>
-        {MenuItems.map((itemNav, index) =>
-          !itemNav?.children ? (
-            <Link
-              key={index}
-              style={{ textDecoration: "none", color: colors.grey }}
-              href={itemNav?.path}
-            >
-              <ListItemButton
-                sx={{
-                  bgcolor: isActive(itemNav?.path)
-                    ? colors.itemNavBG
-                    : "transparent",
-                  height: "60px",
-                }}
+        <Box sx={{ pt: 5 }}>
+          {MenuItems.map((itemNav, index) =>
+            !itemNav?.children ? (
+              <Link
                 key={index}
+                style={{ textDecoration: "none", color: colors.grey }}
+                href={itemNav?.path}
               >
-                <Box
+                <ListItemButton
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    pr: 2,
+                    bgcolor: isActive(itemNav?.path)
+                      ? colors.itemNavBG
+                      : "transparent",
+                    height: "60px",
                   }}
+                  key={index}
                 >
-                  {itemNav.icon && React.createElement(itemNav.icon)}
-                </Box>
-                {itemNav?.label}
-              </ListItemButton>
-            </Link>
-          ) : (
-            <div key={index}>
-              <ListItemButton
-                key={index}
-                onClick={handleClick}
-                sx={{ color: colors.grey }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    pr: 2,
-                  }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      pr: 2,
+                    }}
+                  >
+                    {itemNav.icon && React.createElement(itemNav.icon)}
+                  </Box>
+                  {itemNav?.label}
+                </ListItemButton>
+              </Link>
+            ) : (
+              <div key={index}>
+                <ListItemButton
+                  key={index}
+                  onClick={handleClick}
+                  sx={{ color: colors.grey }}
                 >
-                  {itemNav.icon && React.createElement(itemNav.icon)}
-                </Box>
-                {itemNav?.label}
-              </ListItemButton>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      pr: 2,
+                    }}
+                  >
+                    {itemNav.icon && React.createElement(itemNav.icon)}
+                  </Box>
+                  {itemNav?.label}
+                </ListItemButton>
 
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {itemNav?.children.map((item, index) => (
-                    <Link
-                      key={index}
-                      style={{ textDecoration: "none", color: colors.grey }}
-                      href={item?.path}
-                    >
-                      <ListItemButton
-                        sx={{
-                          bgcolor: isActive(item?.path)
-                            ? colors.itemNavBG
-                            : "transparent",
-                          height: "60px",
-                          pl: 4,
-                        }}
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {itemNav?.children.map((item, index) => (
+                      <Link
                         key={index}
+                        style={{ textDecoration: "none", color: colors.grey }}
+                        href={item?.path}
                       >
-                        <Box
+                        <ListItemButton
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            pr: 2,
+                            bgcolor: isActive(item?.path)
+                              ? colors.itemNavBG
+                              : "transparent",
+                            height: "60px",
+                            pl: 4,
                           }}
+                          key={index}
                         >
-                          {item.icon && React.createElement(item.icon)}
-                        </Box>
-                        {item?.label}
-                      </ListItemButton>
-                    </Link>
-                  ))}
-                </List>
-              </Collapse>
-            </div>
-          )
-        )}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              pr: 2,
+                            }}
+                          >
+                            {item.icon && React.createElement(item.icon)}
+                          </Box>
+                          {item?.label}
+                        </ListItemButton>
+                      </Link>
+                    ))}
+                  </List>
+                </Collapse>
+              </div>
+            )
+          )}
+        </Box>
       </List>
     </Box>
   );

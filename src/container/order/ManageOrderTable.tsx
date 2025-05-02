@@ -9,6 +9,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
 import CreateOrder from "./popup/CreateOrder";
+import { font_size } from "@/styles/config-file";
 
 interface SearchToolProps {
   filter: any;
@@ -96,6 +97,11 @@ const ManageOrderTable = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleClickOpen}
+          sx={(theme) => ({
+            [theme.breakpoints.down("mobile")]: {
+              fontSize: 10,
+            },
+          })}
         >
           Tạo đơn hàng
         </Button>

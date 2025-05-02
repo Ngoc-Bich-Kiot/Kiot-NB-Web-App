@@ -49,6 +49,10 @@ export const colors = {
 
 export enum font_size {
   buttonFontSize = 18,
+  subTitle = 20,
+  desktopTitleFS = 34,
+  tabletTitleFS = 28,
+  mobileTitleFS = 20,
 }
 
 export enum font_weight {
@@ -57,4 +61,10 @@ export enum font_weight {
   medium = 500,
   semiBold = 600,
   bold = 700,
+}
+
+export enum screen_size {
+  mobile = 360,
+  tablet = 744,
+  desktop = 1440,
 }

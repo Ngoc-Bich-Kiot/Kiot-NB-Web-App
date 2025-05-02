@@ -19,7 +19,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { alpha, styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 import moment from "moment"; // Import moment.js for date formatting
-import { colors, font_weight } from "@/styles/config-file";
+import { colors, font_size, font_weight } from "@/styles/config-file";
 import { OrderStatus } from "@/enum/OrderStatus";
 
 interface CTbaleProps {
@@ -294,13 +294,21 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           <CardHeader
             title={
               <Typography
-                variant="h5"
-                sx={{
+                sx={(theme) => ({
                   fontWeight: 700,
                   background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                }}
+                  [theme.breakpoints.up("desktop")]: {
+                    fontSize: font_size.desktopTitleFS,
+                  },
+                  [theme.breakpoints.between("tablet", "desktop")]: {
+                    fontSize: font_size.tabletTitleFS,
+                  },
+                  [theme.breakpoints.down("mobile")]: {
+                    fontSize: font_size.mobileTitleFS,
+                  },
+                })}
               >
                 {title}
               </Typography>
@@ -310,7 +318,16 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
         </Box>
         <Box>{searchTool}</Box>
         <CardContent>
-          <StyledTableContainer sx={{ minWidth: 650 }}>
+          <StyledTableContainer
+            sx={(theme) => ({
+              [theme.breakpoints.up("desktop")]: {
+                minWidth: 650,
+              },
+              [theme.breakpoints.between("tablet", "desktop")]: {
+                minWidth: 450,
+              },
+            })}
+          >
             <Table>
               <TableHead>
                 <TableRow>

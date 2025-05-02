@@ -3,7 +3,7 @@ import React from "react";
 import userApi from "@/axios-clients/user_api/userAPI";
 import CustomizeTable from "@/components/table/customize-table";
 import { User } from "@/types/Usertype";
-import { Button, Grid2, TextField } from "@mui/material";
+import { Box, Button, Grid2, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import AddUser from "./popup/AddUser";
 
@@ -14,21 +14,14 @@ interface STProps {
 
 const SearchTool: React.FC<STProps> = ({ filter, setFilter }) => {
   return (
-    <div>
-      <Grid2 container spacing={2} sx={{ m: 2 }}>
-        <Grid2 size={3}>
-          <TextField
-            fullWidth
-            size="small"
-            placeholder="Tìm kiếm"
-            label="Khách hàng"
-            onChange={(e) =>
-              setFilter({ ...filter, SearchTerm: e.target.value })
-            }
-          />
-        </Grid2>
-      </Grid2>
-    </div>
+    <Box sx={{ p: 2 }}>
+      <TextField
+        size="small"
+        placeholder="Tìm kiếm"
+        label="Khách hàng"
+        onChange={(e) => setFilter({ ...filter, SearchTerm: e.target.value })}
+      />
+    </Box>
   );
 };
 
@@ -106,6 +99,11 @@ const ManageUserTable = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleClickOpen}
+          sx={(theme) => ({
+            [theme.breakpoints.down("mobile")]: {
+              fontSize: 10,
+            },
+          })}
         >
           Thêm người dùng
         </Button>

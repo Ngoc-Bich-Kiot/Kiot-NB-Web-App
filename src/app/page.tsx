@@ -1,4 +1,9 @@
 "use client";
+import authApi from "@/axios-clients/auth_api/authAPI";
+import useAuth from "@/hook/useAuth";
+import { colors, font_size } from "@/styles/config-file";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HttpsIcon from "@mui/icons-material/Https";
 import {
   Box,
   Button,
@@ -8,16 +13,34 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import HttpsIcon from "@mui/icons-material/Https";
-import { colors, font_size } from "@/styles/config-file";
+import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 export default function Home() {
   const route = useRouter();
+  const { setAuth } = useAuth();
 
-  const handleLogin = () => {
-    route.push("/admin/dashboard");
+  const [loginForm, setLoginForm] = React.useState({
+    email: "",
+    password: "",
+  });
+
+  const handleLogin = async () => {
+    // return console.log("Login form data", loginForm);
+    try {
+      const res: any = await authApi.login(loginForm);
+      localStorage.setItem("userInfor", JSON.stringify(res));
+      const decoded: any = jwtDecode(res?.accessToken);
+      console.log("first", decoded);
+      setAuth({
+        user: decoded,
+        accessToken: res?.accessToken,
+      });
+      route.push("/admin/dashboard");
+    } catch (error) {
+      console.log("Login error", error);
+    }
   };
 
   return (
@@ -46,8 +69,11 @@ export default function Home() {
           <TextField
             label={"Tài Khoản"}
             // fullWidth
-            id="userName"
-            name="userName"
+            id="email"
+            name="email"
+            onChange={(e) => {
+              setLoginForm({ ...loginForm, email: e.target.value });
+            }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -64,6 +90,10 @@ export default function Home() {
             // fullWidth
             id="password"
             name="password"
+            type="password"
+            onChange={(e) => {
+              setLoginForm({ ...loginForm, password: e.target.value });
+            }}
             slotProps={{
               input: {
                 startAdornment: (

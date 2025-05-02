@@ -1,7 +1,9 @@
 import ManageOrderTable from "@/container/order/ManageOrderTable";
 import React from "react";
 
-const ManageOrderPage = () => {
+const ManageOrderPage = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   return (
     <div>
       <ManageOrderTable />

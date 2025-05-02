@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import { createContext, useState, useEffect } from "react";
 import { redirect } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
@@ -10,32 +10,31 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const jsonString = localStorage.getItem("userInfor");
-  const userStorage = jsonString ? JSON.parse(jsonString) : null;
-  const accessToken = userStorage?.accessToken;
-
   const [auth, setAuth] = useState({ user: {}, accessToken: "" });
 
   useEffect(() => {
-    if (accessToken) {
-      try {
-        const decoded = jwtDecode(accessToken);
-        console.log("Decoded Token:", decoded);
-        setAuth({ user: decoded, accessToken });
-      } catch (error) {
-        console.error("Lỗi giải mã token:", error);
-        setAuth({ user: {}, accessToken: "" });
-      }
-    } else {
-      setAuth({ user: {}, accessToken: "" });
-    }
-  }, [accessToken]); // Chạy lại khi accessToken thay đổi
+    if (typeof window !== "undefined") {
+      const jsonString = localStorage.getItem("userInfor");
+      const userStorage = jsonString ? JSON.parse(jsonString) : null;
+      const storedAccessToken = userStorage?.accessToken;
 
-  useEffect(() => {
-    if (!accessToken) {
-      redirect("/");
+      if (storedAccessToken) {
+        try {
+          const decoded = jwtDecode(storedAccessToken);
+          setAuth({ user: decoded, accessToken: storedAccessToken });
+        } catch (error) {
+          console.error("Lỗi giải mã token:", error);
+          setAuth({ user: {}, accessToken: "" });
+        }
+      }
     }
-  }, [accessToken]);
+  }, []); // Chạy một lần sau khi component mount
+
+  // useEffect(() => {
+  //   if (!auth.accessToken) {
+  //     redirect("/");
+  //   }
+  // }, [auth.accessToken]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

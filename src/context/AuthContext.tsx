@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useState, useEffect } from "react";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext({});
@@ -11,6 +11,8 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState({ user: {}, accessToken: "" });
+  const pathName = usePathname();
+  const isHomePage = pathName === "/";
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -32,7 +34,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // useEffect(() => {
   //   if (!auth.accessToken) {
-  //     redirect("/");
+  //     if (!isHomePage) {
+  //       redirect("/");
+  //     } else {
+  //       redirect("/admin/dashboard");
+  //     }
   //   }
   // }, [auth.accessToken]);
 

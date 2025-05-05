@@ -35,10 +35,9 @@ const Logo = () => {
           alignItems: "center",
         }}
       >
-        <Avatar
-          src="https://png.pngtree.com/png-vector/20220711/ourlarge/pngtree-dragon-logo-template-vector-design-png-image_5656615.png"
-          style={{ height: "150px", width: "150px" }}
-        />
+        <Avatar style={{ height: "150px", width: "150px" }}>
+          <Typography variant="h4">{auth?.user?.Name?.charAt(0)}</Typography>
+        </Avatar>
         <br />
         <Typography
           sx={{ fontSize: font_size.subTitle, fontWeight: font_weight.light }}

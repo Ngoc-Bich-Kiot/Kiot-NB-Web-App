@@ -1,4 +1,6 @@
+import LoadingAdminLayout from "@/app/admin/loading";
 import DetailOrder from "@/container/order/DetailOrder";
+import React from "react";
 
 export default async function DetailOrderPage(props: {
   params: Promise<{ id: string }>;
@@ -7,7 +9,9 @@ export default async function DetailOrderPage(props: {
   const id = params.id;
   return (
     <div>
-      <DetailOrder orderId={id} />
+      <React.Suspense fallback={<LoadingAdminLayout />}>
+        <DetailOrder orderId={id} />
+      </React.Suspense>
     </div>
   );
 }

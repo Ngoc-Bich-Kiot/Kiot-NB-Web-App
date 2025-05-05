@@ -1,11 +1,19 @@
 import { num } from "@/cons/cons";
 import { colors } from "@/styles/config-file";
-import { Box, Collapse, List, ListItemButton } from "@mui/material";
+import {
+  Box,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import Logo from "./Logo";
 import { MenuItems } from "./SideBarMenu";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 // interface NavBarProps {
 //   openDrawer: boolean;
@@ -29,15 +37,30 @@ const NavBar = () => {
     <Box
       sx={{
         maxWidth: num.SIDEBAR_WITH,
-        bgcolor: colors.sideBarBG,
+        bgcolor: colors.grey_100,
         width: "100%",
         height: "100%",
         zIndex: 2,
         position: "fixed",
         borderRight: "1px solid #e0e0e0",
+        overflow: "auto",
       }}
     >
-      <List>
+      <List
+        sx={(theme) => ({
+          [theme.breakpoints.down("mobile")]: {
+            pt: 2,
+          },
+
+          [theme.breakpoints.between("mobile", "desktop")]: {
+            pt: 2,
+          },
+
+          [theme.breakpoints.up("desktop")]: {
+            pt: 16,
+          },
+        })}
+      >
         <>
           <Logo />
         </>
@@ -52,7 +75,7 @@ const NavBar = () => {
                 <ListItemButton
                   sx={{
                     bgcolor: isActive(itemNav?.path)
-                      ? colors.itemNavBG
+                      ? colors.green_100
                       : "transparent",
                     height: "60px",
                   }}
@@ -67,7 +90,7 @@ const NavBar = () => {
                   >
                     {itemNav.icon && React.createElement(itemNav.icon)}
                   </Box>
-                  {itemNav?.label}
+                  <ListItemText primary={itemNav?.label} />
                 </ListItemButton>
               </Link>
             ) : (
@@ -86,7 +109,8 @@ const NavBar = () => {
                   >
                     {itemNav.icon && React.createElement(itemNav.icon)}
                   </Box>
-                  {itemNav?.label}
+                  <ListItemText primary={itemNav?.label} />
+                  {open ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
 
                 <Collapse in={open} timeout="auto" unmountOnExit>
@@ -100,7 +124,7 @@ const NavBar = () => {
                         <ListItemButton
                           sx={{
                             bgcolor: isActive(item?.path)
-                              ? colors.itemNavBG
+                              ? colors.green_100
                               : "transparent",
                             height: "60px",
                             pl: 4,

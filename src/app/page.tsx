@@ -7,6 +7,7 @@ import HttpsIcon from "@mui/icons-material/Https";
 import {
   Box,
   Button,
+  CircularProgress,
   InputAdornment,
   Paper,
   Stack,
@@ -20,6 +21,7 @@ import React from "react";
 export default function Home() {
   const route = useRouter();
   const { setAuth } = useAuth();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [loginForm, setLoginForm] = React.useState({
     email: "",
@@ -29,6 +31,7 @@ export default function Home() {
   const handleLogin = async () => {
     // return console.log("Login form data", loginForm);
     try {
+      setIsLoading(true);
       const res: any = await authApi.login(loginForm);
       localStorage.setItem("userInfor", JSON.stringify(res));
       const decoded: any = jwtDecode(res?.accessToken);
@@ -40,6 +43,8 @@ export default function Home() {
       route.push("/admin/dashboard");
     } catch (error) {
       console.log("Login error", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,7 +119,7 @@ export default function Home() {
             }}
             onClick={() => handleLogin()}
           >
-            Đăng nhập
+            {isLoading ? <CircularProgress /> : "Đăng nhập"}
           </Button>
         </Stack>
       </Paper>

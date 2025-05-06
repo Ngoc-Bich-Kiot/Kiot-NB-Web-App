@@ -35,17 +35,17 @@ export default function AdminLayout({
                   bgcolor: colors.white,
 
                   [theme.breakpoints.down("mobile")]: {
-                    pt: 8,
+                    mt: 20,
                     p: 4,
                   },
 
                   [theme.breakpoints.between("mobile", "desktop")]: {
-                    pt: 8,
+                    mt: 20,
                     p: 4,
                   },
 
                   [theme.breakpoints.up("desktop")]: {
-                    pt: 8,
+                    mt: 18,
                     pl: 33,
                   },
                 })}

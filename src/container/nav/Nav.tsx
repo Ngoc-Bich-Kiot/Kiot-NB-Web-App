@@ -5,6 +5,8 @@ import {
   AppBar,
   Avatar,
   Box,
+  Card,
+  CardMedia,
   Drawer,
   IconButton,
   Menu,
@@ -17,10 +19,11 @@ import {
 import { useRouter } from "next/navigation";
 import React from "react";
 import NavBar from "../sidebar_menu/NavBar";
+import useAuth from "@/hook/useAuth";
+import images from "@/constant/images";
 
 interface menuSettingProps {
   open: boolean;
-  onClose: () => void;
 }
 
 interface menuSettingType {
@@ -30,6 +33,9 @@ interface menuSettingType {
 }
 
 const Nav = () => {
+  //auth context
+  const { auth } = useAuth();
+
   //Define the state for the drawer
   const [open, setOpen] = React.useState(false);
 
@@ -53,7 +59,7 @@ const Nav = () => {
     { id: 2, itemName: "Cài Đặt" },
   ];
 
-  const SettingMenu: React.FC<menuSettingProps> = ({ open, onClose }) => {
+  const SettingMenu: React.FC<menuSettingProps> = ({ open }) => {
     return (
       <Menu
         id="demo-positioned-menu"
@@ -62,8 +68,8 @@ const Nav = () => {
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
+          vertical: "bottom",
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",
@@ -98,16 +104,17 @@ const Nav = () => {
       {!isDesktop ? (
         <Box>
           <AppBar
-            position="static"
+            position="fixed"
             sx={{
-              bgcolor: colors.navBG,
+              bgcolor: colors.grey_100,
               color: colors.dark,
             }}
           >
             <Toolbar
               sx={{
                 zIndex: 3,
-                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.4)",
+                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.1)",
+                // position: "fixed",
               }}
             >
               <IconButton
@@ -120,13 +127,25 @@ const Nav = () => {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Ki-ot
-              </Typography>
+              <Box sx={{ flexGrow: 1 }}>
+                <img
+                  src={images.logo_remove_bg.src}
+                  alt="logo"
+                  style={{
+                    width: 100,
+                    height: "auto",
+                  }}
+                />
+              </Box>
+
               <IconButton onClick={handleClickOpenMenuSetting}>
-                <Avatar>N</Avatar>
+                <Avatar sx={{ width: 50, height: 50 }}>
+                  <Typography variant="h6" component="div">
+                    {auth?.user?.Name?.charAt(0)}
+                  </Typography>
+                </Avatar>
               </IconButton>
-              <SettingMenu open={openMenuSetting} onClose={handleClose} />
+              <SettingMenu open={openMenuSetting} />
             </Toolbar>
           </AppBar>
 
@@ -139,25 +158,33 @@ const Nav = () => {
       ) : (
         <Box>
           <AppBar
-            position="static"
+            position="fixed"
             sx={{
-              bgcolor: colors.navBG,
+              bgcolor: colors.grey_100,
               color: colors.dark,
             }}
           >
             <Toolbar
               sx={{
                 zIndex: 3,
-                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.4)",
+                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.1)",
               }}
             >
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Ki-ot
-              </Typography>
+              <Box sx={{ flexGrow: 1 }}>
+                <img
+                  src={images.logo_remove_bg.src}
+                  alt="Logo"
+                  style={{ width: 100, height: "auto" }}
+                />
+              </Box>
               <IconButton onClick={handleClickOpenMenuSetting}>
-                <Avatar>N</Avatar>
+                <Avatar sx={{ width: 50, height: 50 }}>
+                  <Typography variant="h5" component={"div"}>
+                    {auth?.user?.Name?.charAt(0)}
+                  </Typography>
+                </Avatar>
               </IconButton>
-              <SettingMenu open={openMenuSetting} onClose={handleClose} />
+              <SettingMenu open={openMenuSetting} />
             </Toolbar>
           </AppBar>
           <NavBar />

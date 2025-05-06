@@ -126,7 +126,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                     Khách hàng:
                   </Typography>
-                  <Typography variant="body1" sx={{ color: colors.gray_600 }}>
+                  <Typography variant="body1" sx={{ color: colors.grey_600 }}>
                     {orderDetailData?.name ?? "-"}
                   </Typography>
                 </Box>
@@ -139,7 +139,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                     Địa chỉ:
                   </Typography>
-                  <Typography variant="body1" sx={{ color: colors.gray_600 }}>
+                  <Typography variant="body1" sx={{ color: colors.grey_600 }}>
                     {orderDetailData?.address ?? "-"}
                   </Typography>
                 </Box>
@@ -152,7 +152,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                     Số điện thoại:
                   </Typography>
-                  <Typography variant="body1" sx={{ color: colors.gray_600 }}>
+                  <Typography variant="body1" sx={{ color: colors.grey_600 }}>
                     {orderDetailData?.phone ?? "-"}
                   </Typography>
                 </Box>
@@ -165,7 +165,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                     Ngày đặt hàng:
                   </Typography>
-                  <Typography variant="body1" sx={{ color: colors.gray_600 }}>
+                  <Typography variant="body1" sx={{ color: colors.grey_600 }}>
                     {moment(orderDetailData?.orderDate).format("DD/MM/YYYY") ??
                       "-"}
                   </Typography>
@@ -180,7 +180,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                     <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                       Phương thức thanh toán:
                     </Typography>
-                    <Typography variant="body1" sx={{ color: colors.gray_600 }}>
+                    <Typography variant="body1" sx={{ color: colors.grey_600 }}>
                       {orderDetailData?.paymentMethod ?? "-"}
                     </Typography>
                   </Box>

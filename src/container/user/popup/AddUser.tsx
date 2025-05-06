@@ -92,7 +92,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
         >
           <DialogTitle
             sx={{
-              color: colors.gray_600,
+              color: colors.grey_600,
               textTransform: "uppercase",
               fontWeight: font_weight.regular,
             }}
@@ -100,7 +100,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
             Tạo mới người dùng
           </DialogTitle>
           <IconButton onClick={handleClose}>
-            <CloseIcon sx={{ color: colors.gray_600 }} />
+            <CloseIcon sx={{ color: colors.grey_600 }} />
           </IconButton>
         </Box>
         <DialogContent>

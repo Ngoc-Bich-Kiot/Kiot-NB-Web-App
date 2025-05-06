@@ -1,3 +1,5 @@
-export default async function CreateProduct() {
-    return <div>This is create product page</div>
+import CreateProduct from "@/container/product/CreateProduct";
+
+export default async function EditProductPage() {
+    return <><CreateProduct /></>
 } 

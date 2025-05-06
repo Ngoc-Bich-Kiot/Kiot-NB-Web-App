@@ -1,10 +1,17 @@
 import { Product, ProductListResponse } from "@/types/ProductType";
 import axiosClient from "../axiosClient";
+import { AxiosResponse } from "axios";
 
 const productApi = {
     //GET api
     getProductList: (params?: any): Promise<ProductListResponse> => {
         const url = "/Products/GetProductPagination";
+        return axiosClient.get(url, {
+            params,
+        });
+    },
+    getAvailableProductList: (params?: any): Promise<ProductListResponse> => {
+        const url = "/Products/GetProductPagination?IsDeleted=false";
         return axiosClient.get(url, {
             params,
         });
@@ -17,9 +24,9 @@ const productApi = {
     },
 
     //POST api
-    CreateProduct: (body: any): Promise<Product> => {
+    CreateProduct: (body: any): Promise<AxiosResponse<Product>> => {
         const url = "/Products/CreateProduct";
-        return axiosClient.post(url, body, {
+        return axiosClient.post<Product>(url, body, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -41,10 +48,24 @@ const productApi = {
         return axiosClient.put(url, body);
     },
 
-    UpdateStock: (params: { productId: number; quantity: number; type: string }): Promise<{ message: string }> => {
+    UpdateStock: (productId: string, quantity: number, type: string, body: any): Promise<{ message: string }> => {
         const url = `/Products/UpdateStock`;
+        return axiosClient.put(url, body, {
+            params: {
+                productId,
+                quantity,
+                type,
+            },
+        });
+    },
+
+    DeleteOrEnable: (productId: string, isDeleted: number): Promise<{ message: string }> => {
+        const url = `/Products/DeleteOrEnable`;
         return axiosClient.put(url, null, {
-            params,
+            params: {
+                productId,
+                isDeleted,
+            },
         });
     },
 

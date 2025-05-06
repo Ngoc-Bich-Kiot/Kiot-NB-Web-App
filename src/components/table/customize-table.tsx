@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import {
   Box,
   Card,
@@ -18,6 +19,8 @@ import TablePagination from "@mui/material/TablePagination";
 import { alpha, styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 import moment from "moment"; // Import moment.js for date formatting
+import { colors, font_size, font_weight } from "@/styles/config-file";
+import { OrderStatus } from "@/enum/OrderStatus";
 
 interface CTbaleProps {
   tableHeaderTitle?: any;
@@ -88,6 +91,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
   }
 
   function formatValue(value: any, column: any) {
+    if (value === null || value === undefined || value === "") return "-";
+
     //date time
     if (column.format && column.format == "date") {
       if (value) {
@@ -110,33 +115,52 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           return "-";
       }
     }
+
     //status
     if (column.format && column.format == "status") {
       switch (value) {
         case "Active":
-          return "Hoạt động";
+          return (
+            <Chip
+              label="Hoạt động"
+              sx={{
+                bgcolor: colors.green_200,
+                color: colors.green_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
         case "UnActive":
-          return "Không hoạt động";
+          return (
+            <Chip
+              label="Không hoạt động"
+              sx={{
+                bgcolor: colors.red_200,
+                color: colors.red_600,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
         default:
           return "-";
       }
     }
-    if (column.format && column.format == "images") {
-      if (value) {
-        console.log("value", value);
-        return value.map((item: any, index: number) => (
+
+    //image
+    if (column.format && column.format === "images") {
+      if (Array.isArray(value) && value.length > 0) {
+        return (
           <img
-            key={index}
-            src={item?.urlPath}
+            src={value[0]?.urlPath}
             alt="product"
             style={{
               width: "50px",
               height: "50px",
               borderRadius: "8px",
-              marginRight: "5px",
+              objectFit: "cover",
             }}
           />
-        ));
+        );
       }
     }
 
@@ -146,11 +170,132 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
       return value.toLocaleString("vi-VN") + " VND";
     }
 
+    //date
+    if (column.format && column.format == "createDate") {
+      if (value) {
+        return moment(value).utcOffset(7).format("DD/MM/YYYY HH:mm:ss");
+      }
+    }
+
+    //phoneNumber
+    if (column.format && column.format === "phoneNumber") {
+      if (!value) return "-";
+
+      const digits = value.replace(/\D/g, "");
+
+      if (digits.length === 10) {
+        return `${digits.slice(0, 4)}.${digits.slice(4, 7)}.${digits.slice(7)}`;
+      }
+
+      return digits;
+    }
+
+    //quantity
+    if (column.format && column.format === "quantity") {
+      if (value) {
+        return value.toLocaleString("vi-VN");
+      }
+    }
+
+    //Import&Export
+    if (column.format && column.format === "type") {
+      switch (value) {
+        case "Import":
+          return "Nhập hàng";
+        case "Export":
+          return "Xuất hàng";
+        default:
+          return "-";
+      }
+    }
+
+    //isDeleted
+    if (column.format && column.format === "deleted") {
+      switch (value) {
+        case true:
+          return (
+            <Chip
+              label="Không khả dụng"
+              sx={{
+                bgcolor: colors.red_200,
+                color: colors.red_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case false:
+          return (
+            <Chip
+              label="Đang khả dụng"
+              sx={{
+                bgcolor: colors.green_200,
+                color: colors.green_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
+    }
+
+    //Order status
+    if (column.format && column.format === "orderStatus") {
+      switch (value) {
+        case OrderStatus.PENDING:
+          return (
+            <Chip
+              label="Chờ xử lý"
+              sx={{
+                bgcolor: colors.yellow_200,
+                color: colors.yellow_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.FINISH:
+          return (
+            <Chip
+              label="Đã thanh toán"
+              sx={{
+                bgcolor: colors.green_200,
+                color: colors.green_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.CANCELED:
+          return (
+            <Chip
+              label="Đã hủy"
+              sx={{
+                bgcolor: colors.red_200,
+                color: colors.red_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.PREPARED:
+          return (
+            <Chip
+              label="Đã chuẩn bị"
+              sx={{
+                bgcolor: colors.blue_200,
+                color: colors.blue_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
+    }
+
     return value;
   }
 
   return (
-    <Box sx={{ minWidth: "600px", mx: "auto", p: 2 }}>
+    <Box sx={{ minWidth: "auto", mx: "auto", p: 2, width: "auto" }}>
       <StyledCard>
         <Box
           sx={{
@@ -162,13 +307,21 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           <CardHeader
             title={
               <Typography
-                variant="h5"
-                sx={{
+                sx={(theme) => ({
                   fontWeight: 700,
                   background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                }}
+                  [theme.breakpoints.up("desktop")]: {
+                    fontSize: font_size.desktopTitleFS,
+                  },
+                  [theme.breakpoints.between("tablet", "desktop")]: {
+                    fontSize: font_size.tabletTitleFS,
+                  },
+                  [theme.breakpoints.down("mobile")]: {
+                    fontSize: font_size.mobileTitleFS,
+                  },
+                })}
               >
                 {title}
               </Typography>
@@ -178,7 +331,16 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
         </Box>
         <Box>{searchTool}</Box>
         <CardContent>
-          <StyledTableContainer>
+          <StyledTableContainer
+            sx={(theme) => ({
+              [theme.breakpoints.up("desktop")]: {
+                minWidth: 650,
+              },
+              [theme.breakpoints.between("tablet", "desktop")]: {
+                minWidth: 450,
+              },
+            })}
+          >
             <Table>
               <TableHead>
                 <TableRow>
@@ -201,9 +363,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     <TableCell>{page * size + index + 1}</TableCell>
                     {tableHeaderTitle.map((column: any) => (
                       <TableCell key={column.id} align={column.align || "left"}>
-                        {getNestedValue(row, column.id)
+                        {/* {getNestedValue(row, column.id)
                           ? formatValue(getNestedValue(row, column.id), column)
-                          : "-"}
+                          : "-"} */}
+                        {formatValue(getNestedValue(row, column.id), column)}
                       </TableCell>
                     ))}
                     <TableCell
@@ -216,7 +379,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               </TableBody>
             </Table>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 50]}
+              rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={total ?? 0}
               rowsPerPage={size ?? 10}
@@ -225,9 +388,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${
-                  count !== -1 ? count : `nhiều hơn ${to}`
-                }`;
+                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
               }}
             />
           </StyledTableContainer>

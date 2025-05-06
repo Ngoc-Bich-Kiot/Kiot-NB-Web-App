@@ -5,7 +5,7 @@ export interface ProductImage {
 
 export interface ProductLog {
   id: number;
-  productId: number;
+  productId: string;
   quantity: number;
   type: string;
   name: string;

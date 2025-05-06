@@ -47,10 +47,10 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
     handleClose,
     fetchData,
 }) => {
-    // Define state
+    console.log(orderData)
     const [listProduct, setListProduct] = React.useState<Product[]>([]);
+    const initialProductIdsRef = React.useRef<number[]>([]);
 
-    // Define default values
     const defaultValues: UpdateOrderForm = {
         name: "",
         phone: "",
@@ -58,17 +58,16 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
         orderDetails: [],
     };
 
-    // Call api to get list product
     const getListProduct = async () => {
         try {
-            const res: any = await productApi.getProductList({
+            const res: any = await productApi.getAvailableProductList({
                 pageIndex: 0,
                 pageSize: 100,
             });
             setListProduct(res.items);
         } catch (error) {
             toast.error("Có lỗi xảy ra trong quá trình lấy danh sách sản phẩm");
-            console.error("Lỗi khi lấy danh sách sản phẩm:", error); // Thêm log lỗi chi tiết
+            console.error("Lỗi khi lấy danh sách sản phẩm:", error);
         }
     };
 
@@ -76,7 +75,6 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
         getListProduct();
     }, []);
 
-    // Yup validation schema
     const orderDetailSchema = Yup.object().shape({
         productId: Yup.number()
             .required("Vui lòng chọn sản phẩm")
@@ -95,7 +93,6 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
             .min(1, "Vui lòng chọn ít nhất một sản phẩm"),
     });
 
-    // Handle submit
     const methods = useForm({
         resolver: yupResolver(validationSchema),
         defaultValues,
@@ -105,7 +102,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
         handleSubmit,
         control,
         formState: { isSubmitting },
-        reset
+        reset,
     } = methods;
 
     const { fields, append, remove } = useFieldArray({
@@ -115,27 +112,44 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
 
     React.useEffect(() => {
         if (orderData) {
+            const initialOrderDetails = orderData.orderDetails?.length
+                ? orderData.orderDetails.map((item: any) => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                }))
+                : [{ productId: 0, quantity: 1 }];
+
+            initialProductIdsRef.current =
+                orderData.orderDetails?.map((item: any) => item.productId) || [];
+
             reset({
                 name: orderData.name || "",
                 phone: orderData.phone || "",
                 address: orderData.address || "",
-                orderDetails: orderData.orderDetails?.length
-                    ? orderData.orderDetails.map((item: any) => ({
-                        productId: item.productId,
-                        quantity: item.quantity,
-                    }))
-                    : [{ productId: 0, quantity: 1 }],
+                orderDetails: initialOrderDetails,
             });
         }
     }, [orderData, reset]);
 
     const updateOrder = async (data: any) => {
-        console.log("Dữ liệu đơn hàng:", data);
         try {
-            // const res = await orderApi.updateOrder(orderData.id, data);
-            // console.log("Phản hồi từ API:", res);
-            // toast.success("Cập nhật đơn hàng thành công");
-            // handleClose();
+            const currentProductIds = data.orderDetails.map(
+                (item: any) => item.productId
+            );
+            const deletedProductIds = initialProductIdsRef.current.filter(
+                (id) => !currentProductIds.includes(id)
+            );
+
+            const payload = {
+                ...data,
+                deletedProductIds,
+            };
+
+            const res = await orderApi.updateOrder(orderData.id, payload);
+            console.log("Phản hồi từ API:", res);
+            toast.success("Cập nhật đơn hàng thành công");
+            handleClose();
+            fetchData();
         } catch (error: any) {
             toast.error("Cập nhật đơn hàng thất bại");
             console.error("Lỗi cập nhật đơn hàng:", error.response?.data || error.message);

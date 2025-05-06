@@ -59,7 +59,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
             }}
           />
         );
-      case OrderStatus.PAID:
+      case OrderStatus.FINISH:
         return (
           <Chip
             label="Đã thanh toán"
@@ -170,6 +170,21 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
                       "-"}
                   </Typography>
                 </Box>
+                {orderDetailData?.orderStatus === OrderStatus.FINISH && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                      Phương thức thanh toán:
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: colors.gray_600 }}>
+                      {orderDetailData?.paymentMethod ?? "-"}
+                    </Typography>
+                  </Box>
+                )}
               </Stack>
             </Paper>
           </Grid2>

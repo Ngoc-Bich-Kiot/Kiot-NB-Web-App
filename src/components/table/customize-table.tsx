@@ -91,6 +91,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
   }
 
   function formatValue(value: any, column: any) {
+    if (value === null || value === undefined || value === "") return "-";
+
     //date time
     if (column.format && column.format == "date") {
       if (value) {
@@ -251,7 +253,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               }}
             />
           );
-        case OrderStatus.PAID:
+        case OrderStatus.FINISH:
           return (
             <Chip
               label="Đã thanh toán"
@@ -269,6 +271,17 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               sx={{
                 bgcolor: colors.red_200,
                 color: colors.red_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.PREPARED:
+          return (
+            <Chip
+              label="Đã chuẩn bị"
+              sx={{
+                bgcolor: colors.blue_200,
+                color: colors.blue_800,
                 fontWeight: font_weight.semiBold,
               }}
             />
@@ -375,9 +388,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${
-                  count !== -1 ? count : `nhiều hơn ${to}`
-                }`;
+                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
               }}
             />
           </StyledTableContainer>

@@ -10,6 +10,12 @@ const productApi = {
             params,
         });
     },
+    getAvailableProductList: (params?: any): Promise<ProductListResponse> => {
+        const url = "/Products/GetProductPagination?IsDeleted=false";
+        return axiosClient.get(url, {
+            params,
+        });
+    },
     getProductById: (id: string, params?: any): Promise<Product> => {
         const url = `/Products/GetProductById/${id}`;
         return axiosClient.get(url, {

@@ -28,6 +28,7 @@ export interface OrderDetailType {
   name: string | null;
   phone: string | null;
   address: string | null;
+  paymentMethod: string | null;
   orderDetails: OrderInf[];
   logs: Log[];
 }

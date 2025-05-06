@@ -76,6 +76,15 @@ const validationSchema = Yup.object().shape({
         )
         .required("Ảnh là bắt buộc")
 });
+const capitalizedWords = (str: string): string => {
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        )
+        .join(" ");
+};
 
 const CreateProduct = () => {
     const router = useRouter();
@@ -103,7 +112,7 @@ const CreateProduct = () => {
     const {
         handleSubmit,
         formState: { isSubmitting, isValid },
-        watch
+        watch, setValue
     } = methods;
 
     const productImages = watch("productImages");
@@ -124,7 +133,7 @@ const CreateProduct = () => {
     const onSubmit = async (data: CreateProductFormInput) => {
         try {
             const formData = convertToFormData(data);
-            //console.log("Data:", data);
+            // console.log("Data:", data);
             // console.log("FormData:", formData);
             await productApi.CreateProduct(formData);
             toast.success("Nhập sản phẩm thành công");
@@ -150,41 +159,81 @@ const CreateProduct = () => {
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Grid2 container spacing={2}>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextField name="name" label="Tên sản phẩm" placeholder="Nhập tên sản phẩm" />
+                            <RHFTextField
+                                name="name"
+                                label="Tên sản phẩm"
+                                placeholder="Nhập tên sản phẩm" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextField name="category" label="Loại" placeholder="Nhập loại sản phẩm" />
+                            <RHFTextField
+                                name="category"
+                                label="Loại"
+                                placeholder="Nhập loại sản phẩm" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextFieldNumber name="originalPrice" label="Giá gốc" placeholder="Ví dụ: 100000" />
+                            <RHFTextFieldNumber
+                                name="originalPrice"
+                                label="Giá gốc"
+                                placeholder="Ví dụ: 100000" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextFieldNumber name="sellingPrice" label="Giá bán" placeholder="Ví dụ: 120000" />
+                            <RHFTextFieldNumber
+                                name="sellingPrice"
+                                label="Giá bán"
+                                placeholder="Ví dụ: 120000" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextFieldNumber name="importCosts" label="Giá nhập" placeholder="Giá nhập từ nhà cung cấp" />
+                            <RHFTextFieldNumber
+                                name="importCosts"
+                                label="Giá nhập"
+                                placeholder="Giá nhập từ nhà cung cấp" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextField name="unit" label="Đơn vị" placeholder="VD: chiếc, hộp, kg..." />
+                            <RHFTextField
+                                name="unit"
+                                label="Đơn vị"
+                                placeholder="VD: chiếc, hộp, kg..."
+                                onBlur={(e) => {
+                                    const formatted = capitalizedWords(e.target.value);
+                                    setValue("unit", formatted, { shouldValidate: true });
+                                }}
+                            />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextField name="sourceOfProducts" label="Nguồn nhập" placeholder="Tên nhà cung cấp hoặc nguồn hàng" />
+                            <RHFTextField
+                                name="sourceOfProducts"
+                                label="Nguồn nhập"
+                                placeholder="Tên nhà cung cấp hoặc nguồn hàng" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextFieldNumber name="stockQuantity" label="Số lượng tồn" placeholder="Ví dụ: 50" />
+                            <RHFTextFieldNumber
+                                name="stockQuantity"
+                                label="Số lượng tồn"
+                                placeholder="Ví dụ: 50" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFTextField name="userName" label="Người nhập" placeholder="Tên nhân viên nhập hàng" />
+                            <RHFTextField
+                                name="userName"
+                                label="Người nhập"
+                                placeholder="Tên nhân viên nhập hàng" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFPhoneField name="phone" label="Số điện thoại" placeholder="Ví dụ: 0797302367" />
+                            <RHFPhoneField
+                                name="phone"
+                                label="Số điện thoại"
+                                placeholder="Ví dụ: 0797302367" />
                         </Grid2>
                         <Grid2 size={{ xs: 12 }}>
-                            <RHFTextField name="address" label="Địa chỉ" placeholder="Địa chỉ kho hoặc nơi nhập hàng" />
+                            <RHFTextField
+                                name="address"
+                                label="Địa chỉ"
+                                placeholder="Địa chỉ kho hoặc nơi nhập hàng" />
                         </Grid2>
 
                         <Grid2 size={{ xs: 12 }}>
-                            <RHFMultiImageUpload name="productImages" label="Ảnh sản phẩm" />
+                            <RHFMultiImageUpload
+                                name="productImages"
+                                label="Ảnh sản phẩm" />
                         </Grid2>
                     </Grid2>
 

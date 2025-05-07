@@ -19,7 +19,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { alpha, styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 import moment from "moment"; // Import moment.js for date formatting
-import { colors, font_weight } from "@/styles/config-file";
+import { colors, font_size, font_weight } from "@/styles/config-file";
 import { OrderStatus } from "@/enum/OrderStatus";
 
 interface CTbaleProps {
@@ -91,6 +91,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
   }
 
   function formatValue(value: any, column: any) {
+    if (value === null || value === undefined || value === "") return "-";
+
     //date time
     if (column.format && column.format == "date") {
       if (value) {
@@ -251,7 +253,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               }}
             />
           );
-        case OrderStatus.PAID:
+        case OrderStatus.FINISH:
           return (
             <Chip
               label="Đã thanh toán"
@@ -269,6 +271,17 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               sx={{
                 bgcolor: colors.red_200,
                 color: colors.red_800,
+                fontWeight: font_weight.semiBold,
+              }}
+            />
+          );
+        case OrderStatus.PREPARED:
+          return (
+            <Chip
+              label="Đã chuẩn bị"
+              sx={{
+                bgcolor: colors.blue_200,
+                color: colors.blue_800,
                 fontWeight: font_weight.semiBold,
               }}
             />
@@ -294,13 +307,21 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           <CardHeader
             title={
               <Typography
-                variant="h5"
-                sx={{
+                sx={(theme) => ({
                   fontWeight: 700,
                   background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
-                }}
+                  [theme.breakpoints.up("desktop")]: {
+                    fontSize: font_size.desktopTitleFS,
+                  },
+                  [theme.breakpoints.between("tablet", "desktop")]: {
+                    fontSize: font_size.tabletTitleFS,
+                  },
+                  [theme.breakpoints.down("mobile")]: {
+                    fontSize: font_size.mobileTitleFS,
+                  },
+                })}
               >
                 {title}
               </Typography>
@@ -310,7 +331,16 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
         </Box>
         <Box>{searchTool}</Box>
         <CardContent>
-          <StyledTableContainer sx={{ minWidth: 650 }}>
+          <StyledTableContainer
+            sx={(theme) => ({
+              [theme.breakpoints.up("desktop")]: {
+                minWidth: 650,
+              },
+              [theme.breakpoints.between("tablet", "desktop")]: {
+                minWidth: 450,
+              },
+            })}
+          >
             <Table>
               <TableHead>
                 <TableRow>
@@ -358,9 +388,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${
-                  count !== -1 ? count : `nhiều hơn ${to}`
-                }`;
+                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
               }}
             />
           </StyledTableContainer>

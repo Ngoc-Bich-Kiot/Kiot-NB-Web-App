@@ -49,13 +49,15 @@ export default function MenuActionTableProduct({
                 router.push(`/admin/manage_product/${id}/detail`)
             },
         },
-        {
-            label: "Chỉnh sửa",
-            icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
-            action: () => {
-                router.push(`/admin/manage_product/${id}/edit`)
-            },
-        },
+        ...(!isDeleted
+            ? [{
+                label: "Chỉnh sửa",
+                icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
+                action: () => {
+                    router.push(`/admin/manage_product/${id}/edit`);
+                },
+            }]
+            : []),
         {
             label: isDeleted === true ? "Khôi phục" : "Ngừng",
             icon: isDeleted === true ? (<AddIcon sx={{ mr: 1 }} color='success' />) : (<BlockIcon sx={{ mr: 1 }} color='error' />),

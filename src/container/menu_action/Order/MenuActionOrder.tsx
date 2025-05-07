@@ -77,6 +77,47 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
     setOpenConfirm(false);
   }
 
+  const menuConfig: Record<OrderStatusType, React.JSX.Element[]> = {
+    Pending: [
+      <MenuItem key="update" onClick={handleUpdate}>
+        <EditIcon sx={{ mr: "4px", color: "#9ADE7B" }} />
+        <span>Cập nhật</span>
+      </MenuItem>,
+      <MenuItem key="prepared" onClick={() => handleConfirm("Prepared")}>
+        <DoneIcon sx={{ mr: "4px", color: "#1976D2" }} />
+        <span>Đã chuẩn bị</span>
+      </MenuItem>,
+      <MenuItem key="cancel" onClick={() => handleConfirm("Canceled")}>
+        <BlockIcon sx={{ mr: "4px" }} color="error" />
+        <span>Hủy</span>
+      </MenuItem>,
+    ],
+    Prepared: [
+      <MenuItem key="finish" onClick={() => handleConfirm("Finish")}>
+        <DoneIcon sx={{ mr: "4px" }} color="success" />
+        <span>Hoàn thành</span>
+      </MenuItem>,
+      <MenuItem key="cancel" onClick={() => handleConfirm("Canceled")}>
+        <BlockIcon sx={{ mr: "4px" }} color="error" />
+        <span>Hủy</span>
+      </MenuItem>,
+    ],
+    Finish: [],
+    Canceled: [],
+  };
+
+  const renderMenuItems = () => {
+    const commonItems = [
+      <MenuItem key="detail" onClick={handleDetail}>
+        <InfoIcon sx={{ mr: "4px" }} color="info" />
+        <span>Chi Tiết</span>
+      </MenuItem>,
+    ];
+    const status = orderData?.orderStatus as OrderStatusType;
+    const statusItems = menuConfig[status] || [];
+    return [...commonItems, ...statusItems];
+  };
+
   return (
     <div>
       <Button
@@ -108,30 +149,7 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={() => handleDetail()}>
-          <InfoIcon sx={{ mr: "4px" }} color="info" />
-          <span>Chi Tiết</span>
-        </MenuItem>
-        {orderData?.orderStatus === "Pending" && (
-          <MenuItem onClick={() => handleUpdate()}>
-            <EditIcon sx={{ mr: "4px", color: "#9ADE7B" }} />
-            <span>Cập nhật</span>
-          </MenuItem>
-        )}
-        {/* <MenuItem onClick={() => handleDelete()}>
-          <BlockIcon sx={{ mr: "4px" }} color="error" />
-          <span>Xóa</span>
-        </MenuItem> */}
-        {orderData?.orderStatus === "Pending" && [
-          <MenuItem key="paid" onClick={() => handleConfirm("Paid")}>
-            <DoneIcon sx={{ mr: "4px" }} color="success" />
-            <span>Hoàn thành</span>
-          </MenuItem>,
-          <MenuItem key="cancel" onClick={() => handleConfirm("Canceled")}>
-            <BlockIcon sx={{ mr: "4px" }} color="error" />
-            <span>Hủy</span>
-          </MenuItem>
-        ]}
+        {renderMenuItems()}
       </Menu>
       {/* {openDetail == true && (
         <DetailPopup

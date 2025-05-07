@@ -63,7 +63,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   // Call api to get list product
   const getListProduct = async () => {
     try {
-      const res: any = await productApi.getProductList({
+      const res: any = await productApi.getAvailableProductList({
         pageIndex: 0,
         pageSize: 100,
       });
@@ -122,6 +122,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       console.log("Phản hồi từ API:", res); // In log phản hồi từ API
       toast.success("Tạo đơn hàng thành công");
       handleClose();
+      fetchData();
     } catch (error: any) {
       toast.error("Tạo đơn hàng thất bại");
       console.error("Lỗi tạo đơn hàng:", error.response?.data || error.message); // Log lỗi chi tiết từ response hoặc message

@@ -17,6 +17,11 @@ const orderApi = {
     return axiosClient.get(url);
   },
 
+  checkOut: (id?: any, paymentMethod?: any) => {
+    const url = `/Orders/CheckOut?orderId=${id}&paymentMethod=${paymentMethod}`;
+    return axiosClient.get(url);
+  },
+
   //POST api
   createOrder: (body: any) => {
     const url = "/Orders/CreateOrder";
@@ -29,10 +34,15 @@ const orderApi = {
     return axiosClient.put(url, body);
   },
 
-  updateOrderStatus: (id: any, body: any) => {
-    const url = `/Orders/UpdateOrderStatus/${id}`;
-    return axiosClient.put(url, body);
+  updateOrderStatus: (id: string, params?: any) => {
+    return axiosClient.put(`/Orders/UpdateOrderStatus/${id}`, null, {
+      params,
+      paramsSerializer: {
+        indexes: null, // by default: false
+      },
+    });
   },
+
 
   //DELETE api
   deleteSomeThing: (id: string) => {

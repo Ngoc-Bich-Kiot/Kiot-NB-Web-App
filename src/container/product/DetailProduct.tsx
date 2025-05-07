@@ -212,26 +212,29 @@ export default function DetailProduct({ id }: { id: string }) {
                             justifyContent="flex-end"
                             alignItems={{ xs: 'stretch', sm: 'center' }}
                         >
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                onClick={() => router.push(`/admin/manage_product/${id}/edit`)}
-                                sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
-                            >
-                                Chỉnh sửa sản phẩm
-                            </Button>
+                            {product.isDeleted === false && (
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                        onClick={() => router.push(`/admin/manage_product/${id}/edit`)}
+                                        sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
+                                    >
+                                        Chỉnh sửa sản phẩm
+                                    </Button>
 
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                fullWidth
-                                onClick={handleOpenEditDialog}
-                                sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
-                            >
-                                Xuất/Nhập
-                            </Button>
-
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        fullWidth
+                                        onClick={handleOpenEditDialog}
+                                        sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
+                                    >
+                                        Xuất/Nhập
+                                    </Button>
+                                </>
+                            )}
                             <Button
                                 variant="contained"
                                 color={product.isDeleted ? 'success' : 'error'}
@@ -249,7 +252,7 @@ export default function DetailProduct({ id }: { id: string }) {
 
             <Box mt={5}>
                 <Typography variant="h5" gutterBottom>Lịch sử sản phẩm</Typography>
-                <LogTable props={product.logs} />
+                <LogTable logs={product.logs} />
             </Box>
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
                 <DialogTitle>Chỉnh sửa tồn kho</DialogTitle>

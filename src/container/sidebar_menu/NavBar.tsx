@@ -1,11 +1,23 @@
 import { num } from "@/cons/cons";
 import { colors } from "@/styles/config-file";
-import { Box, Collapse, List, ListItemButton } from "@mui/material";
+import {
+  Box,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import Logo from "./Logo";
 import { MenuItems } from "./SideBarMenu";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+
+// interface NavBarProps {
+//   openDrawer: boolean;
+// }
 
 const NavBar = () => {
   const pathName = usePathname();
@@ -25,101 +37,119 @@ const NavBar = () => {
     <Box
       sx={{
         maxWidth: num.SIDEBAR_WITH,
-        bgcolor: colors.sideBarBG,
+        bgcolor: colors.grey_100,
         width: "100%",
         height: "100%",
         zIndex: 2,
         position: "fixed",
         borderRight: "1px solid #e0e0e0",
+        overflow: "auto",
       }}
     >
-      <List>
+      <List
+        sx={(theme) => ({
+          [theme.breakpoints.down("mobile")]: {
+            pt: 2,
+          },
+
+          [theme.breakpoints.between("mobile", "desktop")]: {
+            pt: 2,
+          },
+
+          [theme.breakpoints.up("desktop")]: {
+            pt: 16,
+          },
+        })}
+      >
         <>
           <Logo />
         </>
-        {MenuItems.map((itemNav, index) =>
-          !itemNav?.children ? (
-            <Link
-              key={index}
-              style={{ textDecoration: "none", color: colors.grey }}
-              href={itemNav?.path}
-            >
-              <ListItemButton
-                sx={{
-                  bgcolor: isActive(itemNav?.path)
-                    ? colors.itemNavBG
-                    : "transparent",
-                  height: "60px",
-                }}
+        <Box sx={{ pt: 5 }}>
+          {MenuItems.map((itemNav, index) =>
+            !itemNav?.children ? (
+              <Link
                 key={index}
+                style={{ textDecoration: "none", color: colors.grey }}
+                href={itemNav?.path}
               >
-                <Box
+                <ListItemButton
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    pr: 2,
+                    bgcolor: isActive(itemNav?.path)
+                      ? colors.green_100
+                      : "transparent",
+                    height: "60px",
                   }}
+                  key={index}
                 >
-                  {itemNav.icon && React.createElement(itemNav.icon)}
-                </Box>
-                {itemNav?.label}
-              </ListItemButton>
-            </Link>
-          ) : (
-            <div key={index}>
-              <ListItemButton
-                key={index}
-                onClick={handleClick}
-                sx={{ color: colors.grey }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    pr: 2,
-                  }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      pr: 2,
+                    }}
+                  >
+                    {itemNav.icon && React.createElement(itemNav.icon)}
+                  </Box>
+                  <ListItemText primary={itemNav?.label} />
+                </ListItemButton>
+              </Link>
+            ) : (
+              <div key={index}>
+                <ListItemButton
+                  key={index}
+                  onClick={handleClick}
+                  sx={{ color: colors.grey }}
                 >
-                  {itemNav.icon && React.createElement(itemNav.icon)}
-                </Box>
-                {itemNav?.label}
-              </ListItemButton>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      pr: 2,
+                    }}
+                  >
+                    {itemNav.icon && React.createElement(itemNav.icon)}
+                  </Box>
+                  <ListItemText primary={itemNav?.label} />
+                  {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
 
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {itemNav?.children.map((item, index) => (
-                    <Link
-                      key={index}
-                      style={{ textDecoration: "none", color: colors.grey }}
-                      href={item?.path}
-                    >
-                      <ListItemButton
-                        sx={{
-                          bgcolor: isActive(item?.path)
-                            ? colors.itemNavBG
-                            : "transparent",
-                          height: "60px",
-                          pl: 4,
-                        }}
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {itemNav?.children.map((item, index) => (
+                      <Link
                         key={index}
+                        style={{ textDecoration: "none", color: colors.grey }}
+                        href={item?.path}
                       >
-                        <Box
+                        <ListItemButton
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            pr: 2,
+                            bgcolor: isActive(item?.path)
+                              ? colors.green_100
+                              : "transparent",
+                            height: "60px",
+                            pl: 4,
                           }}
+                          key={index}
                         >
-                          {item.icon && React.createElement(item.icon)}
-                        </Box>
-                        {item?.label}
-                      </ListItemButton>
-                    </Link>
-                  ))}
-                </List>
-              </Collapse>
-            </div>
-          )
-        )}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              pr: 2,
+                            }}
+                          >
+                            {item.icon && React.createElement(item.icon)}
+                          </Box>
+                          {item?.label}
+                        </ListItemButton>
+                      </Link>
+                    ))}
+                  </List>
+                </Collapse>
+              </div>
+            )
+          )}
+        </Box>
       </List>
     </Box>
   );

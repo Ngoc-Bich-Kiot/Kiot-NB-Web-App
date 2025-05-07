@@ -30,7 +30,7 @@ export default function RHFPhoneField({ name, ...other }: Props) {
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
-        const inputValue = event.target.value.replace(/\D/g, "").slice(0, 10); // max 10 digits
+        const inputValue = event.target.value.replace(/\D/g, "").slice(0, 14); // max 10 digits
         setDisplayValue(formatPhoneNumber(inputValue));
         setValue(name, inputValue);
     };
@@ -52,7 +52,7 @@ export default function RHFPhoneField({ name, ...other }: Props) {
                         field.onChange(e); // update RHF state
                     }}
                     onBlur={field.onBlur}
-                    inputProps={{ inputMode: "numeric", maxLength: 12 }}
+                    inputProps={{ inputMode: "numeric", maxLength: 15 }}
                     InputLabelProps={{
                         required: true,
                         sx: {

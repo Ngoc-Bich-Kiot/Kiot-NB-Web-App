@@ -33,16 +33,16 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
             { id: "address", label: "Địa chỉ", align: "center" },
             { id: "quantity", label: "Số lượng", align: "center" },
             { id: "type", label: "Nhập/Xuất", align: "center", format: "type" },
-            { id: "createDate", label: "Thời gian", align: "center", format: "createDate" },
+            { id: "createDate", label: "Thời gian", align: "center", format: "date" },
         ],
         "UpdatePrice": [
-            { id: "oldOriginalPrice", label: "Giá vốn cũ", align: "center" },
-            { id: "newOriginalPrice", label: "Giá vốn mới", align: "center" },
-            { id: "oldSellingPrice", label: "Giá bán cũ", align: "center" },
-            { id: "newSellingPrice", label: "Giá bán mới", align: "center" },
-            { id: "oldImportCost", label: "Giá bán cũ", align: "center" },
-            { id: "newImportCost", label: "Giá bán mới", align: "center" },
-            { id: "createDate", label: "Thời gian", align: "center", format: "createDate" },
+            { id: "oldOriginalPrice", label: "Giá vốn cũ", align: "center", format: "price" },
+            { id: "newOriginalPrice", label: "Giá vốn mới", align: "center", format: "price" },
+            { id: "oldSellingPrice", label: "Giá bán cũ", align: "center", format: "price" },
+            { id: "newSellingPrice", label: "Giá bán mới", align: "center", format: "price" },
+            { id: "oldImportCost", label: "Giá bán cũ", align: "center", format: "price" },
+            { id: "newImportCost", label: "Giá bán mới", align: "center", format: "price" },
+            { id: "createDate", label: "Thời gian", align: "center", format: "date" },
         ],
     };
 
@@ -73,7 +73,17 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
         <Box>
             <Tabs value={tabIndex} onChange={handleTabChange} sx={{ px: "16px" }}>
                 {tabKeys.map((key) => (
-                    <Tab key={key} label={tabLabels[key] || key} />
+                    <Tab key={key} label={tabLabels[key] || key} sx={(theme) => ({
+                        [theme.breakpoints.down("mobile")]: {
+                            fontSize: 14,
+                        },
+                        [theme.breakpoints.between("mobile", "desktop")]: {
+                            fontSize: 16,
+                        },
+                        [theme.breakpoints.up("desktop")]: {
+                            fontSize: 16,
+                        },
+                    })} />
                 ))}
             </Tabs>
             <Box mt={2}>

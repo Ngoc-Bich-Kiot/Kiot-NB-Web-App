@@ -40,9 +40,7 @@ const validationSchema = Yup.object().shape({
     sourceOfProducts: Yup.string().required('Nguồn nhập là bắt buộc'),
     userName: Yup.string().required('Tên người dùng là bắt buộc'),
     phone: Yup.string()
-        .required("Số điện thoại là bắt buộc")
-        .transform((value) => value.replace(/\D/g, ""))
-        .matches(/^\d{10}$/, "Số điện thoại không hợp lệ"),
+        .required("Số điện thoại là bắt buộc"),
     address: Yup.string().required('Địa chỉ là bắt buộc'),
     importCosts: Yup.number()
         .transform((value, originalValue) => {
@@ -133,62 +131,65 @@ const CreateProduct = () => {
     const onSubmit = async (data: CreateProductFormInput) => {
         try {
             const formData = convertToFormData(data);
-            // console.log("Data:", data);
+            console.log("Data:", data);
             // console.log("FormData:", formData);
-            await productApi.CreateProduct(formData);
+            //await productApi.CreateProduct(formData);
             toast.success("Nhập sản phẩm thành công");
             router.push("/admin/manage_product");
-        } catch (error) {
+        } catch (error: any) {
             toast.error("Nhập sản phẩm thất bại");
-            console.error("Nhập sản phẩm thất bại:", error);
+            console.error("🧨 Lỗi khi gọi API:", error?.response?.data || error?.message || error);
         }
     };
     return (
-        <Container maxWidth="md" sx={{ my: 4 }}>
-            <Paper elevation={3}
-                sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    border: '1px solid #e0e0e0',
-                }}>
-                <Typography sx={{ fontSize: { xs: '2rem', md: '1.5rem' }, fontWeight: 500 }} gutterBottom>
+        <Container maxWidth="tablet" sx={{ my: 4 }}>
+            <Paper elevation={4} sx={{ p: 2 }}>
+                <Typography variant="h6" gutterBottom >
                     Nhập sản phẩm mới
                 </Typography>
 
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Grid2 container spacing={2}>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextField
                                 name="name"
                                 label="Tên sản phẩm"
                                 placeholder="Nhập tên sản phẩm" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextField
                                 name="category"
                                 label="Loại"
                                 placeholder="Nhập loại sản phẩm" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextFieldNumber
                                 name="originalPrice"
                                 label="Giá gốc"
-                                placeholder="Ví dụ: 100000" />
+                                placeholder="Ví dụ: 100000"
+                                inputProps={{
+                                    pattern: '[0-9]*'
+                                }} />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextFieldNumber
                                 name="sellingPrice"
                                 label="Giá bán"
-                                placeholder="Ví dụ: 120000" />
+                                placeholder="Ví dụ: 120000"
+                                inputProps={{
+                                    pattern: '[0-9]*'
+                                }} />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextFieldNumber
                                 name="importCosts"
                                 label="Giá nhập"
-                                placeholder="Giá nhập từ nhà cung cấp" />
+                                placeholder="Giá nhập từ nhà cung cấp"
+                                inputProps={{
+                                    pattern: '[0-9]*'
+                                }} />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextField
                                 name="unit"
                                 label="Đơn vị"
@@ -199,38 +200,45 @@ const CreateProduct = () => {
                                 }}
                             />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextField
                                 name="sourceOfProducts"
                                 label="Nguồn nhập"
                                 placeholder="Tên nhà cung cấp hoặc nguồn hàng" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextFieldNumber
                                 name="stockQuantity"
                                 label="Số lượng tồn"
-                                placeholder="Ví dụ: 50" />
+                                placeholder="Ví dụ: 50"
+                                inputProps={{
+                                    pattern: '[0-9]*'
+                                }} />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
                             <RHFTextField
                                 name="userName"
                                 label="Người nhập"
                                 placeholder="Tên nhân viên nhập hàng" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, md: 6 }}>
-                            <RHFPhoneField
+                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                            <RHFTextFieldNumber
                                 name="phone"
                                 label="Số điện thoại"
-                                placeholder="Ví dụ: 0797302367" />
+                                placeholder="Ví dụ: 0797302367"
+                                inputProps={{
+                                    maxLength: 15,
+                                    pattern: '[0-9]*'
+                                }} />
                         </Grid2>
-                        <Grid2 size={{ xs: 12 }}>
+                        <Grid2 size={12}>
                             <RHFTextField
                                 name="address"
                                 label="Địa chỉ"
                                 placeholder="Địa chỉ kho hoặc nơi nhập hàng" />
                         </Grid2>
 
-                        <Grid2 size={{ xs: 12 }}>
+                        <Grid2 size={12}>
                             <RHFMultiImageUpload
                                 name="productImages"
                                 label="Ảnh sản phẩm" />
@@ -240,19 +248,37 @@ const CreateProduct = () => {
                     <Box
                         mt={4}
                         display="flex"
-                        flexDirection={{ xs: "column", lg: "row" }}
                         justifyContent="flex-end"
                         alignItems="center"
                         gap={2}
+                        sx={(theme) => ({
+                            [theme.breakpoints.down("mobile")]: {
+                                flexDirection: "column"
+                            },
+                            [theme.breakpoints.between("mobile", "tablet")]: {
+                                flexDirection: "column"
+                            },
+                            [theme.breakpoints.up("tablet")]: {
+                                flexDirection: "row"
+                            },
+                        })}
                     >
                         <Button
                             type="submit"
                             variant="contained"
                             disabled={isSubmitting || !isValid || productImages.length === 0}
-                            sx={{
-                                width: { xs: "100%", sm: "auto" },
-                                order: { xs: 1, lg: 2 },
-                            }}
+                            sx={(theme) => ({
+                                [theme.breakpoints.down("mobile")]: {
+                                    width: "100%"
+                                },
+                                [theme.breakpoints.between("mobile", "tablet")]: {
+                                    width: "80%"
+                                },
+                                [theme.breakpoints.up("tablet")]: {
+                                    width: "auto",
+                                    order: 1
+                                },
+                            })}
                         >
                             {isSubmitting ? "Đang tạo..." : "Nhập sản phẩm"}
                         </Button>
@@ -261,17 +287,18 @@ const CreateProduct = () => {
                             variant="outlined"
                             color="secondary"
                             onClick={() => router.push("/admin/manage_product")}
-                            sx={{
-                                borderColor: "secondary.main",
-                                color: "secondary.main",
-                                ":hover": {
-                                    backgroundColor: (theme) => theme.palette.secondary.light,
-                                    borderColor: "secondary.dark",
-                                    color: "white",
+                            sx={(theme) => ({
+                                [theme.breakpoints.down("mobile")]: {
+                                    width: "100%"
                                 },
-                                width: { xs: "100%", sm: "auto" },
-                                order: { xs: 2, lg: 1 },
-                            }}
+                                [theme.breakpoints.between("mobile", "tablet")]: {
+                                    width: "80%"
+                                },
+                                [theme.breakpoints.up("tablet")]: {
+                                    width: "auto",
+                                    order: 2
+                                },
+                            })}
                         >
                             Quay lại
                         </Button>

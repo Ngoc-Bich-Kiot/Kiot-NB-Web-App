@@ -77,7 +77,7 @@ const ManageUserTable = () => {
   const tableHeaderTitle = [
     { id: "name", label: "Tên người dùng", align: "center" },
     { id: "email", label: "Email", align: "center" },
-    { id: "phone", label: "Số điện thoại", align: "center" },
+    { id: "phone", label: "Số điện thoại", align: "center", format: "phoneNumber" },
     { id: "role.roleName", label: "Vai trò", align: "center" },
     { id: "status", label: "Trạng thái", align: "center", format: "status" },
   ];

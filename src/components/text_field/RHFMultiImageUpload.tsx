@@ -62,6 +62,7 @@ const RHFMultiImageUpload = ({ name, label }: Props) => {
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    capture="environment"
                                     multiple
                                     hidden
                                     ref={fileInputRef}

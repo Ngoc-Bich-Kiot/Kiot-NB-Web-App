@@ -133,12 +133,12 @@ const CreateProduct = () => {
             const formData = convertToFormData(data);
             console.log("Data:", data);
             // console.log("FormData:", formData);
-            await productApi.CreateProduct(formData);
+            //await productApi.CreateProduct(formData);
             toast.success("Nhập sản phẩm thành công");
             router.push("/admin/manage_product");
-        } catch (error) {
+        } catch (error: any) {
             toast.error("Nhập sản phẩm thất bại");
-            console.error("Nhập sản phẩm thất bại:", error);
+            console.error("🧨 Lỗi khi gọi API:", error?.response?.data || error?.message || error);
         }
     };
     return (

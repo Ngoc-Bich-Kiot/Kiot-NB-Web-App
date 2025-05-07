@@ -93,14 +93,14 @@ const CreateProduct = () => {
         defaultValues: {
             name: '',
             category: '',
-            originalPrice: 0,
-            sellingPrice: 0,
+            //originalPrice: 0,
+            //sellingPrice: 0,
             sourceOfProducts: '',
             userName: '',
             phone: '',
             address: '',
-            importCosts: 0,
-            stockQuantity: 0,
+            //importCosts: 0,
+            //stockQuantity: 0,
             unit: '',
             status: 'Available',
             productImages: [],
@@ -136,9 +136,27 @@ const CreateProduct = () => {
             await productApi.CreateProduct(formData);
             toast.success("Nhập sản phẩm thành công");
             router.push("/admin/manage_product");
+            // } catch (error: any) {
+            //     toast.error("Nhập sản phẩm thất bại");
+            //     console.error("🧨 Lỗi khi gọi API:", error?.response?.data || error?.message || error);
+            // }
         } catch (error: any) {
             toast.error("Nhập sản phẩm thất bại");
-            console.error("🧨 Lỗi khi gọi API:", error?.response?.data || error?.message || error);
+
+            if (error.response) {
+                console.error("🧨 Lỗi từ server:");
+                console.error("Status:", error.response.status);
+                console.error("Status Text:", error.response.statusText);
+                console.error("Headers:", error.response.headers);
+                console.error("Data:", error.response.data);
+            } else if (error.request) {
+                console.error("🧨 Không nhận được phản hồi từ server.");
+                console.error("Request:", error.request);
+            } else {
+                console.error("🧨 Lỗi khi cấu hình request:", error.message);
+            }
+
+            console.error("🧨 Stack trace:", error.stack);
         }
     };
     return (
@@ -222,14 +240,11 @@ const CreateProduct = () => {
                                 placeholder="Tên nhân viên nhập hàng" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber
+                            <RHFPhoneField
                                 name="phone"
                                 label="Số điện thoại"
                                 placeholder="Ví dụ: 0797302367"
-                                inputProps={{
-                                    maxLength: 15,
-                                    pattern: '[0-9]*'
-                                }} />
+                            />
                         </Grid2>
                         <Grid2 size={12}>
                             <RHFTextField

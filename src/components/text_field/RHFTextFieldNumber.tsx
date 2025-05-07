@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, useWatch } from "react-hook-form";
 import { TextField, TextFieldProps } from "@mui/material";
 
 type IProps = {
@@ -19,16 +19,24 @@ const parseFormattedNumber = (value: string) => {
 
 export default function RHFTextFieldNumber({ name, ...other }: Props) {
   const { control, setValue, getValues } = useFormContext();
+  const rawValue = useWatch({ name });
   const [displayValue, setDisplayValue] = useState("");
 
+  // useEffect(() => {
+  //   const initialValue = getValues(name);
+  //   if (initialValue && other.type === "number") {
+  //     setDisplayValue(formatNumberWithSpaces(String(initialValue)));
+  //   } else {
+  //     setDisplayValue(initialValue || "");
+  //   }
+  // }, [getValues, name, other.type]);
+
   useEffect(() => {
-    const initialValue = getValues(name);
-    if (initialValue && other.type === "number") {
-      setDisplayValue(formatNumberWithSpaces(String(initialValue)));
-    } else {
-      setDisplayValue(initialValue || "");
+    if (rawValue !== undefined && rawValue !== null) {
+      const stringValue = String(rawValue);
+      setDisplayValue(formatNumberWithSpaces(stringValue));
     }
-  }, [getValues, name, other.type]);
+  }, [rawValue]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -66,15 +74,10 @@ export default function RHFTextFieldNumber({ name, ...other }: Props) {
               setValue(name, parseFormattedNumber(displayValue));
             }
           }}
-          inputProps={{
-            maxLength: 15,
-            inputMode: 'numeric',
-            pattern: '[0-9]*',
-            min: 0,
-            ...other.inputProps,
-          }}
           InputProps={{
             ...other.InputProps,
+            type: "text",
+            inputProps: { ...other.InputProps?.inputProps, min: 0 },
           }}
           InputLabelProps={{
             required: true,

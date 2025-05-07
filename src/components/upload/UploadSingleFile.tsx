@@ -63,7 +63,7 @@ export default function UploadSingleFile({
           }),
         }}
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps({ capture: "environment" })} />
 
         <BlockContent />
 

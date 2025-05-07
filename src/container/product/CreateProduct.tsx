@@ -26,6 +26,7 @@ import {
   RHFUploadMultiFile,
   RHFUploadSingleFile,
 } from "@/components/text_field";
+import { log } from "console";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
@@ -82,6 +83,7 @@ const validationSchema = Yup.object().shape({
   productImages: Yup.array()
     .min(1, "Images is required")
     .required("Ảnh là bắt buộc"),
+  // productImages: Yup.mixed().required("Cover is required"),
 });
 const capitalizedWords = (str: string): string => {
   return str
@@ -116,80 +118,76 @@ const CreateProduct = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting, isValid, errors },
     watch,
     setValue,
   } = methods;
 
   const values = watch();
 
+  console.log(errors);
+
   // nhiều hình
-  //   const handleDrop = useCallback(
-  //     (acceptedFiles: any) => {
-  //       const images = values.productImages || [];
-
-  //       setValue("productImages", [
-  //         ...images,
-  //         ...acceptedFiles.map((file: Blob | MediaSource) =>
-  //           Object.assign(file, {
-  //             preview: URL.createObjectURL(file),
-  //           })
-  //         ),
-  //       ]);
-  //     },
-  //     [setValue, values.productImages]
-  //   );
-
-  //   const handleRemoveAll = () => {
-  //     setValue("productImages", []);
-  //   };
-
-  //   const handleRemove = (file: File | string) => {
-  //     const filteredItems = values.productImages?.filter(
-  //       (_file) => _file !== file
-  //     );
-  //     setValue("productImages", filteredItems);
-  //   };
-
-  //   dùng cho 1 hình
   const handleDrop = useCallback(
     (acceptedFiles: any) => {
-      const file = acceptedFiles[0];
+      const images = values.productImages || [];
 
-      if (file) {
-        setValue(
-          "productImages",
+      setValue("productImages", [
+        ...images,
+        ...acceptedFiles.map((file: Blob | MediaSource) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
-        );
-      }
+        ),
+      ]);
     },
-    [setValue]
+    [setValue, values.productImages]
   );
 
-  const convertToFormData = (data: Record<string, any>): FormData => {
-    const formData = new FormData();
-
-    for (const [key, value] of Object.entries(data)) {
-      if (key === "productImages") {
-        value.forEach((file: File) => formData.append("ProductImages", file));
-      } else {
-        formData.append(key, value.toString());
-      }
-    }
-
-    return formData;
+  const handleRemoveAll = () => {
+    setValue("productImages", []);
   };
+
+  const handleRemove = (file: File | string) => {
+    const filteredItems = values.productImages?.filter(
+      (_file) => _file !== file
+    );
+    setValue("productImages", filteredItems);
+  };
+
+  //   dùng cho 1 hình
+  // const handleDrop = useCallback(
+  //   (acceptedFiles: any) => {
+  //     const file = acceptedFiles[0];
+
+  //     if (file) {
+  //       setValue(
+  //         "productImages",
+  //         Object.assign(file, {
+  //           preview: URL.createObjectURL(file),
+  //         })
+  //       );
+  //     }
+  //   },
+  //   [setValue]
+  // );
 
   const onSubmit = async (data: CreateProductFormInput) => {
     try {
-      const formData = convertToFormData(data);
-      // console.log("Data:", data);
-      // console.log("FormData:", formData);
+      const formData = new FormData();
+
+      data.productImages.forEach((file: File | string) => {
+        formData.append("productImages", file);
+      });
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (key !== "productImages") {
+          formData.append(key, value.toString());
+        }
+      });
+
       await productApi.CreateProduct(formData);
       toast.success("Nhập sản phẩm thành công");
-      router.push("/admin/manage_product");
     } catch (error) {
       toast.error("Nhập sản phẩm thất bại");
       console.error("Nhập sản phẩm thất bại:", error);
@@ -298,20 +296,20 @@ const CreateProduct = () => {
             </Grid2>
 
             <Grid2 size={{ xs: 12 }}>
-              {/* <RHFUploadMultiFile
+              <RHFUploadMultiFile
                 name="productImages"
                 showPreview
                 label="Ảnh sản phẩm"
                 onDrop={handleDrop}
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
-              /> */}
+              />
 
-              <RHFUploadSingleFile
+              {/* <RHFUploadSingleFile
                 name="productImages"
                 label="Ảnh sản phẩm"
                 onDrop={handleDrop}
-              />
+              /> */}
             </Grid2>
           </Grid2>
 
@@ -326,7 +324,7 @@ const CreateProduct = () => {
             <Button
               type="submit"
               variant="contained"
-              disabled={isSubmitting || !isValid}
+              loading={isSubmitting}
               sx={{
                 width: { xs: "100%", sm: "auto" },
                 order: { xs: 1, lg: 2 },

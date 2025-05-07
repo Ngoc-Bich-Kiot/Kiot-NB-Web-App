@@ -66,11 +66,15 @@ export default function RHFTextFieldNumber({ name, ...other }: Props) {
               setValue(name, parseFormattedNumber(displayValue));
             }
           }}
+          inputProps={{
+            maxLength: 15,
+            inputMode: 'numeric',
+            pattern: '[0-9]*',
+            min: 0,
+            ...other.inputProps,
+          }}
           InputProps={{
             ...other.InputProps,
-            type: "text",
-            inputMode: 'numeric',
-            inputProps: { ...other.InputProps?.inputProps, min: 0 },
           }}
           InputLabelProps={{
             required: true,

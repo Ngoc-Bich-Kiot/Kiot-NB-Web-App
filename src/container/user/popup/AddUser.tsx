@@ -91,6 +91,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
           }}
         >
           <DialogTitle
+            width="100%"
             sx={{
               color: colors.grey_600,
               textTransform: "uppercase",

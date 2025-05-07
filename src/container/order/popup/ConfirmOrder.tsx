@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
 import { useState } from "react";
 import { OrderStatusType } from "@/enum/OrderStatus";
 import orderApi from "@/axios-clients/order_api/orderAPI";
 import { toast } from "react-toastify";
+import { colors } from "@/styles/config-file";
 
 interface ConfirmOrderProps {
     data: any;
@@ -72,11 +73,20 @@ const ConfirmOrder: React.FC<ConfirmOrderProps> = ({ type, onOpen, data, handleC
             disableEnforceFocus
             disableAutoFocus
         >
-            <DialogTitle sx={{ color: 'red' }}>
-                {confirmTextByStatus[type]?.title || "Xác nhận hành động?"}
-            </DialogTitle>
-
-            <DialogContent sx={{ minWidth: 400 }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    bgcolor: colors.primary,
+                    color: colors.white,
+                }}
+            >
+                <DialogTitle width="100%">
+                    {confirmTextByStatus[type]?.title || "Xác nhận hành động?"}
+                </DialogTitle>
+            </Box>
+            <DialogContent>
                 <Typography sx={{ mb: 2 }}>
                     {confirmTextByStatus[type]?.content || "Bạn có chắc chắn muốn thực hiện hành động này?"}
                 </Typography>
@@ -99,18 +109,65 @@ const ConfirmOrder: React.FC<ConfirmOrderProps> = ({ type, onOpen, data, handleC
                     </FormControl>
                 )}
             </DialogContent>
-
-            <DialogActions>
-                <Button
-                    onClick={handleClose}>Hủy</Button>
+            <Box
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="center"
+                gap={2}
+                px={3}
+                mb={2}
+                sx={(theme) => ({
+                    [theme.breakpoints.down("mobile")]: {
+                        flexDirection: "column"
+                    },
+                    [theme.breakpoints.between("mobile", "tablet")]: {
+                        flexDirection: "column"
+                    },
+                    [theme.breakpoints.up("tablet")]: {
+                        flexDirection: "row"
+                    },
+                })}
+            >
                 <Button
                     onClick={handleConfirm}
                     color="primary"
                     variant="contained"
-                    disabled={type === "Finish" && !paymentMethod}>
+                    disabled={type === "Finish" && !paymentMethod}
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("mobile")]: {
+                            width: "100%"
+                        },
+                        [theme.breakpoints.between("mobile", "tablet")]: {
+                            width: "80%"
+                        },
+                        [theme.breakpoints.up("tablet")]: {
+                            width: "auto",
+                            order: 1
+                        },
+                    })}
+                >
                     Xác nhận
                 </Button>
-            </DialogActions>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleClose}
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("mobile")]: {
+                            width: "100%"
+                        },
+                        [theme.breakpoints.between("mobile", "tablet")]: {
+                            width: "80%"
+                        },
+                        [theme.breakpoints.up("tablet")]: {
+                            width: "auto",
+                            order: 2
+                        },
+                    })}
+                >
+                    Hủy
+                </Button>
+            </Box>
         </Dialog>
     );
 };

@@ -69,6 +69,7 @@ export default function RHFTextFieldNumber({ name, ...other }: Props) {
           InputProps={{
             ...other.InputProps,
             type: "text",
+            inputMode: 'numeric',
             inputProps: { ...other.InputProps?.inputProps, min: 0 },
           }}
           InputLabelProps={{

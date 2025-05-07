@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
 import CreateOrder from "./popup/CreateOrder";
 import { font_size } from "@/styles/config-file";
+import { format } from "path";
 
 interface SearchToolProps {
   filter: any;
@@ -82,7 +83,7 @@ const ManageOrderTable = () => {
   //TableHeader
   const tableHeader = [
     { id: "name", label: "Khách hàng" },
-    { id: "phone", label: "Điện thoại" },
+    { id: "phone", label: "Điện thoại", format: "phoneNumber" },
     { id: "orderDate", label: "Ngày đặt", format: "date" },
     { id: "orderStatus", label: "Trạng thái", format: "orderStatus" },
     { id: "orderAmount", label: "Đơn giá", format: "price" },

@@ -110,8 +110,13 @@ const ProductTable = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => router.push("/admin/manage_product/create")}
+          sx={(theme) => ({
+            [theme.breakpoints.down("mobile")]: {
+              fontSize: 10,
+            },
+          })}
         >
-          Thêm sản phẩm
+          Tạo sản phẩm
         </Button>
       </Box>
     );
@@ -138,7 +143,7 @@ const ProductTable = () => {
         eventAction={createProduct()}
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
-        title="Danh sách sản phẩm"
+        title="Quản lý sản phẩm"
       />
     </div>
   );

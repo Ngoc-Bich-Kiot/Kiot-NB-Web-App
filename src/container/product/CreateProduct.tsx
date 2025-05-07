@@ -133,7 +133,7 @@ const CreateProduct = () => {
             const formData = convertToFormData(data);
             console.log("Data:", data);
             // console.log("FormData:", formData);
-            //await productApi.CreateProduct(formData);
+            await productApi.CreateProduct(formData);
             toast.success("Nhập sản phẩm thành công");
             router.push("/admin/manage_product");
         } catch (error: any) {

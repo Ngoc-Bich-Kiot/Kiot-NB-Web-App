@@ -27,6 +27,7 @@ import {
   RHFUploadSingleFile,
 } from "@/components/text_field";
 import { log } from "console";
+import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
@@ -125,21 +126,21 @@ const CreateProduct = () => {
 
   const values = watch();
 
-  console.log(errors);
-
   // nhiều hình
-  const handleDrop = useCallback(
-    (acceptedFiles: any) => {
+  const handleDropImage = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (acceptedFiles: any) => {
       const images = values.productImages || [];
 
-      setValue("productImages", [
-        ...images,
-        ...acceptedFiles.map((file: Blob | MediaSource) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        ),
-      ]);
+      const uploadedImages = await Promise.all(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        acceptedFiles.map(async (file: any) => {
+          const downloadURL = await uploadImageToFirebase(file);
+          return downloadURL;
+        })
+      );
+
+      setValue("productImages", [...images, ...uploadedImages]);
     },
     [setValue, values.productImages]
   );
@@ -156,37 +157,24 @@ const CreateProduct = () => {
   };
 
   //   dùng cho 1 hình
-  // const handleDrop = useCallback(
-  //   (acceptedFiles: any) => {
-  //     const file = acceptedFiles[0];
+  //  const handleDrop = useCallback(
+  //    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //    async (acceptedFiles: any[]) => {
+  //      const file = acceptedFiles[0];
 
-  //     if (file) {
-  //       setValue(
-  //         "productImages",
-  //         Object.assign(file, {
-  //           preview: URL.createObjectURL(file),
-  //         })
-  //       );
-  //     }
-  //   },
-  //   [setValue]
-  // );
+  //      const coverImage = await uploadImageToFirebase(file);
+  //      if (typeof coverImage === "string") {
+  //        setValue("productImages", coverImage);
+  //      }
+  //    },
+  //    [setValue]
+  //  );
 
   const onSubmit = async (data: CreateProductFormInput) => {
     try {
-      const formData = new FormData();
+      console.log(data);
 
-      data.productImages.forEach((file: File | string) => {
-        formData.append("productImages", file);
-      });
-
-      Object.entries(data).forEach(([key, value]) => {
-        if (key !== "productImages") {
-          formData.append(key, value.toString());
-        }
-      });
-
-      await productApi.CreateProduct(formData);
+      // await productApi.CreateProduct(formData);
       toast.success("Nhập sản phẩm thành công");
     } catch (error) {
       toast.error("Nhập sản phẩm thất bại");
@@ -300,7 +288,7 @@ const CreateProduct = () => {
                 name="productImages"
                 showPreview
                 label="Ảnh sản phẩm"
-                onDrop={handleDrop}
+                onDrop={handleDropImage}
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
               />

@@ -32,7 +32,7 @@ const RHFMultiImageUpload = ({ name, label }: Props) => {
                     if (!files) return;
 
                     const validFiles = Array.from(files).filter((file) =>
-                        file.type.startsWith("image/")
+                        ["image/jpeg", "image/png", "image/webp", "image/jpg"].includes(file.type)
                     );
 
                     const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
@@ -61,8 +61,7 @@ const RHFMultiImageUpload = ({ name, label }: Props) => {
                             <Box>
                                 <input
                                     type="file"
-                                    accept="image/*"
-                                    capture="environment"
+                                    accept="image/jpeg,image/png,image/webp,image/jpg"
                                     multiple
                                     hidden
                                     ref={fileInputRef}

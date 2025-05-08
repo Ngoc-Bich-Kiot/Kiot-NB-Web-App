@@ -174,7 +174,6 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
                     }}
                 >
                     <DialogTitle
-                        width="100%"
                         sx={{
                             textTransform: "uppercase",
                             fontWeight: font_weight.regular,
@@ -200,7 +199,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
                         {fields.map((item, index) => (
                             <React.Fragment key={item.id}>
                                 <Grid2 container spacing={2} alignItems="center">
-                                    <Grid2 size={{ xs: 7, desktop: 8 }}>
+                                    <Grid2 size={8}>
                                         <RHFSelect
                                             name={`orderDetails.${index}.productId`}
                                             label="Sản Phẩm"
@@ -247,7 +246,7 @@ const UpdateOrder: React.FC<UpdateOrderProps> = ({
                     </Button>
                 </DialogActions>
             </FormProvider>
-        </Dialog >
+        </Dialog>
     );
 };
 

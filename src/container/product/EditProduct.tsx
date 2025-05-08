@@ -189,41 +189,35 @@ export default function EditProduct({ id }: { id: string }) {
     };
 
     return (
-        <Container maxWidth="tablet" sx={{ my: 2 }}>
-            <Paper elevation={4} sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom >
+        <Container maxWidth="md" sx={{ my: 2 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+                <Typography variant="h4" gutterBottom>
                     Chỉnh sửa sản phẩm
                 </Typography>
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Grid2 container spacing={2}>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="name" label="Tên sản phẩm" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="category" label="Loại" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber name="originalPrice" label="Giá gốc" inputProps={{
-                                pattern: '[0-9]*'
-                            }} />
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="originalPrice" label="Giá gốc" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber name="sellingPrice" label="Giá bán" inputProps={{
-                                pattern: '[0-9]*'
-                            }} />
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="sellingPrice" label="Giá bán" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber name="importCosts" label="Giá nhập" inputProps={{
-                                pattern: '[0-9]*'
-                            }} />
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="importCosts" label="Giá nhập" />
                         </Grid2>
-                        {/* <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="sourceOfProducts" label="Nguồn nhập" />
-                        </Grid2> */}
-                        {/* <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextField name="stockQuantity" label="Số lượng tồn" slotProps={{ input: { readOnly: true } }} />
-                        </Grid2> */}
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="stockQuantity" label="Số lượng tồn" />
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFSelect name="status" label="Trạng thái">
                                 {productStatusOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
@@ -240,37 +234,19 @@ export default function EditProduct({ id }: { id: string }) {
                     <Box
                         mt={4}
                         display="flex"
+                        flexDirection={{ xs: "column", lg: "row" }}
                         justifyContent="flex-end"
                         alignItems="center"
                         gap={2}
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                flexDirection: "column"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                flexDirection: "column"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                flexDirection: "row"
-                            },
-                        })}
                     >
                         <Button
                             type="submit"
                             variant="contained"
                             disabled={isSubmitting || !isValid || productImages.length === 0}
-                            sx={(theme) => ({
-                                [theme.breakpoints.down("mobile")]: {
-                                    width: "100%"
-                                },
-                                [theme.breakpoints.between("mobile", "tablet")]: {
-                                    width: "80%"
-                                },
-                                [theme.breakpoints.up("tablet")]: {
-                                    width: "auto",
-                                    order: 1
-                                },
-                            })}
+                            sx={{
+                                width: { xs: "100%", sm: "auto" },
+                                order: { xs: 1, lg: 2 },
+                            }}
                         >
                             {isSubmitting ? "Đang cập nhật..." : "Lưu thay đổi"}
                         </Button>
@@ -278,18 +254,17 @@ export default function EditProduct({ id }: { id: string }) {
                             variant="outlined"
                             color="secondary"
                             onClick={() => router.push(`/admin/manage_product/${id}/detail`)}
-                            sx={(theme) => ({
-                                [theme.breakpoints.down("mobile")]: {
-                                    width: "100%"
+                            sx={{
+                                borderColor: "secondary.main",
+                                color: "secondary.main",
+                                ":hover": {
+                                    backgroundColor: (theme) => theme.palette.secondary.light,
+                                    borderColor: "secondary.dark",
+                                    color: "white",
                                 },
-                                [theme.breakpoints.between("mobile", "tablet")]: {
-                                    width: "80%"
-                                },
-                                [theme.breakpoints.up("tablet")]: {
-                                    width: "auto",
-                                    order: 2
-                                },
-                            })}
+                                width: { xs: "100%", sm: "auto" },
+                                order: { xs: 2, lg: 1 },
+                            }}
                         >
                             Quay lại
                         </Button>

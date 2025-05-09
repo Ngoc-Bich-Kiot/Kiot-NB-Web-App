@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Product } from '@/types/ProductType';
 import { Box, Button, Chip, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid2, MenuItem, Select, TextField, Typography } from '@mui/material';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
-import productApi from '@/axios-clients/auth_api/productAPI';
+import productApi from '@/axios-clients/product_api/productAPI';
 import ProductImageGallery from './ProductImages';
 import LogTable from './LogTable';
 import { toast } from 'react-toastify';
-import { colors, font_weight } from '@/styles/config-file';
 
 export default function DetailProduct({ id }: { id: string }) {
     const [product, setProduct] = React.useState<Product | null>(null);
@@ -23,14 +22,14 @@ export default function DetailProduct({ id }: { id: string }) {
     const [phone, setPhone] = React.useState('');
     const [address, setAddress] = React.useState('');
 
-    const statusMap: Record<string, { label: string; color: string }> = {
-        Available: { label: "Còn hàng", color: "#2e7d32" },
-        OutOfStock: { label: "Hết hàng", color: "#d32f2f" },
-        Incoming: { label: "Hàng về", color: "#0288d1" },
-        Discontinued: { label: "Ngừng", color: "#616161" },
-        PendingApproval: { label: "Phê duyệt", color: "#ed6c02" },
-        Damaged: { label: "Hư hỏng", color: "#c62828" },
-        Expired: { label: "Hết hạn", color: "#b71c1c" },
+    const statusMap: Record<string, { label: string; color: 'success' | 'error' | 'warning' | 'info' | 'default' }> = {
+        Available: { label: 'Còn hàng', color: 'success' },
+        OutOfStock: { label: 'Hết hàng', color: 'error' },
+        Incoming: { label: 'Hàng về', color: 'info' },
+        Discontinued: { label: 'Ngừng', color: 'default' },
+        PendingApproval: { label: 'Phê duyệt', color: 'warning' },
+        Damaged: { label: 'Hư hỏng', color: 'error' },
+        Expired: { label: 'Hết hạn', color: 'error' },
     };
     const hasExportError = editType === 'Export' && (
         product?.stockQuantity === 0 ||
@@ -137,66 +136,57 @@ export default function DetailProduct({ id }: { id: string }) {
                 onClick={() => router.push('/admin/manage_product')}
                 sx={{ cursor: 'pointer', color: 'black', ":hover": { color: 'grey' }, alignSelf: 'center' }}
             />
-            <Typography
-                variant="h5"
-                gutterBottom
-                sx={{ fontWeight: font_weight.semiBold, textAlign: 'center' }}
-            >
+            <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
                 Chi tiết sản phẩm: {product.name}
             </Typography>
 
             <Grid2 container spacing={4}>
-                <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                <Grid2 size={{ xs: 12, sm: 6 }}>
                     {product.images.length > 0 && (
                         <ProductImageGallery images={product.images} />
                     )}
                 </Grid2>
-                <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                <Grid2 size={{ xs: 12, sm: 6 }}>
                     <Box display="flex" flexDirection="column">
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Danh mục:</Typography>
-                            <Typography variant="body1" sx={{ color: colors.grey_600 }}>{product.category}</Typography>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Danh mục:</Typography>
+                            <Typography variant='subtitle1' sx={{ width: "200px", textAlign: "center" }}>{product.category}</Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Giá gốc:</Typography>
-                            <Typography variant="body1" sx={{ color: colors.grey_600 }}>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Giá gốc:</Typography>
+                            <Typography variant='subtitle1' sx={{ width: "200px", textAlign: "center" }}>
                                 {new Intl.NumberFormat('vi-VN').format(product.originalPrice)} VNĐ</Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Giá bán:</Typography>
-                            <Typography variant="body1" sx={{ color: colors.grey_600 }}>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Giá bán:</Typography>
+                            <Typography variant='subtitle1' sx={{ width: "200px", textAlign: "center" }}>
                                 {new Intl.NumberFormat('vi-VN').format(product.sellingPrice)} VNĐ
                             </Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Nguồn hàng:</Typography>
-                            <Typography variant="body1" sx={{ color: colors.grey_600 }}>{product.sourceOfProducts}</Typography>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Nguồn hàng:</Typography>
+                            <Typography variant='subtitle1' sx={{ width: "200px", textAlign: "center" }}>{product.sourceOfProducts}</Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Chi phí nhập:</Typography>
-                            <Typography variant="body1" sx={{ color: colors.grey_600 }}>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Chi phí nhập:</Typography>
+                            <Typography variant='subtitle1' sx={{ width: "200px", textAlign: "center" }}>
                                 {new Intl.NumberFormat('vi-VN').format(product.importCosts)} VNĐ
                             </Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Tồn kho:</Typography>
-                            <Typography variant="body1" sx={{ color: colors.grey_600 }}>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Tồn kho:</Typography>
+                            <Typography variant='subtitle1' sx={{ width: "200px", textAlign: "center" }}>
                                 {new Intl.NumberFormat('vi-VN').format(product.stockQuantity)}
                             </Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" sx={{ fontWeight: "bold" }}>Tình trạng:</Typography>
-                            <Typography
-                                variant="body1"
-                                sx={{
-                                    color: statusMap[product.status]?.color || "text.primary",
-                                    fontSize: "16px",
-                                    fontFamily: "sans-serif",
-                                    fontWeight: 600,
-                                }}
-                            >
-                                {statusMap[product.status]?.label || "KHÔNG"}
-                            </Typography>
+                            <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Tình trạng:</Typography>
+                            <Chip
+                                label={statusMap[product.status]?.label || 'KHÔNG'}
+                                color={statusMap[product.status]?.color || 'default'}
+                                variant="outlined"
+                                sx={{ width: "200px", textAlign: "center", fontSize: "16px", fontFamily: "sans-serif" }}
+                            />
                         </Box>
                         {/* <Box display="flex" justifyContent="space-between">
                             <Typography sx={{ fontWeight: 600, fontSize: "20px" }}>Trạng thái:</Typography>
@@ -231,7 +221,7 @@ export default function DetailProduct({ id }: { id: string }) {
                                         onClick={() => router.push(`/admin/manage_product/${id}/edit`)}
                                         sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
                                     >
-                                        Chỉnh sửa
+                                        Chỉnh sửa sản phẩm
                                     </Button>
 
                                     <Button
@@ -252,7 +242,7 @@ export default function DetailProduct({ id }: { id: string }) {
                                 onClick={() => setOpenDeleteDialog(true)}
                                 sx={{ textTransform: 'none', fontWeight: 600, borderRadius: 2 }}
                             >
-                                {product.isDeleted ? 'Khôi phục' : 'Tạm dừng'}
+                                {product.isDeleted ? 'Khôi phục' : 'Ngừng hoạt động'}
                             </Button>
                         </Box>
 
@@ -261,36 +251,18 @@ export default function DetailProduct({ id }: { id: string }) {
             </Grid2>
 
             <Box mt={5}>
-                <Typography variant="h6" gutterBottom>Lịch sử sản phẩm</Typography>
+                <Typography variant="h5" gutterBottom>Lịch sử sản phẩm</Typography>
                 <LogTable logs={product.logs} />
             </Box>
-            <Dialog fullWidth open={openEditDialog} onClose={handleCloseEditDialog}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: 1,
-                        bgcolor: colors.primary,
-                        color: colors.white,
-                    }}
-                >
-                    <DialogTitle
-                        width="100%"
-                        sx={{
-                            textTransform: "uppercase",
-                            fontWeight: font_weight.regular,
-                        }}
-                    >
-                        Chỉnh sửa tồn kho
-                    </DialogTitle>
-                </Box>
-                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+                <DialogTitle>Chỉnh sửa tồn kho</DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
                     <TextField
                         fullWidth
                         label="Tên người thực hiện"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        sx={{ mt: 2 }}
                     />
                     <TextField
                         fullWidth
@@ -331,64 +303,16 @@ export default function DetailProduct({ id }: { id: string }) {
                         helperText={exportHelperText}
                     />
                 </DialogContent>
-                <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    alignItems="center"
-                    gap={2}
-                    px={3}
-                    mb={2}
-                    sx={(theme) => ({
-                        [theme.breakpoints.down("mobile")]: {
-                            flexDirection: "column"
-                        },
-                        [theme.breakpoints.between("mobile", "tablet")]: {
-                            flexDirection: "column"
-                        },
-                        [theme.breakpoints.up("tablet")]: {
-                            flexDirection: "row"
-                        },
-                    })}
-                >
+                <DialogActions>
+                    <Button onClick={handleCloseEditDialog}>Hủy</Button>
                     <Button
                         variant="contained"
                         onClick={handleSaveQuickEdit}
                         disabled={isInvalid}
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                width: "100%"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                width: "80%"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                width: "auto",
-                                order: 1
-                            },
-                        })}
                     >
                         Lưu
                     </Button>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handleCloseEditDialog}
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                width: "100%"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                width: "80%"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                width: "auto",
-                                order: 2
-                            },
-                        })}
-                    >
-                        Hủy
-                    </Button>
-                </Box>
+                </DialogActions>
             </Dialog>
             <Dialog
                 open={openDeleteDialog}
@@ -396,82 +320,20 @@ export default function DetailProduct({ id }: { id: string }) {
                 disableEnforceFocus
                 disableAutoFocus
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        bgcolor: colors.primary,
-                        color: colors.white,
-                    }}
-                >
-                    <DialogTitle width="100%">
-                        {product.isDeleted ? "Xác nhận khôi phục sản phẩm?" : "Xác nhận ngừng hoạt động sản phẩm?"}
-                    </DialogTitle>
-                </Box>
+                <DialogTitle sx={{ color: 'red' }}>
+                    {product.isDeleted ? "Xác nhận khôi phục sản phẩm?" : "Xác nhận ngừng hoạt động sản phẩm?"}
+                </DialogTitle>
                 <DialogContent>
                     <Typography>
                         Bạn có chắc chắn muốn {product.isDeleted ? "khôi phục" : "ngừng hoạt động"} sản phẩm này?
                     </Typography>
                 </DialogContent>
-                <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    alignItems="center"
-                    gap={2}
-                    px={3}
-                    mb={2}
-                    sx={(theme) => ({
-                        [theme.breakpoints.down("mobile")]: {
-                            flexDirection: "column"
-                        },
-                        [theme.breakpoints.between("mobile", "tablet")]: {
-                            flexDirection: "column"
-                        },
-                        [theme.breakpoints.up("tablet")]: {
-                            flexDirection: "row"
-                        },
-                    })}
-                >
-                    <Button
-                        onClick={handleDelete}
-                        color="primary"
-                        variant="contained"
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                width: "100%"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                width: "80%"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                width: "auto",
-                                order: 1
-                            },
-                        })}
-                    >
+                <DialogActions>
+                    <Button onClick={() => setOpenDeleteDialog(false)}>Hủy</Button>
+                    <Button onClick={handleDelete} color="primary" variant="contained">
                         Xác nhận
                     </Button>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => setOpenDeleteDialog(false)}
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                width: "100%"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                width: "80%"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                width: "auto",
-                                order: 2
-                            },
-                        })}
-                    >
-                        Hủy
-                    </Button>
-                </Box>
+                </DialogActions>
             </Dialog>
         </Box >
     );

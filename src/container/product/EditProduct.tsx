@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 
 
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import { EditProductFormInput, ProductImage } from "@/types/ProductType";
 import {
     FormProvider,
@@ -24,8 +24,9 @@ import {
     RHFTextField,
     RHFTextFieldNumber,
 } from "@/components/hook_form";
-import RHFMultiImageUpload from "@/components/text_field/RHFMultiImageUpload";
 import { toast } from "react-toastify";
+import { RHFUploadMultiFile } from "@/components/text_field";
+import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
 
 const productStatusOptions = [
     { value: "", label: "Chọn trạng thái" },
@@ -84,21 +85,13 @@ const validationSchema = Yup.object().shape({
         .required("Số lượng tồn là bắt buộc"),
     status: Yup.string().required("Trạng thái là bắt buộc"),
     productImages: Yup.array()
-        .of(
-            Yup.mixed<File | string>()
-                .test(
-                    "is-valid",
-                    "Chỉ chấp nhận ảnh hợp lệ",
-                    (value) => typeof value === "string" || value instanceof File
-                )
-                .defined()
-        )
+        .min(1, "Images is required")
         .required("Ảnh là bắt buộc"),
+    // productImages: Yup.mixed().required("Cover is required"),
 });
 
 export default function EditProduct({ id }: { id: string }) {
     const router = useRouter();
-    const [initialImages, setInitialImages] = React.useState<ProductImage[]>([]);
     const methods = useForm<EditProductFormInput>({
         resolver: yupResolver(validationSchema),
         mode: "onChange",
@@ -119,19 +112,18 @@ export default function EditProduct({ id }: { id: string }) {
         handleSubmit,
         reset,
         watch,
-        formState: { isSubmitting, isValid },
+        setValue,
+        formState: { isSubmitting },
     } = methods;
-    const productImages = watch("productImages");
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const data = await productApi.getProductById(id);
                 console.log(data);
-                setInitialImages(data.images);
                 reset({
                     ...data,
-                    productImages: data.images.map((img) => img.urlPath),
+                    productImages: data.images?.map((img) => img.urlPath) || [],
                 });
             } catch (error) {
                 toast.error("Lấy thông tin sản phẩm thất bại");
@@ -142,44 +134,11 @@ export default function EditProduct({ id }: { id: string }) {
         if (id) fetchProduct();
     }, [id, reset]);
 
-    const convertToFormData = (data: Record<string, any>): FormData => {
-        const formData = new FormData();
-
-        for (const [key, value] of Object.entries(data)) {
-            if (key === "productImages") {
-                value.forEach((file: File | string) => {
-                    if (file instanceof File) {
-                        formData.append("ProductImages", file);
-                    }
-                });
-            } else if (key === "ImageIdsToDelete") {
-                if (Array.isArray(value)) {
-                    value.forEach((id) => {
-                        formData.append("ImageIdsToDelete", id.toString());
-                    });
-                }
-            } else {
-                formData.append(key, value.toString());
-            }
-        }
-
-        return formData;
-    };
-
     const onSubmit = async (data: EditProductFormInput) => {
         try {
-            const currentImageUrls = data.productImages.filter(
-                (img): img is string => typeof img === "string"
-            );
-            const imageIdsToDelete = initialImages
-                .filter((img) => !currentImageUrls.includes(img.urlPath))
-                .map((img) => img.id);
+            console.log(data)
 
-            const formData = convertToFormData({
-                ...data,
-                ImageIdsToDelete: imageIdsToDelete,
-            });
-            await productApi.UpdateProduct(id, formData);
+            await productApi.UpdateProduct(id, data);
             toast.success("Cập nhật sản phẩm thành công");
             router.push(`/admin/manage_product/${id}/detail`);
         } catch (error) {
@@ -187,43 +146,66 @@ export default function EditProduct({ id }: { id: string }) {
             console.error("Cập nhật sản phẩm thất bại:", error);
         }
     };
+    const values = watch();
+    const handleDropImage = React.useCallback(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async (acceptedFiles: any) => {
+            const images = values.productImages || [];
+
+            const uploadedImages = await Promise.all(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                acceptedFiles.map(async (file: any) => {
+                    const downloadURL = await uploadImageToFirebase(file);
+                    return downloadURL;
+                })
+            );
+
+            setValue("productImages", [...images, ...uploadedImages]);
+        },
+        [setValue, values.productImages]
+    );
+
+    const handleRemoveAll = () => {
+        setValue("productImages", []);
+    };
+
+    const handleRemove = (file: File | string) => {
+        const filteredItems = values.productImages?.filter(
+            (_file) => _file !== file
+        );
+        setValue("productImages", filteredItems);
+    };
 
     return (
-        <Container maxWidth="tablet" sx={{ my: 2 }}>
-            <Paper elevation={4} sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom >
+        <Container maxWidth="md" sx={{ my: 2 }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+                <Typography variant="h4" gutterBottom>
                     Chỉnh sửa sản phẩm
                 </Typography>
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                     <Grid2 container spacing={2}>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="name" label="Tên sản phẩm" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="category" label="Loại" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber name="originalPrice" label="Giá gốc" inputProps={{
-                                pattern: '[0-9]*'
-                            }} />
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="originalPrice" label="Giá gốc" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber name="sellingPrice" label="Giá bán" inputProps={{
-                                pattern: '[0-9]*'
-                            }} />
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="sellingPrice" label="Giá bán" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextFieldNumber name="importCosts" label="Giá nhập" inputProps={{
-                                pattern: '[0-9]*'
-                            }} />
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="importCosts" label="Giá nhập" />
                         </Grid2>
-                        {/* <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="sourceOfProducts" label="Nguồn nhập" />
-                        </Grid2> */}
-                        {/* <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
-                            <RHFTextField name="stockQuantity" label="Số lượng tồn" slotProps={{ input: { readOnly: true } }} />
-                        </Grid2> */}
-                        <Grid2 size={{ xs: 12, mobile: 12, tablet: 6, desktop: 6 }}>
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="stockQuantity" label="Số lượng tồn" />
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFSelect name="status" label="Trạng thái">
                                 {productStatusOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
@@ -233,44 +215,39 @@ export default function EditProduct({ id }: { id: string }) {
                             </RHFSelect>
                         </Grid2>
                         <Grid2 size={{ xs: 12 }}>
-                            <RHFMultiImageUpload name="productImages" label="Ảnh sản phẩm" />
+                            <RHFUploadMultiFile
+                                name="productImages"
+                                showPreview
+                                label="Ảnh sản phẩm"
+                                onDrop={handleDropImage}
+                                onRemove={handleRemove}
+                                onRemoveAll={handleRemoveAll}
+                            />
+
+                            {/* <RHFUploadSingleFile
+                                        name="productImages"
+                                        label="Ảnh sản phẩm"
+                                        onDrop={handleDrop}
+                                      /> */}
                         </Grid2>
                     </Grid2>
 
                     <Box
                         mt={4}
                         display="flex"
+                        flexDirection={{ xs: "column", lg: "row" }}
                         justifyContent="flex-end"
                         alignItems="center"
                         gap={2}
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                flexDirection: "column"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                flexDirection: "column"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                flexDirection: "row"
-                            },
-                        })}
                     >
                         <Button
                             type="submit"
                             variant="contained"
-                            disabled={isSubmitting || !isValid || productImages.length === 0}
-                            sx={(theme) => ({
-                                [theme.breakpoints.down("mobile")]: {
-                                    width: "100%"
-                                },
-                                [theme.breakpoints.between("mobile", "tablet")]: {
-                                    width: "80%"
-                                },
-                                [theme.breakpoints.up("tablet")]: {
-                                    width: "auto",
-                                    order: 1
-                                },
-                            })}
+                            disabled={isSubmitting}
+                            sx={{
+                                width: { xs: "100%", sm: "auto" },
+                                order: { xs: 1, lg: 2 },
+                            }}
                         >
                             {isSubmitting ? "Đang cập nhật..." : "Lưu thay đổi"}
                         </Button>
@@ -278,18 +255,17 @@ export default function EditProduct({ id }: { id: string }) {
                             variant="outlined"
                             color="secondary"
                             onClick={() => router.push(`/admin/manage_product/${id}/detail`)}
-                            sx={(theme) => ({
-                                [theme.breakpoints.down("mobile")]: {
-                                    width: "100%"
+                            sx={{
+                                borderColor: "secondary.main",
+                                color: "secondary.main",
+                                ":hover": {
+                                    backgroundColor: (theme) => theme.palette.secondary.light,
+                                    borderColor: "secondary.dark",
+                                    color: "white",
                                 },
-                                [theme.breakpoints.between("mobile", "tablet")]: {
-                                    width: "80%"
-                                },
-                                [theme.breakpoints.up("tablet")]: {
-                                    width: "auto",
-                                    order: 2
-                                },
-                            })}
+                                width: { xs: "100%", sm: "auto" },
+                                order: { xs: 2, lg: 1 },
+                            }}
                         >
                             Quay lại
                         </Button>

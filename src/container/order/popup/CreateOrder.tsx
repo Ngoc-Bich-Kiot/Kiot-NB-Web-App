@@ -1,5 +1,5 @@
 "use client";
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import orderApi from "@/axios-clients/order_api/orderAPI";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook_form";
 import { colors, font_weight } from "@/styles/config-file";
@@ -147,7 +147,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
           }}
         >
           <DialogTitle
-            width="100%"
             sx={{
               textTransform: "uppercase",
               fontWeight: font_weight.regular,
@@ -173,7 +172,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
             {fields.map((item, index) => (
               <React.Fragment key={item.id}>
                 <Grid2 container spacing={2} alignItems="center">
-                  <Grid2 size={{ xs: 7, desktop: 8 }}>
+                  <Grid2 size={8}>
                     <RHFSelect
                       name={`orderDetails.${index}.productId`}
                       label="Sản Phẩm"

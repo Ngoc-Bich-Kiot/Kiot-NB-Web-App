@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useFormContext, Controller, useWatch } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import { TextField, TextFieldProps } from "@mui/material";
 
 type IProps = {
@@ -19,24 +19,16 @@ const parseFormattedNumber = (value: string) => {
 
 export default function RHFTextFieldNumber({ name, ...other }: Props) {
   const { control, setValue, getValues } = useFormContext();
-  const rawValue = useWatch({ name });
   const [displayValue, setDisplayValue] = useState("");
 
-  // useEffect(() => {
-  //   const initialValue = getValues(name);
-  //   if (initialValue && other.type === "number") {
-  //     setDisplayValue(formatNumberWithSpaces(String(initialValue)));
-  //   } else {
-  //     setDisplayValue(initialValue || "");
-  //   }
-  // }, [getValues, name, other.type]);
-
   useEffect(() => {
-    if (rawValue !== undefined && rawValue !== null) {
-      const stringValue = String(rawValue);
-      setDisplayValue(formatNumberWithSpaces(stringValue));
+    const initialValue = getValues(name);
+    if (initialValue && other.type === "number") {
+      setDisplayValue(formatNumberWithSpaces(String(initialValue)));
+    } else {
+      setDisplayValue(initialValue || "");
     }
-  }, [rawValue]);
+  }, [getValues, name, other.type]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -9,10 +9,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from '@mui/icons-material/Add';
 import BlockIcon from "@mui/icons-material/Block";
 import { useRouter } from 'next/navigation';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
-import productApi from '@/axios-clients/auth_api/productAPI';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
+import productApi from '@/axios-clients/product_api/productAPI';
 import { toast } from 'react-toastify';
-import { colors } from '@/styles/config-file';
 
 export default function MenuActionTableProduct({
     id,
@@ -123,80 +122,18 @@ export default function MenuActionTableProduct({
                 disableEnforceFocus
                 disableAutoFocus
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        bgcolor: colors.primary,
-                        color: colors.white,
-                    }}
-                >
-                    <DialogTitle width="100%">
-                        {isDeleted ? "Xác nhận khôi phục sản phẩm?" : "Xác nhận ngừng hoạt động sản phẩm?"}
-                    </DialogTitle>
-                </Box>
+                <DialogTitle sx={{ color: 'red' }}>
+                    {isDeleted ? "Xác nhận khôi phục sản phẩm?" : "Xác nhận ngừng hoạt động sản phẩm?"}
+                </DialogTitle>
                 <DialogContent>
                     <Typography>Bạn có chắc chắn muốn {isDeleted ? "khôi phục" : "ngừng hoạt động"} sản phẩm này?</Typography>
                 </DialogContent>
-                <Box
-                    display="flex"
-                    justifyContent="flex-end"
-                    alignItems="center"
-                    gap={2}
-                    px={3}
-                    mb={2}
-                    sx={(theme) => ({
-                        [theme.breakpoints.down("mobile")]: {
-                            flexDirection: "column"
-                        },
-                        [theme.breakpoints.between("mobile", "tablet")]: {
-                            flexDirection: "column"
-                        },
-                        [theme.breakpoints.up("tablet")]: {
-                            flexDirection: "row"
-                        },
-                    })}
-                >
-                    <Button
-                        onClick={handleDelete}
-                        color="primary"
-                        variant="contained"
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                width: "100%"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                width: "80%"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                width: "auto",
-                                order: 1
-                            },
-                        })}
-                    >
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>Hủy</Button>
+                    <Button onClick={handleDelete} color="primary" variant="contained">
                         Xác nhận
                     </Button>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => setConfirmOpen(false)}
-                        sx={(theme) => ({
-                            [theme.breakpoints.down("mobile")]: {
-                                width: "100%"
-                            },
-                            [theme.breakpoints.between("mobile", "tablet")]: {
-                                width: "80%"
-                            },
-                            [theme.breakpoints.up("tablet")]: {
-                                width: "auto",
-                                order: 2
-                            },
-                        })}
-                    >
-                        Hủy
-                    </Button>
-                </Box>
+                </DialogActions>
             </Dialog>
         </div>
     );

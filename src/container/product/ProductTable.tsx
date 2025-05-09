@@ -2,7 +2,7 @@
 
 import React from "react";
 import CustomizeTable from "@/components/table/customize-table";
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import { Product, ProductListResponse } from "@/types/ProductType";
 import useDebounce from "@/hook/useDebounce";
 import { useRouter } from "next/navigation";

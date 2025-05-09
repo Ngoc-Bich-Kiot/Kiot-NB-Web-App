@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Product } from '@/types/ProductType';
 import { Box, Button, Chip, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid2, MenuItem, Select, TextField, Typography } from '@mui/material';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
-import productApi from '@/axios-clients/auth_api/productAPI';
+import productApi from '@/axios-clients/product_api/productAPI';
 import ProductImageGallery from './ProductImages';
 import LogTable from './LogTable';
 import { toast } from 'react-toastify';

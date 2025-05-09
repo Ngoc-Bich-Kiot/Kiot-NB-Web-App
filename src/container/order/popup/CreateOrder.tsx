@@ -1,5 +1,5 @@
 "use client";
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import orderApi from "@/axios-clients/order_api/orderAPI";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook_form";
 import { colors, font_weight } from "@/styles/config-file";

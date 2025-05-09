@@ -2,7 +2,7 @@
 
 import React from "react";
 import CustomizeTable from "@/components/table/customize-table";
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import { Product, ProductListResponse } from "@/types/ProductType";
 import useDebounce from "@/hook/useDebounce";
 import { useRouter } from "next/navigation";
@@ -110,13 +110,8 @@ const ProductTable = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => router.push("/admin/manage_product/create")}
-          sx={(theme) => ({
-            [theme.breakpoints.down("mobile")]: {
-              fontSize: 10,
-            },
-          })}
         >
-          Tạo sản phẩm
+          Thêm sản phẩm
         </Button>
       </Box>
     );
@@ -143,7 +138,7 @@ const ProductTable = () => {
         eventAction={createProduct()}
         selectedData={(row: Product) => setSelectedRow(row)}
         data={products}
-        title="Quản lý sản phẩm"
+        title="Danh sách sản phẩm"
       />
     </div>
   );

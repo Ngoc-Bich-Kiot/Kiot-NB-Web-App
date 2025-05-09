@@ -26,21 +26,13 @@ const productApi = {
     //POST api
     CreateProduct: (body: any): Promise<AxiosResponse<Product>> => {
         const url = "/Products/CreateProduct";
-        return axiosClient.post<Product>(url, body, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
+        return axiosClient.post<Product>(url, body);
     },
 
     //PUT api
     UpdateProduct: (id: string, body: any): Promise<Product> => {
         const url = `/Products/UpdateProduct/${id}`;
-        return axiosClient.put(url, body, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
+        return axiosClient.put(url, body);
     },
 
     UpdateProductQuantity: (id: string, body: any): Promise<{ message: string }> => {

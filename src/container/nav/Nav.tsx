@@ -149,8 +149,8 @@ const Nav = () => {
             </Toolbar>
           </AppBar>
 
-          {open == true ? (
-            <Drawer open={open} onClose={toggleDrawer()}>
+          {open === true ? (
+            <Drawer open={open} onClose={toggleDrawer()} sx={{ zIndex: 2000 }}>
               <NavBar />
             </Drawer>
           ) : null}

@@ -1,5 +1,6 @@
 "use client";
 import authApi from "@/axios-clients/auth_api/authAPI";
+import images from "@/constant/images";
 import useAuth from "@/hook/useAuth";
 import { colors, font_size } from "@/styles/config-file";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -55,27 +56,43 @@ export default function Home() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        backgroundImage: `url(${images.loginBg.src})`,
       }}
     >
       <Paper
-        sx={{
+        sx={(theme) => ({
+          opacity: 0.9,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          alignItems: "center",
-          width: "30vw",
+          bgcolor: "wheat",
           p: 2,
-        }}
+          [theme.breakpoints.down("mobile")]: {
+            width: "90vw",
+          },
+          [theme.breakpoints.between("tablet", "desktop")]: {
+            width: "70vw",
+          },
+          [theme.breakpoints.up("desktop")]: { width: "30vw" },
+        })}
       >
         <Stack spacing={4}>
-          <Typography textAlign={"center"} variant="h4">
-            Ki-ot
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <img
+              src={images.logo_remove_bg.src}
+              alt="logo"
+              style={{
+                width: 200,
+                height: 200,
+              }}
+            />
+          </Box>
           <TextField
             label={"Tài Khoản"}
-            // fullWidth
             id="email"
             name="email"
+            color="success"
+            focused
             onChange={(e) => {
               setLoginForm({ ...loginForm, email: e.target.value });
             }}
@@ -88,14 +105,14 @@ export default function Home() {
                 ),
               },
             }}
-            sx={{ width: "400px" }}
           />
           <TextField
             label={"Mật khẩu"}
-            // fullWidth
             id="password"
             name="password"
             type="password"
+            color="success"
+            focused
             onChange={(e) => {
               setLoginForm({ ...loginForm, password: e.target.value });
             }}
@@ -108,12 +125,16 @@ export default function Home() {
                 ),
               },
             }}
-            sx={{ width: "400px" }}
           />
-          <Typography textAlign={"right"}>Quên mật khẩu? tìm lại</Typography>
+          <Typography textAlign={"right"}>
+            Quên mật khẩu?{" "}
+            <a href="#" style={{ color: colors.dark }}>
+              tìm lại
+            </a>
+          </Typography>
           <Button
             sx={{
-              bgcolor: colors.buttonColor,
+              bgcolor: colors.green_300,
               color: colors.buttonTextColor,
               fontSize: font_size.buttonFontSize,
             }}

@@ -6,7 +6,7 @@ import React from "react";
 
 const Logo = () => {
   const { auth } = useAuth();
-  console.log("get auth: ", auth);
+  //console.log("get auth: ", auth);
 
   //format role
   const roleFormat = (role: any) => {

@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import BlockIcon from "@mui/icons-material/Block";
 import { useRouter } from 'next/navigation';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
-import productApi from '@/axios-clients/auth_api/productAPI';
+import productApi from '@/axios-clients/product_api/productAPI';
 import { toast } from 'react-toastify';
 
 export default function MenuActionTableProduct({

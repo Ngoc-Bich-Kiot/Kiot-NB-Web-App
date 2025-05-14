@@ -27,7 +27,6 @@ export interface CreateProductFormInput {
   unit: string;
   status: string;
   productImages: (File | string)[];
-  // productImages: File | any;
 }
 
 export interface EditProductFormInput {

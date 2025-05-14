@@ -15,7 +15,7 @@ import {
     IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook_form";
 import { colors, font_weight } from "@/styles/config-file";
 import { Product } from "@/types/ProductType";

@@ -99,7 +99,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
     <Box sx={{ p: 2 }}>
       <Stack spacing={4}>
         <Grid2 container spacing={3}>
-          <Grid2 size={4}>
+          <Grid2 size={{ mobile: 12, desktop: 4 }}>
             <Paper
               component={Box}
               sx={{
@@ -188,7 +188,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
               </Stack>
             </Paper>
           </Grid2>
-          <Grid2 size={8}>
+          <Grid2 size={{ mobile: 12, desktop: 8 }}>
             <Box style={{ backgroundColor: colors.bgCardColor }}>
               <Paper
                 component={Box}

@@ -20,7 +20,7 @@ import {
   RHFTextFieldNumber,
 } from "@/components/hook_form";
 import RHFPhoneField from "@/components/text_field/RHFTextFieldPhone";
-import productApi from "@/axios-clients/auth_api/productAPI";
+import productApi from "@/axios-clients/product_api/productAPI";
 import { toast } from "react-toastify";
 import {
   RHFUploadMultiFile,
@@ -119,7 +119,7 @@ const CreateProduct = () => {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, isValid, errors },
+    formState: { isSubmitting },
     watch,
     setValue,
   } = methods;
@@ -172,10 +172,10 @@ const CreateProduct = () => {
 
   const onSubmit = async (data: CreateProductFormInput) => {
     try {
-      console.log(data);
-
-      // await productApi.CreateProduct(formData);
+      await productApi.CreateProduct(data);
       toast.success("Nhập sản phẩm thành công");
+      router.push("/admin/manage_product");
+      console.log(data)
     } catch (error) {
       toast.error("Nhập sản phẩm thất bại");
       console.error("Nhập sản phẩm thất bại:", error);

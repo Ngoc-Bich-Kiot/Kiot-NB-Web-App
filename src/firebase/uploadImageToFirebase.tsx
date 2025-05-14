@@ -5,7 +5,6 @@ function uploadImageToFirebase(file: File) {
   return new Promise((resolve, reject) => {
     const imageName = new Date().getTime() + file.name;
     const storageRef = ref(storage, imageName);
-    console.log("i");
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",

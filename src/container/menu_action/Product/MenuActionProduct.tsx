@@ -1,52 +1,35 @@
 //'use client';
 
 import React from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from '@mui/icons-material/Add';
 import BlockIcon from "@mui/icons-material/Block";
 import { useRouter } from 'next/navigation';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
-import productApi from '@/axios-clients/product_api/productAPI';
-import { toast } from 'react-toastify';
+import { Button, Menu, MenuItem } from '@mui/material';
+import DeleteProduct from '@/container/product/popup/DeleteProduct';
 
 export default function MenuActionTableProduct({
-    id,
+    product,
     isDeleted,
-    onActionSuccess,
+    fetchProduct,
 }: {
-    id: string;
+    product: any;
     isDeleted: boolean;
-    onActionSuccess: () => void;
+    fetchProduct: () => void;
 }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
-
-    const handleDelete = async () => {
-        try {
-            await productApi.DeleteOrEnable(id, !isDeleted ? 1 : 0);
-            toast.success("Cập nhật trạng thái sản phẩm thành công!");
-            onActionSuccess();
-        } catch (error) {
-            toast.error("Cập nhật trạng thái sản phẩm thất bại!");
-            console.error("Lỗi khi xoá/khôi phục sản phẩm:", error);
-        } finally {
-            setConfirmOpen(false);
-        }
-    };
-
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
     const actions = [
         {
             label: "Chi Tiết",
             icon: <InfoIcon sx={{ mr: 1 }} color="info" />,
             action: () => {
-                router.push(`/admin/manage_product/${id}/detail`)
+                router.push(`/admin/manage_product/${product.id}/detail`)
             },
         },
         ...(!isDeleted
@@ -54,7 +37,7 @@ export default function MenuActionTableProduct({
                 label: "Chỉnh sửa",
                 icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
                 action: () => {
-                    router.push(`/admin/manage_product/${id}/edit`);
+                    router.push(`/admin/manage_product/${product.id}/edit`);
                 },
             }]
             : []),
@@ -62,7 +45,7 @@ export default function MenuActionTableProduct({
             label: isDeleted === true ? "Khôi phục" : "Ngừng",
             icon: isDeleted === true ? (<AddIcon sx={{ mr: 1 }} color='success' />) : (<BlockIcon sx={{ mr: 1 }} color='error' />),
             action: () => {
-                setConfirmOpen(true);
+                setOpenDeleteDialog(true);
             },
         },
     ];
@@ -75,6 +58,9 @@ export default function MenuActionTableProduct({
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+    const handleCloseDelete = () => {
+        setOpenDeleteDialog(!openDeleteDialog);
     };
 
     return (
@@ -116,25 +102,14 @@ export default function MenuActionTableProduct({
                     </MenuItem>
                 ))}
             </Menu>
-            <Dialog
-                open={confirmOpen}
-                onClose={() => setConfirmOpen(false)}
-                disableEnforceFocus
-                disableAutoFocus
-            >
-                <DialogTitle sx={{ color: 'red' }}>
-                    {isDeleted ? "Xác nhận khôi phục sản phẩm?" : "Xác nhận ngừng hoạt động sản phẩm?"}
-                </DialogTitle>
-                <DialogContent>
-                    <Typography>Bạn có chắc chắn muốn {isDeleted ? "khôi phục" : "ngừng hoạt động"} sản phẩm này?</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setConfirmOpen(false)}>Hủy</Button>
-                    <Button onClick={handleDelete} color="primary" variant="contained">
-                        Xác nhận
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {openDeleteDialog == true && (
+                <DeleteProduct
+                    open={openDeleteDialog}
+                    handleClose={handleCloseDelete}
+                    product={product}
+                    fetchData={fetchProduct}
+                />
+            )}
         </div>
     );
 }

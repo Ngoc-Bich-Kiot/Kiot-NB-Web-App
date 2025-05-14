@@ -7,23 +7,12 @@ import {
   Box,
   Button,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  FormControl,
   Grid2,
-  MenuItem,
-  Select,
-  TextField,
   Typography,
   Card,
   CardContent,
   Stack,
   Avatar,
-  Fade,
-  Backdrop,
   IconButton,
   Tooltip,
   Badge,
@@ -38,13 +27,12 @@ import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import productApi from "@/axios-clients/product_api/productAPI";
 import ProductImageGallery from "./ProductImages";
 import LogTable from "./LogTable";
 import { toast } from "react-toastify";
+import DeleteProduct from "./popup/DeleteProduct";
+import EditProduct from "./popup/EditProduct";
 
 export default function DetailProduct({ id }: { id: string }) {
   const [product, setProduct] = React.useState<Product | null>(null);
@@ -74,20 +62,6 @@ export default function DetailProduct({ id }: { id: string }) {
     Expired: { label: "Hết hạn", color: "error" },
   };
 
-  const hasExportError =
-    editType === "Export" &&
-    (product?.stockQuantity === 0 ||
-      editQuantity > (product?.stockQuantity ?? 0));
-
-  const exportHelperText =
-    editType === "Export" && product
-      ? product.stockQuantity === 0
-        ? "Không thể xuất khi hết kho"
-        : editQuantity > product.stockQuantity
-        ? `Số lượng xuất vượt quá tồn kho (${product.stockQuantity})`
-        : ""
-      : "";
-
   const fetchProduct = async () => {
     try {
       const data: Product = await productApi.getProductById(id);
@@ -104,72 +78,6 @@ export default function DetailProduct({ id }: { id: string }) {
     fetchProduct();
   }, []);
 
-  const isInvalid =
-    !name.trim() || !phone.trim() || !address.trim() || editQuantity <= 0;
-
-  const handleOpenEditDialog = () => {
-    setOpenEditDialog(true);
-  };
-
-  const handleCloseEditDialog = () => {
-    setName("");
-    setPhone("");
-    setAddress("");
-    setEditType("Import");
-    setEditQuantity(0);
-    setRawQuantity("0");
-    setOpenEditDialog(false);
-    fetchProduct();
-  };
-
-  const handleSaveQuickEdit = async () => {
-    try {
-      await productApi.UpdateStock(id, editQuantity, editType, {
-        name,
-        phone,
-        address,
-      });
-      setName("");
-      setPhone("");
-      setAddress("");
-      setEditType("Import");
-      setEditQuantity(0);
-      setRawQuantity("0");
-      setOpenEditDialog(false);
-      toast.success("Cập nhật tồn kho thành công");
-      fetchProduct();
-    } catch (error) {
-      toast.error("Cập nhật tồn kho thất bại");
-      console.error("Lỗi khi cập nhật tồn kho:", error);
-    }
-  };
-
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-
-    if (!/^\d*$/.test(value)) return;
-
-    if (value.length > 1) {
-      value = value.replace(/^0+/, "");
-    }
-
-    setRawQuantity(value);
-    setEditQuantity(Number(value));
-  };
-
-  const handleDelete = async () => {
-    try {
-      await productApi.DeleteOrEnable(id, !product?.isDeleted ? 1 : 0);
-      toast.success("Đổi trạng thái sản phẩm thành công");
-      fetchProduct();
-    } catch (error) {
-      toast.error("Đổi trạng thái sản phẩm thất bại");
-      console.error("Lỗi khi xoá/khôi phục sản phẩm:", error);
-    } finally {
-      setOpenDeleteDialog(false);
-    }
-  };
-
   if (!product) {
     return (
       <Box
@@ -184,6 +92,25 @@ export default function DetailProduct({ id }: { id: string }) {
       </Box>
     );
   }
+  const handleOpenDeleteDialog = () => {
+    setOpenEditDialog(true);
+  };
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(!openDeleteDialog);
+  };
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+  const handleCloseEditDialog = () => {
+    setName("");
+    setPhone("");
+    setAddress("");
+    setEditType("Import");
+    setEditQuantity(0);
+    setRawQuantity("0");
+    setOpenEditDialog(!openEditDialog);
+    fetchProduct();
+  };
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#f8fafc" }}>
@@ -496,210 +423,24 @@ export default function DetailProduct({ id }: { id: string }) {
       </Box>
 
       {/* Edit Dialog */}
-      <Dialog
-        open={openEditDialog}
-        onClose={handleCloseEditDialog}
-        maxWidth="sm"
-        fullWidth
-        TransitionComponent={Fade}
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <DialogTitle sx={{ pb: 1 }}>
-          <Typography variant="h6" fontWeight={600}>
-            Cập nhật tồn kho
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Tồn kho hiện tại: {product.stockQuantity} sản phẩm
-          </Typography>
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3 }}>
-          <Stack spacing={3}>
-            <TextField
-              fullWidth
-              label="Tên người thực hiện"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <PersonOutlineIcon sx={{ mr: 1, color: "action.active" }} />
-                ),
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Số điện thoại"
-              type="tel"
-              value={phone}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d*$/.test(value)) {
-                  setPhone(value);
-                }
-              }}
-              InputProps={{
-                startAdornment: (
-                  <PhoneOutlinedIcon sx={{ mr: 1, color: "action.active" }} />
-                ),
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Địa chỉ"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <LocationOnOutlinedIcon
-                    sx={{ mr: 1, color: "action.active" }}
-                  />
-                ),
-              }}
-            />
-            <FormControl fullWidth>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                Loại thao tác
-              </Typography>
-              <Select
-                value={editType}
-                onChange={(e) =>
-                  setEditType(e.target.value as "Import" | "Export")
-                }
-                sx={{
-                  borderRadius: 2,
-                  "& .MuiSelect-select": {
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  },
-                }}
-              >
-                <MenuItem value="Import">
-                  <Stack direction="row" alignItems="center" spacing={1}>
-                    <TrendingUpOutlinedIcon color="success" />
-                    <Typography>Nhập hàng</Typography>
-                  </Stack>
-                </MenuItem>
-                <MenuItem value="Export">
-                  <Stack direction="row" alignItems="center" spacing={1}>
-                    <TrendingUpOutlinedIcon
-                      color="error"
-                      sx={{ transform: "rotate(180deg)" }}
-                    />
-                    <Typography>Xuất hàng</Typography>
-                  </Stack>
-                </MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              fullWidth
-              label="Số lượng"
-              type="text"
-              value={rawQuantity}
-              onChange={handleQuantityChange}
-              error={hasExportError}
-              helperText={exportHelperText}
-              InputProps={{
-                startAdornment: (
-                  <InventoryOutlinedIcon
-                    sx={{ mr: 1, color: "action.active" }}
-                  />
-                ),
-              }}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button
-            onClick={handleCloseEditDialog}
-            variant="outlined"
-            sx={{ borderRadius: 2 }}
-          >
-            Hủy
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSaveQuickEdit}
-            disabled={isInvalid}
-            sx={{ borderRadius: 2 }}
-          >
-            Lưu thay đổi
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {openEditDialog == true && (
+        <EditProduct
+          open={openEditDialog}
+          handleClose={handleCloseEditDialog}
+          product={product}
+          fetchData={fetchProduct}
+        />
+      )}
 
       {/* Delete Dialog */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-        maxWidth="sm"
-        fullWidth
-        TransitionComponent={Fade}
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <DialogTitle sx={{ pb: 1 }}>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            {product.isDeleted ? (
-              <RestoreFromTrashOutlinedIcon color="success" fontSize="large" />
-            ) : (
-              <DeleteOutlinedIcon color="error" fontSize="large" />
-            )}
-            <Box>
-              <Typography variant="h6" fontWeight={600}>
-                {product.isDeleted
-                  ? "Khôi phục sản phẩm"
-                  : "Ngừng hoạt động sản phẩm"}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {product.isDeleted
-                  ? "Sản phẩm sẽ được kích hoạt lại"
-                  : "Sản phẩm sẽ được ẩn khỏi hệ thống"}
-              </Typography>
-            </Box>
-          </Stack>
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3 }}>
-          <Box
-            sx={{
-              p: 2,
-              backgroundColor: "#f8fafc",
-              borderRadius: 2,
-              border: "1px solid #e2e8f0",
-            }}
-          >
-            <Typography variant="body1" textAlign="center">
-              Bạn có chắc chắn muốn{" "}
-              {product.isDeleted ? "khôi phục" : "ngừng hoạt động"} sản phẩm{" "}
-              <Typography component="span" fontWeight={600} color="primary">
-                "{product.name}"
-              </Typography>{" "}
-              này không?
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button
-            onClick={() => setOpenDeleteDialog(false)}
-            variant="outlined"
-            sx={{ borderRadius: 2 }}
-          >
-            Hủy
-          </Button>
-          <Button
-            onClick={handleDelete}
-            variant="contained"
-            color={product.isDeleted ? "success" : "error"}
-            sx={{ borderRadius: 2 }}
-          >
-            {product.isDeleted ? "Khôi phục" : "Xác nhận"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {openDeleteDialog == true && (
+        <DeleteProduct
+          open={openDeleteDialog}
+          handleClose={handleCloseDeleteDialog}
+          product={product}
+          fetchData={fetchProduct}
+        />
+      )}
     </Box>
   );
 }

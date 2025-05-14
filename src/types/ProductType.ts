@@ -1,10 +1,10 @@
 export interface ProductImage {
-  id?: number;
+  id?: string;
   urlPath: string;
 }
 
 export interface ProductLog {
-  id: number;
+  id: string;
   productId: string;
   quantity: number;
   type: string;

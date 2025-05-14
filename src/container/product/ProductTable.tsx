@@ -120,9 +120,9 @@ const ProductTable = () => {
 
   const menuAction = (
     <MenuActionTableProduct
-      id={selectedRow?.id as string}
+      product={selectedRow}
       isDeleted={selectedRow?.isDeleted as boolean}
-      onActionSuccess={getProducts}
+      fetchProduct={getProducts}
     />
   );
   return (

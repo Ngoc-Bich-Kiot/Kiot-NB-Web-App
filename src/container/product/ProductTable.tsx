@@ -94,6 +94,7 @@ const ProductTable = () => {
     { id: "importCosts", label: "Giá nhập", align: "center", format: "price" },
     { id: "stockQuantity", label: "Số lượng tồn", align: "center", format: "quantity" },
     { id: "unit", label: "Đơn vị", align: "center" },
+    { id: "createDate", label: "Ngày tạo", align: "center", format: "date" },
     {
       id: "isDeleted",
       label: "Trạng thái",

@@ -1,4 +1,5 @@
 import { Dashboard as DashboardIcon } from "@mui/icons-material";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GroupIcon from "@mui/icons-material/Group";
 import { MenuItem } from "@/types/MenuItemType";
 import ListIcon from "@mui/icons-material/List";
@@ -39,6 +40,12 @@ export const MenuItems: MenuItem[] = [
     icon: DashboardIcon,
     label: "Sản phẩm",
     path: "/admin/manage_product",
+    role: ["admin", "user"],
+  },
+  {
+    icon: CalendarMonthIcon,
+    label: "Xuất excel",
+    path: "/admin/export_excel",
     role: ["admin", "user"],
   },
 ];

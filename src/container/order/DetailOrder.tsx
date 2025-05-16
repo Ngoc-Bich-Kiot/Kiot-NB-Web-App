@@ -16,9 +16,10 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Button,
 } from "@mui/material";
 import moment from "moment";
-import React from "react";
+import React, { useRef } from "react";
 import { toast } from "react-toastify";
 
 interface DetailOrderProps {
@@ -29,6 +30,7 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
   //define state
   const [orderDetailData, setOrderDetailData] =
     React.useState<OrderDetailType>();
+  const receiptRef = useRef<HTMLDivElement>(null);
 
   //call api to get order detail
   const getOrderDetail = async () => {
@@ -95,9 +97,203 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
     { id: 5, label: "Thành tiền" },
   ];
 
+  // Handle print function
+  const handlePrint = () => {
+    const content = receiptRef.current?.innerHTML;
+    const printWindow = window.open("", "", "width=300,height=600");
+    if (printWindow && content) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Order</title>
+   <style>
+  @media print {
+    @page {
+      size: auto;
+      margin: 0;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  body {
+    font-family: monospace;
+    font-size: 20px;
+    width: 80mm;
+    padding: 5mm;
+    margin: 0;
+  }
+
+  .center { text-align: center; }
+  .bold { font-weight: bold; }
+  .line { margin: 4px 0; }
+
+  .header-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    border-bottom: 1px solid #000;
+    margin: 6px 0;
+    padding-bottom: 4px;
+  }
+
+  .item-line {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    font-size: 20px;
+  }
+
+  .item-number {
+    width: 30px;
+    flex-shrink: 0;
+  }
+
+  .item-name {
+    flex: 1;
+    padding-right: 10px;
+    word-break: break-word;
+  }
+
+  .item-prices {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 160px;
+    flex-shrink: 0;
+  }
+
+  .quantity {
+    width: 40px;
+    text-align: center;
+  }
+
+  .unit-price {
+    width: 60px;
+    text-align: right;
+  }
+
+  .total-price {
+    width: 60px;
+    text-align: right;
+  }
+
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 6px 0;
+  }
+</style>
+          </head>
+          <body onload="window.print(); window.close();">
+            ${content}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+  };
+
+  // Get status text for print
+  const getStatusText = (status?: string) => {
+    switch (status) {
+      case OrderStatus.PENDING:
+        return "Chờ xử lý";
+      case OrderStatus.FINISH:
+        return "Đã thanh toán";
+      case OrderStatus.CANCELED:
+        return "Đã hủy";
+      default:
+        return "-";
+    }
+  };
+
   return (
     <Box sx={{ p: 2 }}>
+      {/* Hidden receipt content for printing */}
+      <div ref={receiptRef} style={{ display: "none" }}>
+        <div>
+          <div className="center bold">CỬA HÀNG NGỌC BÍCH</div>
+          <div className="center">Địa chỉ cửa hàng</div>
+          <div className="center">=============================</div>
+          <div className="center bold">HÓA ĐƠN BÁN HÀNG</div>
+          <div className="line">
+            Ngày:{" "}
+            {moment(orderDetailData?.orderDate).format("DD/MM/YYYY HH:mm")}{" "}
+          </div>
+          <div className="line">
+            Khách hàng: {orderDetailData?.name || "Toàn"}
+          </div>
+          <div className="center">=============================</div>
+
+          {/* Table headers */}
+          <div className="header-line">
+            <span className="item-number"></span>
+            <span className="item-name">Tên</span>
+            <div className="item-prices">
+              <span className="quantity">Số lượng</span>
+              <span className="unit-price">Giá</span>
+              <span className="total-price">Thành tiền</span>
+            </div>
+          </div>
+
+          {/* Product items */}
+          {orderDetailData?.orderDetails?.map((item, index) => (
+            <div key={index} className="item-line">
+              <span className="item-number">{index + 1}.</span>
+              <span className="item-name">
+                {item.product.name.length > 20
+                  ? item.product.name.substring(0, 20) + "..."
+                  : item.product.name}
+              </span>
+              <div className="item-prices">
+                <span className="quantity">{item.quantity}</span>
+                <span className="unit-price">
+                  {item.unitPrice.toLocaleString("vi-VN")}
+                </span>
+                <span className="total-price">
+                  {item.totalPrice.toLocaleString("vi-VN")}
+                </span>
+              </div>
+            </div>
+          ))}
+
+          <div className="center">=============================</div>
+          <div className="total-line">
+            <span>Tổng tiền sản phẩm:</span>
+            <span>
+              {orderDetailData?.orderDetails
+                ?.reduce((total, item) => total + item.totalPrice, 0)
+                .toLocaleString("vi-VN")}
+            </span>
+          </div>
+          <div className="center">=============================</div>
+          <div className="center">Cảm ơn quý khách và hẹn gặp lại!</div>
+        </div>
+      </div>
+
       <Stack spacing={4}>
+        {/* Print Button */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <Button
+            variant="contained"
+            onClick={handlePrint}
+            sx={{
+              bgcolor: colors.primary,
+              color: "white",
+              "&:hover": {
+                bgcolor: colors.blue_200,
+              },
+            }}
+          >
+            🖨️ In đơn hàng
+          </Button>
+        </Box>
+
         <Grid2 container spacing={3}>
           <Grid2 size={{ mobile: 12, desktop: 4 }}>
             <Paper

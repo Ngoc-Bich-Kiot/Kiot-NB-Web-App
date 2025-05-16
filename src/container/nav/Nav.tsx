@@ -174,11 +174,11 @@ const Nav = () => {
                 <img
                   src={images.logo_remove_bg.src}
                   alt="Logo"
-                  style={{ width: 100, height: "auto" }}
+                  style={{ width: 100, height: 90 }}
                 />
               </Box>
               <IconButton onClick={handleClickOpenMenuSetting}>
-                <Avatar sx={{ width: 50, height: 50 }}>
+                <Avatar sx={{ width: 60, height: 60 }}>
                   <Typography variant="h5" component={"div"}>
                     {auth?.user?.Name?.charAt(0)}
                   </Typography>

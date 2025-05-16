@@ -33,7 +33,7 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
             { id: "address", label: "Địa chỉ", align: "center" },
             { id: "quantity", label: "Số lượng", align: "center" },
             { id: "type", label: "Nhập/Xuất", align: "center", format: "type" },
-            { id: "createDate", label: "Thời gian", align: "center", format: "createDate" },
+            { id: "createDate", label: "Thời gian", align: "center", format: "date" },
         ],
         "UpdatePrice": [
             { id: "oldOriginalPrice", label: "Giá vốn cũ", align: "center" },
@@ -42,7 +42,7 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
             { id: "newSellingPrice", label: "Giá bán mới", align: "center" },
             { id: "oldImportCost", label: "Giá bán cũ", align: "center" },
             { id: "newImportCost", label: "Giá bán mới", align: "center" },
-            { id: "createDate", label: "Thời gian", align: "center", format: "createDate" },
+            { id: "createDate", label: "Thời gian", align: "center", format: "date" },
         ],
     };
 

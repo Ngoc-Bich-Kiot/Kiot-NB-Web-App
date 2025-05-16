@@ -12,6 +12,16 @@ const userApi = {
     });
   },
 
+  getUserByPhone: (params?: any) => {
+    const url = "/Users/GetCustomerInfoByPhone";
+    return axiosClient.get(url, {
+      params,
+      paramsSerializer: {
+        indexes: null, // by default: false
+      },
+    });
+  },
+
   //POST api (multipart/form-data)
   createNewUser: (body: any) => {
     const url = "/Users/CreateUser";

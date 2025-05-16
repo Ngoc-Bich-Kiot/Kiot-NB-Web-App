@@ -1,7 +1,12 @@
 "use client";
 import productApi from "@/axios-clients/product_api/productAPI";
 import orderApi from "@/axios-clients/order_api/orderAPI";
-import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook_form";
+import {
+  FormProvider,
+  RHFAutoComplete,
+  RHFSelect,
+  RHFTextField,
+} from "@/components/hook_form";
 import { colors, font_weight } from "@/styles/config-file";
 import { Product } from "@/types/ProductType";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,6 +25,8 @@ import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+import userApi from "@/axios-clients/user_api/userAPI";
+import { User } from "@/types/Usertype";
 
 interface CreateOrderProps {
   open: boolean;
@@ -39,6 +46,12 @@ interface CreateOrderForm {
   orderDetails: OrderDetailForm[];
 }
 
+interface userInformationType {
+  name: string;
+  phone: string;
+  address: string;
+}
+
 const CreateOrder: React.FC<CreateOrderProps> = ({
   open,
   handleClose,
@@ -46,6 +59,10 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
 }) => {
   // Define state
   const [listProduct, setListProduct] = React.useState<Product[]>([]);
+  const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
+  const [userInformation, setUserInformation] =
+    React.useState<userInformationType>();
+  const [usersList, setUsersList] = React.useState<User[]>([]); // Thay đổi kiểu dữ liệu nếu cần
 
   // Define default values
   const defaultValues: CreateOrderForm = {
@@ -74,8 +91,24 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     }
   };
 
+  // Call api to get list user
+  const getListUser = async () => {
+    try {
+      const res: any = await userApi.getListUsers({
+        pageIndex: 0,
+        pageSize: 1000,
+      });
+      setUsersList(res.items);
+      console.log("Danh sách người dùng:", res.items); // In log danh sách người dùng
+    } catch (error) {
+      toast.error("Có lỗi xảy ra trong quá trình lấy danh sách người dùng");
+      console.error("Lỗi khi lấy danh sách người dùng:", error); // Thêm log lỗi chi tiết
+    }
+  };
+
   React.useEffect(() => {
     getListProduct();
+    getListUser();
   }, []);
 
   // Yup validation schema
@@ -106,6 +139,8 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const {
     handleSubmit,
     control, // Thêm control để sử dụng với useFieldArray
+    getValues,
+    watch,
     formState: { isSubmitting },
   } = methods;
 
@@ -129,9 +164,35 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     }
   };
 
+  //func add field product
   const handleAddProduct = () => {
     append({ productId: 0, quantity: 1 }); // Thêm một sản phẩm mới vào form
   };
+
+  //func check phone number
+  const handleCheckPhoneNumber = async () => {
+    const phone = getValues("phone");
+    try {
+      const res: any = await userApi.getUserByPhone({ phone });
+      console.log("Thông tin khách hàng:", res); // In log thông tin khách hàng
+      setUserInformation(res);
+      methods.setValue("name", res.name);
+      methods.setValue("address", res.address);
+      setIsPhoneNumber(true);
+    } catch (error) {
+      toast.error("Có lỗi xảy ra trong quá trình lấy thông tin khách hàng");
+      console.error("Lỗi khi lấy thông tin khách hàng:", error); // Thêm log lỗi chi tiết
+    }
+  };
+
+  // Watch the phone field for changes and reset isPhoneNumber if it changes
+  const phoneValue = watch("phone");
+
+  React.useEffect(() => {
+    if (!phoneValue) {
+      setIsPhoneNumber(false);
+    }
+  }, [phoneValue]);
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -161,14 +222,55 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
         <DialogContent>
           <Grid2 container spacing={4} sx={{ mt: 1 }}>
             <Grid2 size={12}>
-              <RHFTextField name="name" label="Tên người đặt" />
+              <Grid2
+                container
+                spacing={4}
+                sx={{ mt: 1, display: "flex", alignItems: "center" }}
+              >
+                <Grid2 size={10}>
+                  <RHFAutoComplete
+                    name="phone"
+                    label="Số điện thoại"
+                    options={usersList}
+                  />
+                </Grid2>
+                <Grid2 size={2}>
+                  <Button
+                    variant="contained"
+                    sx={{ bgcolor: colors.green_400 }}
+                    onClick={() => handleCheckPhoneNumber()}
+                  >
+                    Chọn
+                  </Button>
+                </Grid2>
+              </Grid2>
             </Grid2>
-            <Grid2 size={12}>
-              <RHFTextField name="phone" label="Số điện thoại" />
-            </Grid2>
-            <Grid2 size={12}>
-              <RHFTextField name="address" label="Địa chỉ" />
-            </Grid2>
+            {isPhoneNumber === true ? (
+              <>
+                <Grid2 size={12}>
+                  <RHFTextField
+                    name="name"
+                    label="Tên người đặt"
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                      },
+                    }}
+                  />
+                </Grid2>
+                <Grid2 size={12}>
+                  <RHFTextField
+                    name="address"
+                    label="Địa chỉ"
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                      },
+                    }}
+                  />
+                </Grid2>
+              </>
+            ) : null}
             {fields.map((item, index) => (
               <React.Fragment key={item.id}>
                 <Grid2 container spacing={2} alignItems="center">

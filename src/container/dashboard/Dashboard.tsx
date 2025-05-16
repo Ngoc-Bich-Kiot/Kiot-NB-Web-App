@@ -35,7 +35,10 @@ import {
   MonthlyStats,
   Product,
 } from "@/types/DashboardType";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import dashboardApi from "@/axios-clients/dashboard_api/dashboardAPI";
+import IntroTour from "@/components/intro/IntroTour";
+import { title } from "process";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -425,6 +428,29 @@ const Dashboard: React.FC = () => {
   );
   const [loading, setLoading] = useState(true);
 
+  const steps = [
+    {
+      element: '#summary-stats',
+      title: 'hello',
+      intro: 'Thống kê tổng quan cửa hàng.',
+      position: "bottom"
+    },
+    {
+      element: '#monthly-revenue',
+      intro: 'Biểu đồ doanh thu theo tháng.',
+      position: "right"
+    },
+    {
+      element: '#top-customers',
+      intro: 'Khách hàng đặt nhiều hàng nhất.',
+      position: "bottom"
+    },
+    {
+      element: '#top-products',
+      intro: 'Sản phẩm bán chạy nhất.',
+      position: "bottom"
+    },
+  ];
   useEffect(() => {
     // Simulate API fetch
     const fetchData = async () => {
@@ -477,32 +503,39 @@ const Dashboard: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Summary Statistics */}
-      <Box sx={{ mb: 4 }}>
-        <StatsSummary dashboardData={dashboardData} />
-      </Box>
+      <IntroTour
+        steps={steps}
+        buttonContent={
+          <InfoOutlinedIcon sx={{ cursor: 'pointer', float: 'right' }} />
+        }
+      >
+        {/* Summary Statistics */}
+        <Box id="summary-stats" sx={{ mb: 4 }} >
+          <StatsSummary dashboardData={dashboardData} />
+        </Box>
 
-      {/* Charts Section */}
-      <Grid container spacing={3}>
-        {/* Monthly Revenue Chart */}
-        <Grid size={{ xs: 12, md: 12 }}>
-          <MonthlyRevenueChart
-            monthlyStats={dashboardData?.monthlyOrderStats}
-          />
-        </Grid>
+        {/* Charts Section */}
+        <Grid container spacing={3}>
+          {/* Monthly Revenue Chart */}
+          <Grid id="monthly-revenue" size={{ xs: 12, md: 12 }}>
+            <MonthlyRevenueChart
+              monthlyStats={dashboardData?.monthlyOrderStats}
+            />
+          </Grid>
 
-        {/* Top Customers Pie Chart */}
-        <Grid size={{ xs: 12, md: 12 }}>
-          <TopCustomersChart customers={dashboardData?.topCustomers} />
-        </Grid>
+          {/* Top Customers Pie Chart */}
+          <Grid id="top-customers" size={{ xs: 12, md: 12 }}>
+            <TopCustomersChart customers={dashboardData?.topCustomers} />
+          </Grid>
 
-        {/* Top Selling Products Chart */}
-        <Grid size={{ xs: 12 }}>
-          <TopSellingProductsChart
-            products={dashboardData.topSellingProducts}
-          />
+          {/* Top Selling Products Chart */}
+          <Grid id="top-products" size={{ xs: 12 }}>
+            <TopSellingProductsChart
+              products={dashboardData.topSellingProducts}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </IntroTour>
     </Container>
   );
 };

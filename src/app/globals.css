@@ -29,6 +29,49 @@ body {
   padding: 0;
   margin: 0;
 }
+.introjs-tooltip {
+  font-size: 16px !important;
+  font-family: '"Lora", serif' !important;
+  background-color: #ffffff !important;
+  color: #333 !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  max-width: 1000px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid #00BCD4;
+}
+
+.introjs-tooltip-title {
+  font-size: 18px !important;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 8px;
+}
+
+/* .introjs-arrow {
+  border-color: #ffffff !important;
+}
+
+.introjs-button {
+  font-family: '"Lora", serif' !important;
+  padding: 6px 16px;
+  border-radius: 6px;
+}
+
+.introjs-button:hover {
+  background-color: #115293 !important;
+}
+
+.introjs-disabled {
+  background-color: #cccccc !important;
+  color: #999 !important;
+  cursor: not-allowed;
+} */
+
+/* .introjs-helperLayer {
+  border-radius: 8px !important;
+  box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.5) !important;
+} */
 
 /* a {
   color: inherit;

@@ -6,6 +6,8 @@ import { User } from "@/types/Usertype";
 import { Box, Button, Grid2, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import AddUser from "./popup/AddUser";
+import IntroTour from "@/components/intro/IntroTour";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface STProps {
   filter: any;
@@ -19,11 +21,31 @@ const SearchTool: React.FC<STProps> = ({ filter, setFilter }) => {
         size="small"
         placeholder="Tìm kiếm"
         label="Khách hàng"
+        id="intro-search-user"
         onChange={(e) => setFilter({ ...filter, SearchTerm: e.target.value })}
       />
     </Box>
   );
 };
+
+const userTableIntroSteps = [
+  {
+    element: "#intro-user-table",
+    title: "Bảng đơn hàng",
+    intro: "Đây là danh sách người dùng trong hệ thống.",
+  },
+  {
+    element: "#intro-search-user",
+    title: "Thanh tìm kiếm",
+    intro: "Nhập vào đây để tìm kiếm khách hàng",
+  },
+  {
+    element: "#intro-create-user",
+    title: "Thêm người dùng",
+    intro: "Nhấn vào đây để thêm người dùng mới.",
+  },
+];
+
 
 const ManageUserTable = () => {
   //define state
@@ -93,12 +115,13 @@ const ManageUserTable = () => {
 
   const EventAction = () => {
     return (
-      <div>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleClickOpen}
+          id="intro-create-user"
           sx={(theme) => ({
             [theme.breakpoints.down("mobile")]: {
               fontSize: 10,
@@ -107,7 +130,13 @@ const ManageUserTable = () => {
         >
           Thêm người dùng
         </Button>
-      </div>
+        <IntroTour
+          steps={userTableIntroSteps}
+          buttonContent={
+            <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
+          }
+        />
+      </Box>
     );
   };
   return (
@@ -125,6 +154,7 @@ const ManageUserTable = () => {
         page={pageIndex}
         size={pageSize}
         total={total}
+        tableContainerId="intro-user-table"
       />
     </div>
   );

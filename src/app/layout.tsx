@@ -3,6 +3,9 @@
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
+// introjs
+import "intro.js/introjs.css";
+
 import OverrideMuiTheme from "@/theme/override";
 import { Box } from "@mui/material";
 import "./globals.css";

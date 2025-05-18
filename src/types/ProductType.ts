@@ -11,6 +11,7 @@ export interface ProductLog {
   name: string;
   phone: string;
   address: string;
+  createDate: string;
 }
 
 export interface CreateProductFormInput {

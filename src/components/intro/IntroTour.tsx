@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Steps, Step } from 'intro.js-react';
 import 'intro.js/introjs.css';
+import { Box } from '@mui/material';
 
 type IntroTourProps = {
     steps: Step[];
@@ -13,27 +14,32 @@ const IntroTour = ({ steps, children, buttonContent }: IntroTourProps) => {
     const [enabled, setEnabled] = useState(false);
 
     const handleStartTour = () => {
-        setTimeout(() => setEnabled(true), 300);
-    };
-    const handleExit = () => {
-        setEnabled(false);
+        setTimeout(() => setEnabled(true), 100);
     };
 
     return (
-        <div>
+        <>
+            {buttonContent && (
+                <Box onClick={handleStartTour} sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                    {buttonContent}
+                </Box>
+            )}
             {children}
-            <button onClick={handleStartTour}>
-                {buttonContent ?? 'Bắt đầu hướng dẫn'}
-            </button>
-
-            {/* Tour Component */}
             <Steps
                 enabled={enabled}
                 steps={steps}
                 initialStep={0}
-                onExit={handleExit}
+                onExit={() => setEnabled(false)}
+                options={{
+                    scrollToElement: true,
+                    showBullets: false,
+                    exitOnOverlayClick: true,
+                    nextLabel: 'Tiếp',
+                    prevLabel: 'Trước',
+                    doneLabel: 'Hoàn tất',
+                }}
             />
-        </div>
+        </>
     );
 };
 

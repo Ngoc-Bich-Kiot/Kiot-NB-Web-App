@@ -11,7 +11,11 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
     const [pageSize, setPageSize] = React.useState(5);
 
     const groupedLogs = React.useMemo(() => {
-        return logs.reduce<Record<string, ProductLog[]>>((acc, log) => {
+        const sortedLogs = [...logs].sort((a, b) => {
+            return new Date(b.createDate).getTime() - new Date(a.createDate).getTime();
+        });
+
+        return sortedLogs.reduce<Record<string, ProductLog[]>>((acc, log) => {
             const key = (log.type === "Import" || log.type === "Export") ? "Import/Export" : log.type;
             if (!acc[key]) acc[key] = [];
             acc[key].push(log);

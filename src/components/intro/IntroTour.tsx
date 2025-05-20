@@ -31,7 +31,7 @@ const IntroTour = ({ steps, children, buttonContent }: IntroTourProps) => {
                 initialStep={0}
                 onExit={() => setEnabled(false)}
                 options={{
-                    scrollToElement: true,
+                    scrollToElement: false,
                     showBullets: false,
                     exitOnOverlayClick: true,
                     nextLabel: 'Tiếp',

@@ -435,7 +435,7 @@ const Dashboard: React.FC = () => {
       element: '#summary-stats',
       title: 'Tổng quan',
       intro: 'Thống kê tổng quan cửa hàng.',
-      position: "top"
+      position: "bottom"
     },
     {
       element: '#stat-total-revenue',

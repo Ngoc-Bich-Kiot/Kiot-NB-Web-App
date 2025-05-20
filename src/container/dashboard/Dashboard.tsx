@@ -433,43 +433,50 @@ const Dashboard: React.FC = () => {
   const dashBoardIntroSteps = [
     {
       element: '#summary-stats',
-      title: 'hello',
+      title: 'Tổng quan',
       intro: 'Thống kê tổng quan cửa hàng.',
       position: "left"
     },
     {
       element: '#stat-total-revenue',
-      intro: 'Tổng doanh thu của cửa hàng trong năm.',
+      title: 'Tổng doanh thu',
+      intro: 'Tổng doanh thu của cửa hàng trong tháng.',
       position: "right"
     },
     {
       element: '#stat-total-orders',
-      intro: 'Tổng số đơn hàng đã hoàn thành.',
+      title: 'Tổng số đơn hàng',
+      intro: 'Tổng số đơn hàng đã hoàn thành trong tháng.',
       position: "left"
     },
     {
       element: '#stat-products-sold',
+      title: 'Sản phẩm đã bán',
       intro: 'Tổng số sản phẩm đã bán.',
       position: "left"
     },
     {
       element: '#stat-customers',
+      title: 'Tổng số khách hàng',
       intro: 'Tổng số khách hàng đã mua hàng.',
       position: "left"
     },
     {
       element: '#monthly-revenue',
+      title: 'Doanh thu hàng tháng',
       intro: 'Biểu đồ doanh thu hàng tháng.',
       position: "left"
     },
     {
       element: '#top-customers',
-      intro: 'Khách hàng hàng đầu theo doanh số.',
+      title: 'Khách hàng hàng đầu',
+      intro: 'Khách hàng hàng đầu theo doanh.',
       position: "left"
     },
     {
       element: '#top-products',
-      intro: 'Sản phẩm bán chạy nhất.',
+      title: 'Sản phẩm bán chạy nhất',
+      intro: 'Sản phẩm bán chạy nhất theo số lượng.',
       position: "top"
     }
   ];

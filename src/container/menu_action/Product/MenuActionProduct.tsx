@@ -13,10 +13,12 @@ import DeleteProduct from '@/container/product/popup/DeleteProduct';
 export default function MenuActionTableProduct({
     product,
     isDeleted,
+    introId,
     fetchProduct,
 }: {
     product: any;
     isDeleted: boolean;
+    introId?: string;
     fetchProduct: () => void;
 }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -66,7 +68,7 @@ export default function MenuActionTableProduct({
     return (
         <div>
             <Button
-                id="demo-positioned-button"
+                id={introId}
                 aria-controls={open ? "demo-positioned-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}

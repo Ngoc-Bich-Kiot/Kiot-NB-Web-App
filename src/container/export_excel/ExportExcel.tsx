@@ -26,6 +26,42 @@ import EventIcon from "@mui/icons-material/Event";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import exportApi from "@/axios-clients/export_excel_api/ExportExcelAPI";
+import IntroTour from "@/components/intro/IntroTour";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+
+const exportExcelIntroSteps = [
+  {
+    element: "#excel-export-card",
+    title: "Xuất Excel",
+    intro: "Chọn khoảng thời gian để xuất báo cáo.",
+    position: "top",
+  },
+  {
+    element: "#date-picker-from",
+    title: "Chọn ngày bắt đầu",
+    intro: "Chọn ngày bắt đầu cho khoảng thời gian xuất báo cáo.",
+    position: "top",
+  },
+  {
+    element: "#date-picker-to",
+    title: "Chọn ngày kết thúc ",
+    intro:
+      "Chọn ngày kết thúc cho khoảng thời gian xuất báo cáo.",
+    position: "top",
+  },
+  {
+    element: "#info-card",
+    title: "Thông tin xuất",
+    intro: "Thông tin về file xuất.",
+    position: "top",
+  },
+  {
+    element: "#export-button",
+    title: "Xuất Excel",
+    intro: "Nhấn nút này để xuất báo cáo dưới dạng file Excel.",
+    position: "top",
+  },
+];
 
 export default function ExcelExportUI() {
   const [fromDate, setFromDate] = useState<Dayjs | null>(null);
@@ -126,6 +162,7 @@ export default function ExcelExportUI() {
               <Fade in={true} timeout={800}>
                 <Card
                   elevation={4}
+                  id="excel-export-card"
                   sx={{
                     borderRadius: 3,
                     background: "rgba(255,255,255,0.9)",
@@ -133,19 +170,26 @@ export default function ExcelExportUI() {
                   }}
                 >
                   <CardContent sx={{ p: 4 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
                       <CalendarTodayIcon
                         color="primary"
-                        sx={{ fontSize: 28, mr: 2 }}
+                        sx={{ fontSize: 28 }}
                       />
                       <Typography variant="h5" component="h2" fontWeight={600}>
                         Chọn Thời Gian
                       </Typography>
+                      <IntroTour
+                        steps={exportExcelIntroSteps}
+                        buttonContent={
+                          <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
+                        }
+                      />
                     </Box>
 
                     <Grid2 container spacing={3}>
                       <Grid2 size={{ mobile: 12, desktop: 6 }}>
                         <Box
+                          id="date-picker-from"
                           sx={{
                             p: 2,
                             borderRadius: 2,
@@ -179,6 +223,7 @@ export default function ExcelExportUI() {
 
                       <Grid2 size={{ mobile: 12, desktop: 6 }}>
                         <Box
+                          id="date-picker-to"
                           sx={{
                             p: 2,
                             borderRadius: 2,
@@ -217,6 +262,7 @@ export default function ExcelExportUI() {
             <Grid2 size={{ mobile: 12, desktop: 4 }}>
               <Fade in={true} timeout={1200}>
                 <Card
+                  id="info-card"
                   elevation={4}
                   sx={{
                     borderRadius: 3,
@@ -283,6 +329,7 @@ export default function ExcelExportUI() {
           {/* Export Button */}
           <Box sx={{ mt: 4, textAlign: "center" }}>
             <Button
+              id="export-button"
               variant="contained"
               size="large"
               onClick={handleExport}

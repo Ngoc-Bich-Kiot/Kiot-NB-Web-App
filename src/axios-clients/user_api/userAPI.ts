@@ -25,11 +25,7 @@ const userApi = {
   //POST api (multipart/form-data)
   createNewUser: (body: any) => {
     const url = "/Users/CreateUser";
-    return axiosClient.post(url, body, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    return axiosClient.post(url, body);
   },
 
   //POST api

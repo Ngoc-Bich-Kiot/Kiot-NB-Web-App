@@ -30,6 +30,7 @@ interface CTbaleProps {
   selectedData?: any;
   searchTool?: ReactNode;
   eventAction?: ReactNode;
+  tableContainerId?: string
   handleChangePage: (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -73,6 +74,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
   menuAction,
   selectedData,
   searchTool,
+  tableContainerId,
   handleChangePage,
   handleChangeRowsPerPage,
   eventAction,
@@ -329,9 +331,9 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           />
           <Box sx={{ pr: 2 }}>{eventAction}</Box>
         </Box>
-        <Box>{searchTool}</Box>
+        <Box >{searchTool}</Box>
         <CardContent>
-          <StyledTableContainer
+          <StyledTableContainer id={tableContainerId}
             sx={(theme) => ({
               [theme.breakpoints.up("desktop")]: {
                 minWidth: 650,
@@ -349,6 +351,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     <TableCell
                       sx={{ fontWeight: "bold" }}
                       key={column.id}
+                      id={column.introId}
                       align={column.align || "left"}
                     >
                       {column.label}

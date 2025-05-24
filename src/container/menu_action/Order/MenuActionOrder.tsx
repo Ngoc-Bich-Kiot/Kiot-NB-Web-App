@@ -18,6 +18,7 @@ interface MenuActionOrderProps {
   onOpenUpdate?: any;
   onOpenDetail?: any;
   onOpenDelete?: any;
+  introId?: string;
   fetchData: () => void;
 }
 
@@ -26,9 +27,9 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   onOpenUpdate,
   onOpenDetail,
   onOpenDelete,
+  introId,
   fetchData,
 }) => {
-  //console.log("data dc chọn: ", orderData);
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
   const [openDetail, setOpenDetail] = React.useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = React.useState<boolean>(false);
@@ -121,7 +122,7 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   return (
     <div>
       <Button
-        id="demo-positioned-button"
+        id={introId}
         aria-controls={open ? "demo-positioned-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}

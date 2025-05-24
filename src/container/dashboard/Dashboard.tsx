@@ -35,7 +35,10 @@ import {
   MonthlyStats,
   Product,
 } from "@/types/DashboardType";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import dashboardApi from "@/axios-clients/dashboard_api/dashboardAPI";
+import IntroTour from "@/components/intro/IntroTour";
+import { title } from "process";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -125,7 +128,7 @@ const StatsSummary: React.FC<{ dashboardData: DashboardData }> = ({
   return (
     <Grid container spacing={3}>
       {stats.map((stat, index) => (
-        <Grid size={{ xs: 12, md: 3, sm: 6 }} key={index}>
+        <Grid size={{ xs: 12, md: 3, sm: 6 }} key={index} id={`stat-${stat.title.toLowerCase().replace(/\s/g, '-')}`}>
           <StyledCard>
             <StatsCardContent>
               <Box
@@ -134,9 +137,11 @@ const StatsSummary: React.FC<{ dashboardData: DashboardData }> = ({
                 <Avatar
                   sx={{ bgcolor: stat.color, width: 48, height: 48, mr: 2 }}
                 ></Avatar>
-                <Typography variant="h6" gutterBottom component="div">
-                  {stat.title == ""}
-                </Typography>
+                {stat.title && (
+                  <Typography variant="h6" gutterBottom component="div">
+                    {stat.title}
+                  </Typography>
+                )}
               </Box>
               <Typography
                 variant="h4"
@@ -425,6 +430,56 @@ const Dashboard: React.FC = () => {
   );
   const [loading, setLoading] = useState(true);
 
+  const dashBoardIntroSteps = [
+    {
+      element: '#summary-stats',
+      title: 'Tổng quan',
+      intro: 'Thống kê tổng quan cửa hàng.',
+      position: "bottom"
+    },
+    {
+      element: '#stat-total-revenue',
+      title: 'Tổng doanh thu',
+      intro: 'Tổng doanh thu của cửa hàng trong tháng.',
+      position: "bottom"
+    },
+    {
+      element: '#stat-total-orders',
+      title: 'Tổng số đơn hàng',
+      intro: 'Tổng số đơn hàng đã hoàn thành trong tháng.',
+      position: "bottom"
+    },
+    {
+      element: '#stat-products-sold',
+      title: 'Sản phẩm đã bán',
+      intro: 'Tổng số sản phẩm đã bán.',
+      position: "bottom"
+    },
+    {
+      element: '#stat-customers',
+      title: 'Tổng số khách hàng',
+      intro: 'Tổng số khách hàng đã mua hàng.',
+      position: "bottom"
+    },
+    {
+      element: '#monthly-revenue',
+      title: 'Doanh thu hàng tháng',
+      intro: 'Biểu đồ doanh thu hàng tháng.',
+      position: "bottom"
+    },
+    {
+      element: '#top-customers',
+      title: 'Khách hàng hàng đầu',
+      intro: 'Khách hàng hàng đầu theo doanh.',
+      position: "bottom"
+    },
+    {
+      element: '#top-products',
+      title: 'Sản phẩm bán chạy nhất',
+      intro: 'Sản phẩm bán chạy nhất theo số lượng.',
+      position: "top"
+    }
+  ];
   useEffect(() => {
     // Simulate API fetch
     const fetchData = async () => {
@@ -469,35 +524,44 @@ const Dashboard: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Bảng thống kê cửa hàng
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Bảng thống kê cửa hàng
+          </Typography>
+
+          <IntroTour
+            steps={dashBoardIntroSteps}
+            buttonContent={
+              <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
+            }
+          />
+        </Box>
         <Typography variant="subtitle1" color="text.secondary">
           Sơ bộ về thống kê bán hàng của cửa hàng
         </Typography>
       </Box>
 
       {/* Summary Statistics */}
-      <Box sx={{ mb: 4 }}>
+      <Box id="summary-stats" sx={{ mb: 4 }} >
         <StatsSummary dashboardData={dashboardData} />
       </Box>
 
       {/* Charts Section */}
       <Grid container spacing={3}>
         {/* Monthly Revenue Chart */}
-        <Grid size={{ xs: 12, md: 12 }}>
+        <Grid id="monthly-revenue" size={{ xs: 12, md: 12 }}>
           <MonthlyRevenueChart
             monthlyStats={dashboardData?.monthlyOrderStats}
           />
         </Grid>
 
         {/* Top Customers Pie Chart */}
-        <Grid size={{ xs: 12, md: 12 }}>
+        <Grid id="top-customers" size={{ xs: 12, md: 12 }}>
           <TopCustomersChart customers={dashboardData?.topCustomers} />
         </Grid>
 
         {/* Top Selling Products Chart */}
-        <Grid size={{ xs: 12 }}>
+        <Grid id="top-products" size={{ xs: 12 }}>
           <TopSellingProductsChart
             products={dashboardData.topSellingProducts}
           />

@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import MenuActionOrder from "../menu_action/Order/MenuActionOrder";
 import CreateOrder from "./popup/CreateOrder";
 import { font_size } from "@/styles/config-file";
+import IntroTour from "@/components/intro/IntroTour";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface SearchToolProps {
   filter: any;
@@ -23,11 +25,69 @@ const SearchTool: React.FC<SearchToolProps> = ({ filter, setFilter }) => {
         label="Tìm kiếm"
         variant="outlined"
         size="small"
+        id="search-order"
         onChange={(e) => setFilter({ ...filter, SearchTerm: e.target.value })}
       />
     </Box>
   );
 };
+
+const orderTableIntroSteps = [
+  {
+    element: "#intro-order-table",
+    title: "Bảng đơn hàng",
+    intro: "Đây là danh sách các đơn hàng đã tạo.",
+    position: "left"
+  },
+  {
+    element: "#name-header",
+    title: "Cột Khách hàng",
+    intro: "Hiển thị tên khách hàng đặt đơn.",
+    position: "right"
+  },
+  {
+    element: "#phone-header",
+    title: "Cột Số điện thoại",
+    intro: "Hiển thị số điện thoại của khách hàng.",
+    position: "left"
+  },
+  {
+    element: "#order-date-header",
+    title: "Cột Ngày đặt",
+    intro: "Hiển thị ngày khách hàng đặt đơn.",
+    position: "left"
+  },
+  {
+    element: "#order-status-header",
+    title: "Cột Trạng thái",
+    intro: "Hiển thị trạng thái đơn hàng.",
+    position: "left"
+  },
+  {
+    element: "#order-amount-header",
+    title: "Cột Đơn giá",
+    intro: "Hiển thị giá trị đơn hàng.",
+    position: "left"
+  },
+  {
+    element: "#menu-action",
+    title: "Nút hành động",
+    intro: "Nhấn vào đây để thực hiện các hành động trên đơn hàng đã chọn.",
+    position: "left"
+  },
+  {
+    element: "#search-order",
+    title: "Thanh tìm kiếm",
+    intro: "Nhập vào đây để tìm kiếm đơn hàng",
+    position: "right"
+  },
+  {
+    element: "#create-order-btn",
+    title: "Tạo đơn hàng",
+    intro: "Nhấn vào đây để thêm đơn hàng mới.",
+    position: "left"
+  },
+];
 
 const ManageOrderTable = () => {
   //Define the state for orders
@@ -81,22 +141,23 @@ const ManageOrderTable = () => {
 
   //TableHeader
   const tableHeader = [
-    { id: "name", label: "Khách hàng" },
-    { id: "phone", label: "Điện thoại" },
-    { id: "orderDate", label: "Ngày đặt", format: "date" },
-    { id: "orderStatus", label: "Trạng thái", format: "orderStatus" },
-    { id: "orderAmount", label: "Đơn giá", format: "price" },
+    { id: "name", label: "Khách hàng", introId: "name-header" },
+    { id: "phone", label: "Điện thoại", introId: "phone-header" },
+    { id: "orderDate", label: "Ngày đặt", format: "date", introId: "order-date-header" },
+    { id: "orderStatus", label: "Trạng thái", format: "orderStatus", introId: "order-status-header" },
+    { id: "orderAmount", label: "Đơn giá", format: "price", introId: "order-amount-header" },
   ];
 
   //Event action
   const CreateOrderAction = () => {
     return (
-      <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleClickOpen}
+          id="create-order-btn"
           sx={(theme) => ({
             [theme.breakpoints.down("mobile")]: {
               fontSize: 10,
@@ -105,6 +166,12 @@ const ManageOrderTable = () => {
         >
           Tạo đơn hàng
         </Button>
+        <IntroTour
+          steps={orderTableIntroSteps}
+          buttonContent={
+            <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
+          }
+        />
       </Box>
     );
   };
@@ -134,6 +201,7 @@ const ManageOrderTable = () => {
             orderData={selectedRow}
             fetchData={getOrders}
             onOpenDetail={selectedData}
+            introId="menu-action"
           />
         }
         eventAction={<CreateOrderAction />}
@@ -144,6 +212,7 @@ const ManageOrderTable = () => {
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}
+        tableContainerId="intro-order-table"
       />
     </div>
   );

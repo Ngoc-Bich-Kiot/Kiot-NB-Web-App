@@ -1,5 +1,9 @@
 "use client";
-import React from "react";
+import userApi from "@/axios-clients/user_api/userAPI";
+import { FormProvider, RHFTextField } from "@/components/hook_form";
+import { colors, font_weight } from "@/styles/config-file";
+import { yupResolver } from "@hookform/resolvers/yup";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -7,48 +11,38 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   Grid2,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { colors, font_weight } from "@/styles/config-file";
-import { ListRole } from "@/enum/Role";
-import * as Yup from "yup";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProvider, RHFSelect, RHFTextField } from "@/components/hook_form";
-import userApi from "@/axios-clients/user_api/userAPI";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
 
 interface AddUserProps {
   open: boolean;
   handleClose: () => void;
+  fetchData?: () => void;
 }
 
-const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
+const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
   //define default values
   const defaultValues = {
-    Name: "",
-    Email: "",
-    Password: "",
-    Phone: "",
-    Address: "",
-    UserImages: [],
-    RoleId: "",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+    userImages: [],
+    roleId: "2",
   };
 
   //Yup validation schema
   const validationSchema = Yup.object().shape({
-    Name: Yup.string(),
-    Email: Yup.string(),
-    Password: Yup.string(),
-    Phone: Yup.string(),
-    Address: Yup.string(),
-    RoleId: Yup.string(),
+    name: Yup.string(),
+    phone: Yup.string(),
+    address: Yup.string(),
+    roleId: Yup.string(),
   });
 
   //handle submit
@@ -65,10 +59,9 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
   } = methods;
 
   const createUser = async (data: any) => {
+    // return console.log("data", data);
     try {
-      const res: any = await userApi.createNewUser({
-        ...data,
-      });
+      const res: any = await userApi.createNewUser({ ...data });
       console.log("data", data);
       toast.success("Tạo mới người dùng thành công");
       handleClose();
@@ -106,32 +99,17 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose }) => {
         <DialogContent>
           <Grid2 container spacing={2}>
             <Grid2 size={12}>
-              <RHFTextField name="Name" label="Tên người dùng" />
+              <RHFTextField name="name" label="Tên người dùng" />
             </Grid2>
             <Grid2 size={12}>
-              <RHFTextField name="Phone" label="SDT" />
+              <RHFTextField name="phone" label="SDT" />
             </Grid2>
             <Grid2 size={12}>
-              <RHFTextField name="Address" label="Địa chỉ" />
+              <RHFTextField name="address" label="Địa chỉ" />
             </Grid2>
-            <Grid2 size={12}>
-              <RHFTextField name="Email" label="email" />
-            </Grid2>
-            <Grid2 size={12}>
-              <RHFTextField name="Password" label="Mật khẩu" />
-            </Grid2>
-            <Grid2 size={12}>
-              <RHFSelect name="RoleId" label="Vai trò" sx={{ mb: 2 }}>
-                {ListRole?.map((i) => (
-                  <option key={i.roleId} value={i.roleName}>
-                    {i.roleName}
-                  </option>
-                ))}
-              </RHFSelect>
-            </Grid2>
-            <Grid2 size={12}>
+            {/* <Grid2 size={12}>
               <RHFTextField name="UserImages" label="Hình ảnh" />
-            </Grid2>
+            </Grid2> */}
           </Grid2>
         </DialogContent>
         <DialogActions>

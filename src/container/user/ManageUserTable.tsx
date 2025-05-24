@@ -7,7 +7,7 @@ import { Box, Button, Grid2, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import AddUser from "./popup/AddUser";
 import IntroTour from "@/components/intro/IntroTour";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 interface STProps {
   filter: any;
@@ -33,52 +33,51 @@ const userTableIntroSteps = [
     element: "#intro-user-table",
     title: "Bảng đơn hàng",
     intro: "Đây là danh sách người dùng trong hệ thống.",
-    position: "left"
+    position: "left",
   },
   {
     element: "#name-header",
     title: "Cột tên người dùng",
     intro: "Tên người dùng.",
-    position: "right"
+    position: "right",
   },
   {
     element: "#email-header",
     title: "Cột email",
     intro: "Email của người dùng.",
-    position: "left"
+    position: "left",
   },
   {
     element: "#phone-header",
     title: "Cột số điện thoại",
     intro: "Số điện thoại của người dùng.",
-    position: "left"
+    position: "left",
   },
   {
     element: "#role-header",
     title: "Cột vai trò",
     intro: "Vai trò của người dùng trong hệ thống.",
-    position: "left"
+    position: "left",
   },
   {
     element: "#status-header",
     title: "Cột trạng thái",
     intro: "Trạng thái hoạt động của người dùng.",
-    position: "left"
+    position: "left",
   },
   {
     element: "#intro-search-user",
     title: "Thanh tìm kiếm",
     intro: "Nhập vào đây để tìm kiếm khách hàng",
-    position: "right"
+    position: "right",
   },
   {
     element: "#intro-create-user",
     title: "Thêm người dùng",
     intro: "Nhấn vào đây để thêm người dùng mới.",
-    position: "left"
+    position: "left",
   },
 ];
-
 
 const ManageUserTable = () => {
   //define state
@@ -130,11 +129,32 @@ const ManageUserTable = () => {
 
   //title header
   const tableHeaderTitle = [
-    { id: "name", label: "Tên người dùng", align: "center", introId: "name-header" },
+    {
+      id: "name",
+      label: "Tên người dùng",
+      align: "center",
+      introId: "name-header",
+    },
     { id: "email", label: "Email", align: "center", introId: "email-header" },
-    { id: "phone", label: "Số điện thoại", align: "center", introId: "phone-header" },
-    { id: "role.roleName", label: "Vai trò", align: "center", introId: "role-header" },
-    { id: "status", label: "Trạng thái", align: "center", format: "status", introId: "status-header" },
+    {
+      id: "phone",
+      label: "Số điện thoại",
+      align: "center",
+      introId: "phone-header",
+    },
+    {
+      id: "role.roleName",
+      label: "Vai trò",
+      align: "center",
+      introId: "role-header",
+    },
+    {
+      id: "status",
+      label: "Trạng thái",
+      align: "center",
+      format: "status",
+      introId: "status-header",
+    },
   ];
 
   //handle open add popup
@@ -148,7 +168,14 @@ const ManageUserTable = () => {
 
   const EventAction = () => {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 1,
+        }}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -165,16 +192,14 @@ const ManageUserTable = () => {
         </Button>
         <IntroTour
           steps={userTableIntroSteps}
-          buttonContent={
-            <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
-          }
+          buttonContent={<InfoOutlinedIcon sx={{ cursor: "pointer" }} />}
         />
       </Box>
     );
   };
   return (
     <div>
-      <AddUser open={open} handleClose={handleClose} />
+      <AddUser open={open} handleClose={handleClose} fetchData={getListUsers} />
       <CustomizeTable
         data={usersData}
         searchTool={<SearchTool filter={filter} setFilter={setFilter} />}

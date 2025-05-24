@@ -62,7 +62,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
     // return console.log("data", data);
     try {
       const res: any = await userApi.createNewUser({ ...data });
-      console.log("data", data);
+      //console.log("data", data);
       toast.success("Tạo mới người dùng thành công");
       handleClose();
     } catch (error) {

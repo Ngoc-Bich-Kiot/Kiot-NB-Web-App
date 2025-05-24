@@ -41,7 +41,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string(),
     phone: Yup.string(),
-    address: Yup.string(),
+    // address: Yup.string(),
     roleId: Yup.string(),
   });
 
@@ -104,9 +104,9 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
             <Grid2 size={12}>
               <RHFTextField name="phone" label="SDT" />
             </Grid2>
-            <Grid2 size={12}>
+            {/* <Grid2 size={12}>
               <RHFTextField name="address" label="Địa chỉ" />
-            </Grid2>
+            </Grid2> */}
             {/* <Grid2 size={12}>
               <RHFTextField name="UserImages" label="Hình ảnh" />
             </Grid2> */}

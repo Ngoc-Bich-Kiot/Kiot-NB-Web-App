@@ -17,12 +17,12 @@ export interface ProductLog {
 export interface CreateProductFormInput {
   name: string;
   category: string;
-  originalPrice: number;
+  //originalPrice: number;
   sellingPrice: number;
   sourceOfProducts: string;
   userName: string;
-  phone: string;
-  address: string;
+  //phone: string;
+  //address: string;
   importCosts: number;
   stockQuantity: number;
   unit: string;
@@ -33,11 +33,11 @@ export interface CreateProductFormInput {
 export interface EditProductFormInput {
   name: string;
   category: string;
-  originalPrice: number;
+  //originalPrice: number;
   sellingPrice: number;
   sourceOfProducts: string;
   importCosts: number;
-  stockQuantity: number;
+  //stockQuantity: number;
   status: string;
   productImages: (File | string)[];
 }
@@ -46,7 +46,7 @@ export interface Product {
   id: string;
   name: string;
   category: string;
-  originalPrice: number;
+  //originalPrice: number;
   sellingPrice: number;
   sourceOfProducts: string;
   importCosts: number;

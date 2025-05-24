@@ -42,16 +42,16 @@ const productStatusOptions = [
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Tên sản phẩm là bắt buộc"),
     category: Yup.string().required("Loại là bắt buộc"),
-    originalPrice: Yup.number()
-        .transform((value, originalValue) => {
-            if (typeof originalValue === "string") {
-                const normalized = originalValue.replace(/,/g, "");
-                return parseFloat(normalized);
-            }
-            return value;
-        })
-        .typeError("Phải là số")
-        .required("Giá gốc là bắt buộc"),
+    // originalPrice: Yup.number()
+    //     .transform((value, originalValue) => {
+    //         if (typeof originalValue === "string") {
+    //             const normalized = originalValue.replace(/,/g, "");
+    //             return parseFloat(normalized);
+    //         }
+    //         return value;
+    //     })
+    //     .typeError("Phải là số")
+    //     .required("Giá gốc là bắt buộc"),
     sellingPrice: Yup.number()
         .transform((value, originalValue) => {
             if (typeof originalValue === "string") {
@@ -73,16 +73,16 @@ const validationSchema = Yup.object().shape({
         })
         .typeError("Phải là số")
         .required("Giá nhập là bắt buộc"),
-    stockQuantity: Yup.number()
-        .transform((value, originalValue) => {
-            if (typeof originalValue === "string") {
-                const normalized = originalValue.replace(/,/g, "");
-                return parseFloat(normalized);
-            }
-            return value;
-        })
-        .typeError("Phải là số")
-        .required("Số lượng tồn là bắt buộc"),
+    // stockQuantity: Yup.number()
+    //     .transform((value, originalValue) => {
+    //         if (typeof originalValue === "string") {
+    //             const normalized = originalValue.replace(/,/g, "");
+    //             return parseFloat(normalized);
+    //         }
+    //         return value;
+    //     })
+    //     .typeError("Phải là số")
+    //     .required("Số lượng tồn là bắt buộc"),
     status: Yup.string().required("Trạng thái là bắt buộc"),
     productImages: Yup.array()
         .min(1, "Images is required")
@@ -98,12 +98,12 @@ export default function EditProduct({ id }: { id: string }) {
         defaultValues: {
             name: "",
             category: "",
-            originalPrice: 0,
+            //originalPrice: 0,
             sellingPrice: 0,
             sourceOfProducts: "",
             importCosts: 0,
             status: "",
-            stockQuantity: 0,
+            //stockQuantity: 0,
             productImages: [],
         },
     });
@@ -136,8 +136,7 @@ export default function EditProduct({ id }: { id: string }) {
 
     const onSubmit = async (data: EditProductFormInput) => {
         try {
-            console.log(data)
-
+            //console.log(data)
             await productApi.UpdateProduct(id, data);
             toast.success("Cập nhật sản phẩm thành công");
             router.push(`/admin/manage_product/${id}/detail`);
@@ -190,21 +189,21 @@ export default function EditProduct({ id }: { id: string }) {
                         <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="category" label="Loại" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                        {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="originalPrice" label="Giá gốc" />
+                        </Grid2> */}
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <RHFTextField name="importCosts" label="Giá nhập" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="sellingPrice" label="Giá bán" />
                         </Grid2>
                         <Grid2 size={{ xs: 12, sm: 6 }}>
-                            <RHFTextField name="importCosts" label="Giá nhập" />
-                        </Grid2>
-                        <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="sourceOfProducts" label="Nguồn nhập" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                        {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="stockQuantity" label="Số lượng tồn" />
-                        </Grid2>
+                        </Grid2> */}
                         <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFSelect name="status" label="Trạng thái">
                                 {productStatusOptions.map((option) => (

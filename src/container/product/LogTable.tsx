@@ -16,36 +16,36 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
         });
 
         return sortedLogs.reduce<Record<string, ProductLog[]>>((acc, log) => {
-            const key = (log.type === "Import" || log.type === "Export") ? "Import/Export" : log.type;
+            const key = log.type;
             if (!acc[key]) acc[key] = [];
             acc[key].push(log);
             return acc;
         }, {});
     }, [logs]);
 
-    const tabKeys = Object.keys(groupedLogs);
+    const tabKeys = ["Import", "Export", "UpdatePrice"].filter((key) => key in groupedLogs);
 
     const tabLabels: Record<string, string> = {
-        "Import/Export": "Nhập / Xuất kho",
+        "Import": "Nhập kho",
+        "Export": "Xuất kho",
         "UpdatePrice": "Cập nhật giá",
     };
 
+    const importExportHeaders = [
+        { id: "name", label: "Tên", align: "center" },
+        { id: "quantity", label: "Số lượng", align: "center" },
+        { id: "type", label: "Nhập/Xuất", align: "center", format: "type" },
+        { id: "createDate", label: "Thời gian", align: "center", format: "date" },
+    ];
+
     const headerByType: Record<string, any[]> = {
-        "Import/Export": [
-            { id: "name", label: "Tên", align: "center" },
-            { id: "phone", label: "Số điện thoại", align: "center", format: "phoneNumber" },
-            { id: "address", label: "Địa chỉ", align: "center" },
-            { id: "quantity", label: "Số lượng", align: "center" },
-            { id: "type", label: "Nhập/Xuất", align: "center", format: "type" },
-            { id: "createDate", label: "Thời gian", align: "center", format: "date" },
-        ],
+        "Import": importExportHeaders,
+        "Export": importExportHeaders,
         "UpdatePrice": [
-            { id: "oldOriginalPrice", label: "Giá vốn cũ", align: "center" },
-            { id: "newOriginalPrice", label: "Giá vốn mới", align: "center" },
+            { id: "oldImportCost", label: "Giá nhập cũ", align: "center" },
+            { id: "newImportCost", label: "Giá nhập mới", align: "center" },
             { id: "oldSellingPrice", label: "Giá bán cũ", align: "center" },
             { id: "newSellingPrice", label: "Giá bán mới", align: "center" },
-            { id: "oldImportCost", label: "Giá bán cũ", align: "center" },
-            { id: "newImportCost", label: "Giá bán mới", align: "center" },
             { id: "createDate", label: "Thời gian", align: "center", format: "date" },
         ],
     };

@@ -65,6 +65,7 @@ export default function DetailProduct({ id }: { id: string }) {
   const fetchProduct = async () => {
     try {
       const data: Product = await productApi.getProductById(id);
+      console.log(data)
       if (data) {
         setProduct(data);
       }
@@ -266,7 +267,7 @@ export default function DetailProduct({ id }: { id: string }) {
                     Thông tin giá
                   </Typography>
                   <Grid2 container spacing={2}>
-                    <Grid2 size={12}>
+                    {/* <Grid2 size={12}>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Avatar sx={{ bgcolor: "#e3f2fd" }}>
                           <AttachMoneyOutlinedIcon />
@@ -278,6 +279,24 @@ export default function DetailProduct({ id }: { id: string }) {
                           <Typography variant="h6" fontWeight={600}>
                             {new Intl.NumberFormat("vi-VN").format(
                               product.originalPrice
+                            )}{" "}
+                            VNĐ
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </Grid2> */}
+                    <Grid2 size={12}>
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Avatar sx={{ bgcolor: "#fff3e0" }}>
+                          <TrendingUpOutlinedIcon />
+                        </Avatar>
+                        <Box flex={1}>
+                          <Typography variant="body2" color="text.secondary">
+                            Chi phí nhập
+                          </Typography>
+                          <Typography variant="h6" fontWeight={600}>
+                            {new Intl.NumberFormat("vi-VN").format(
+                              product.importCosts
                             )}{" "}
                             VNĐ
                           </Typography>
@@ -300,24 +319,6 @@ export default function DetailProduct({ id }: { id: string }) {
                           >
                             {new Intl.NumberFormat("vi-VN").format(
                               product.sellingPrice
-                            )}{" "}
-                            VNĐ
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    </Grid2>
-                    <Grid2 size={12}>
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Avatar sx={{ bgcolor: "#fff3e0" }}>
-                          <TrendingUpOutlinedIcon />
-                        </Avatar>
-                        <Box flex={1}>
-                          <Typography variant="body2" color="text.secondary">
-                            Chi phí nhập
-                          </Typography>
-                          <Typography variant="h6" fontWeight={600}>
-                            {new Intl.NumberFormat("vi-VN").format(
-                              product.importCosts
                             )}{" "}
                             VNĐ
                           </Typography>
@@ -347,9 +348,9 @@ export default function DetailProduct({ id }: { id: string }) {
                           Tồn kho
                         </Typography>
                         <Typography variant="h6" fontWeight={600}>
-                          {new Intl.NumberFormat("vi-VN").format(
-                            product.stockQuantity
-                          )}{" "}
+                          {typeof product.stockQuantity === "number"
+                            ? new Intl.NumberFormat("vi-VN").format(product.stockQuantity)
+                            : "Chưa cập nhật"}{" "}
                           sản phẩm
                         </Typography>
                       </Box>

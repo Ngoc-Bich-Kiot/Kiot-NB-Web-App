@@ -32,16 +32,16 @@ import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
   category: Yup.string().required("Loại là bắt buộc"),
-  originalPrice: Yup.number()
-    .transform((value, originalValue) => {
-      if (typeof originalValue === "string") {
-        const normalized = originalValue.replace(/,/g, "");
-        return parseFloat(normalized);
-      }
-      return value;
-    })
-    .typeError("Phải là số")
-    .required("Giá gốc là bắt buộc"),
+  // originalPrice: Yup.number()
+  //   .transform((value, originalValue) => {
+  //     if (typeof originalValue === "string") {
+  //       const normalized = originalValue.replace(/,/g, "");
+  //       return parseFloat(normalized);
+  //     }
+  //     return value;
+  //   })
+  //   .typeError("Phải là số")
+  //   .required("Giá gốc là bắt buộc"),
   sellingPrice: Yup.number()
     .transform((value, originalValue) => {
       if (typeof originalValue === "string") {
@@ -54,11 +54,11 @@ const validationSchema = Yup.object().shape({
     .required("Giá bán là bắt buộc"),
   sourceOfProducts: Yup.string().required("Nguồn nhập là bắt buộc"),
   userName: Yup.string().required("Tên người dùng là bắt buộc"),
-  phone: Yup.string()
-    .required("Số điện thoại là bắt buộc")
-    .transform((value) => value.replace(/\D/g, ""))
-    .matches(/^\d{10}$/, "Số điện thoại không hợp lệ"),
-  address: Yup.string().required("Địa chỉ là bắt buộc"),
+  // phone: Yup.string()
+  //   .required("Số điện thoại là bắt buộc")
+  //   .transform((value) => value.replace(/\D/g, ""))
+  //   .matches(/^\d{10}$/, "Số điện thoại không hợp lệ"),
+  // address: Yup.string().required("Địa chỉ là bắt buộc"),
   importCosts: Yup.number()
     .transform((value, originalValue) => {
       if (typeof originalValue === "string") {
@@ -103,12 +103,12 @@ const CreateProduct = () => {
     defaultValues: {
       name: "",
       category: "",
-      originalPrice: 0,
+      //originalPrice: 0,
       sellingPrice: 0,
       sourceOfProducts: "",
       userName: "",
-      phone: "",
-      address: "",
+      // phone: "",
+      // address: "",
       importCosts: 0,
       stockQuantity: 0,
       unit: "",
@@ -215,11 +215,18 @@ const CreateProduct = () => {
                 placeholder="Nhập loại sản phẩm"
               />
             </Grid2>
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            {/* <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFTextFieldNumber
                 name="originalPrice"
                 label="Giá gốc"
                 placeholder="Ví dụ: 100000"
+              />
+            </Grid2> */}
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              <RHFTextFieldNumber
+                name="importCosts"
+                label="Giá nhập"
+                placeholder="Giá nhập từ nhà cung cấp"
               />
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
@@ -227,13 +234,6 @@ const CreateProduct = () => {
                 name="sellingPrice"
                 label="Giá bán"
                 placeholder="Ví dụ: 120000"
-              />
-            </Grid2>
-            <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFTextFieldNumber
-                name="importCosts"
-                label="Giá nhập"
-                placeholder="Giá nhập từ nhà cung cấp"
               />
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
@@ -254,13 +254,13 @@ const CreateProduct = () => {
                 placeholder="Tên nhà cung cấp hoặc nguồn hàng"
               />
             </Grid2>
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            {/* <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFTextFieldNumber
                 name="stockQuantity"
                 label="Số lượng tồn"
                 placeholder="Ví dụ: 50"
               />
-            </Grid2>
+            </Grid2> */}
             <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFTextField
                 name="userName"
@@ -268,7 +268,7 @@ const CreateProduct = () => {
                 placeholder="Tên nhân viên nhập hàng"
               />
             </Grid2>
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            {/* <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFPhoneField
                 name="phone"
                 label="Số điện thoại"
@@ -281,7 +281,7 @@ const CreateProduct = () => {
                 label="Địa chỉ"
                 placeholder="Địa chỉ kho hoặc nơi nhập hàng"
               />
-            </Grid2>
+            </Grid2> */}
 
             <Grid2 size={{ xs: 12 }}>
               <RHFUploadMultiFile

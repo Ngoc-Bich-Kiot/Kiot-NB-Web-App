@@ -45,7 +45,7 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
     };
 
     const isInvalid =
-        !name.trim() || !phone.trim() || !address.trim() || editQuantity <= 0;
+        !name.trim() || editQuantity <= 0;
 
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +109,7 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
                             ),
                         }}
                     />
-                    <TextField
+                    {/* <TextField
                         fullWidth
                         label="Số điện thoại"
                         type="tel"
@@ -138,7 +138,7 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
                                 />
                             ),
                         }}
-                    />
+                    /> */}
                     <FormControl fullWidth>
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                             Loại thao tác

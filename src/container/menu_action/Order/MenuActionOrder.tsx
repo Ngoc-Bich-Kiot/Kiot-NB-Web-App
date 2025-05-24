@@ -30,7 +30,6 @@ const MenuActionOrder: React.FC<MenuActionOrderProps> = ({
   introId,
   fetchData,
 }) => {
-  //console.log("data dc chọn: ", orderData);
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
   const [openDetail, setOpenDetail] = React.useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = React.useState<boolean>(false);

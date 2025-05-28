@@ -372,7 +372,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                         {formatValue(getNestedValue(row, column.id), column)}
                       </TableCell>
                     ))}
-                    <TableCell
+                    <TableCell align="center"
                       onClick={() => selectedData && selectedData(row)}
                     >
                       {menuAction}

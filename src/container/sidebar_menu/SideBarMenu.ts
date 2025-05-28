@@ -4,6 +4,9 @@ import GroupIcon from "@mui/icons-material/Group";
 import { MenuItem } from "@/types/MenuItemType";
 import ListIcon from "@mui/icons-material/List";
 import AllInboxIcon from "@mui/icons-material/AllInbox";
+import CategoryIcon from '@mui/icons-material/Category';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import StoreIcon from '@mui/icons-material/Store';
 
 export const MenuItems: MenuItem[] = [
   {
@@ -37,7 +40,19 @@ export const MenuItems: MenuItem[] = [
     ],
   },
   {
-    icon: DashboardIcon,
+    icon: CategoryIcon,
+    label: "Loại sản phẩm",
+    path: "/admin/manage_category",
+    role: ["admin", "user"],
+  },
+  {
+    icon: StoreIcon,
+    label: "Nhà cung cấp",
+    path: "/admin/manage_source",
+    role: ["admin", "user"],
+  },
+  {
+    icon: LocalGroceryStoreIcon,
     label: "Sản phẩm",
     path: "/admin/manage_product",
     role: ["admin", "user"],

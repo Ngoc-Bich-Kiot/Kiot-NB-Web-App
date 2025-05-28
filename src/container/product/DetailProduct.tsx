@@ -251,7 +251,7 @@ export default function DetailProduct({ id }: { id: string }) {
                       Danh mục:
                     </Typography>
                     <Typography variant="body1" fontWeight={600}>
-                      {product.category}
+                      {product.category.name}
                     </Typography>
                   </Stack>
                 </CardContent>
@@ -368,7 +368,7 @@ export default function DetailProduct({ id }: { id: string }) {
                           Nguồn hàng
                         </Typography>
                         <Typography variant="h6" fontWeight={600}>
-                          {product.sourceOfProducts}
+                          {product.sourceOfProduct.name}
                         </Typography>
                       </Box>
                     </Stack>

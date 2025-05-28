@@ -41,7 +41,7 @@ const productStatusOptions = [
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Tên sản phẩm là bắt buộc"),
-    category: Yup.string().required("Loại là bắt buộc"),
+    //category: Yup.string().required("Loại là bắt buộc"),
     // originalPrice: Yup.number()
     //     .transform((value, originalValue) => {
     //         if (typeof originalValue === "string") {
@@ -62,7 +62,7 @@ const validationSchema = Yup.object().shape({
         })
         .typeError("Phải là số")
         .required("Giá bán là bắt buộc"),
-    sourceOfProducts: Yup.string().required("Nguồn nhập là bắt buộc"),
+    //sourceOfProducts: Yup.string().required("Nguồn nhập là bắt buộc"),
     importCosts: Yup.number()
         .transform((value, originalValue) => {
             if (typeof originalValue === "string") {
@@ -97,10 +97,10 @@ export default function EditProduct({ id }: { id: string }) {
         mode: "onChange",
         defaultValues: {
             name: "",
-            category: "",
+            //category: "",
             //originalPrice: 0,
             sellingPrice: 0,
-            sourceOfProducts: "",
+            //sourceOfProducts: "",
             importCosts: 0,
             status: "",
             //stockQuantity: 0,
@@ -186,9 +186,9 @@ export default function EditProduct({ id }: { id: string }) {
                         <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="name" label="Tên sản phẩm" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                        {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="category" label="Loại" />
-                        </Grid2>
+                        </Grid2> */}
                         {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="originalPrice" label="Giá gốc" />
                         </Grid2> */}
@@ -198,9 +198,9 @@ export default function EditProduct({ id }: { id: string }) {
                         <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="sellingPrice" label="Giá bán" />
                         </Grid2>
-                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                        {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="sourceOfProducts" label="Nguồn nhập" />
-                        </Grid2>
+                        </Grid2> */}
                         {/* <Grid2 size={{ xs: 12, sm: 6 }}>
                             <RHFTextField name="stockQuantity" label="Số lượng tồn" />
                         </Grid2> */}

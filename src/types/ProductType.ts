@@ -1,3 +1,6 @@
+import { Category } from "./CategoryType";
+import { SourceOfProduct } from "./SourceOfProduct";
+
 export interface ProductImage {
   id?: string;
   urlPath: string;
@@ -16,10 +19,10 @@ export interface ProductLog {
 
 export interface CreateProductFormInput {
   name: string;
-  category: string;
+  categoryId: number;
   //originalPrice: number;
   sellingPrice: number;
-  sourceOfProducts: string;
+  sourceOfProductId: number;
   userName: string;
   //phone: string;
   //address: string;
@@ -32,10 +35,10 @@ export interface CreateProductFormInput {
 
 export interface EditProductFormInput {
   name: string;
-  category: string;
+  //categoryId: number;
   //originalPrice: number;
   sellingPrice: number;
-  sourceOfProducts: string;
+  //sourceOfProductId: number;
   importCosts: number;
   //stockQuantity: number;
   status: string;
@@ -45,14 +48,17 @@ export interface EditProductFormInput {
 export interface Product {
   id: string;
   name: string;
-  category: string;
+  categoryId: number;
+  category: Category;
   //originalPrice: number;
   sellingPrice: number;
-  sourceOfProducts: string;
+  sourceOfProduct: SourceOfProduct;
+  sourceOfProductId: number;
   importCosts: number;
   isDeleted: boolean;
   stockQuantity: number;
   status: string;
+  unit: string;
   images: ProductImage[];
   logs: ProductLog[];
 }

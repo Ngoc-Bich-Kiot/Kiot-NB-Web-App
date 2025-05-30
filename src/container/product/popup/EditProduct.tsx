@@ -94,7 +94,7 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={3} sx={{ mt: 0.5 }}>
+                <Stack spacing={3} sx={{ mt: 1 }}>
                     <TextField
                         fullWidth
                         label="Tên người thực hiện"

@@ -60,7 +60,7 @@ const CreateSource: React.FC<CreateSourceProps> = ({ open, handleClose, fetchDat
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={3} sx={{ mt: 0.5 }}>
+                <Stack spacing={3} sx={{ mt: 1 }}>
                     <TextField
                         fullWidth
                         label="Tên nhà cung cấp"

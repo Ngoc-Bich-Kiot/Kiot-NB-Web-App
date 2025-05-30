@@ -29,8 +29,6 @@ import {
 import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
 import { Category } from "@/types/CategoryType";
 import categoryApi from "@/axios-clients/category_api/categoryAPI";
-import { SourceOfProduct } from "@/types/SourceOfProduct";
-import sourceOfProductApi from "@/axios-clients/source_of_product_api/sourceOfProductAPI";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
@@ -45,7 +43,6 @@ const validationSchema = Yup.object().shape({
     })
     .typeError("Phải là số")
     .required("Giá bán là bắt buộc"),
-  sourceOfProductId: Yup.number().required("Nguồn nhập là bắt buộc"),
   userName: Yup.string().required("Tên người dùng là bắt buộc"),
   importCosts: Yup.number()
     .transform((value, originalValue) => {
@@ -85,7 +82,6 @@ const capitalizedWords = (str: string): string => {
 const CreateProduct = () => {
   const router = useRouter();
   const [categories, setCategories] = React.useState<Category[]>([]);
-  const [sources, setSources] = React.useState<SourceOfProduct[]>([]);
 
   const methods = useForm<CreateProductFormInput>({
     resolver: yupResolver(validationSchema),
@@ -94,7 +90,6 @@ const CreateProduct = () => {
       name: "",
       categoryId: 0,
       sellingPrice: 0,
-      sourceOfProductId: 0,
       userName: "",
       importCosts: 0,
       stockQuantity: 0,
@@ -171,26 +166,11 @@ const CreateProduct = () => {
     getCategories();
   }, []);
 
-  // call api get source of products
-  React.useEffect(() => {
-    const getSources = async () => {
-      try {
-        const res = await sourceOfProductApi.getSourceActive();
-        setSources(res.items);
-      } catch (error) {
-        console.error("Lỗi khi lấy danh sách nguồn nhập:", error);
-      }
-    };
-
-    getSources();
-  }, []);
-
   const onSubmit = async (data: CreateProductFormInput) => {
     try {
       await productApi.CreateProduct(data);
       toast.success("Nhập sản phẩm thành công");
       router.push("/admin/manage_product");
-      // console.log(data)
     } catch (error) {
       toast.error("Nhập sản phẩm thất bại");
       console.error("Nhập sản phẩm thất bại:", error);
@@ -257,16 +237,6 @@ const CreateProduct = () => {
                   setValue("unit", formatted, { shouldValidate: true });
                 }}
               />
-            </Grid2>
-            <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFSelect name="sourceOfProductId" label="Nhà cung cấp">
-                <option value={0}>Chọn nhà cung cấp</option>
-                {sources?.map((source) => (
-                  <option key={source.id} value={source.id}>
-                    {source.name}
-                  </option>
-                ))}
-              </RHFSelect>
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFTextField

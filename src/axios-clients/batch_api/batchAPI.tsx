@@ -1,3 +1,4 @@
+import { get } from "http";
 import axiosClient from "../axiosClient";
 import { AxiosResponse } from "axios";
 
@@ -5,6 +6,13 @@ const BatchAPI = {
   //GET api
   getBatchList: (params?: any) => {
     const url = "/Batch/GetBatchPagination?IsDescending=true";
+    return axiosClient.get(url, {
+      params,
+    });
+  },
+
+  getBatchById: (id: string, params?: any) => {
+    const url = `/Batch/GetBatchById/${id}`;
     return axiosClient.get(url, {
       params,
     });

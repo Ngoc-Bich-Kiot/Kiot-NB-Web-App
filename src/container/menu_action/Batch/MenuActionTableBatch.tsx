@@ -2,10 +2,11 @@
 
 import React from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from "@mui/icons-material/Info";
 import AddIcon from "@mui/icons-material/Add";
 import BlockIcon from "@mui/icons-material/Block";
 import { Button, Menu, MenuItem } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function MenuActionTableBatch({
   batchData,
@@ -20,21 +21,18 @@ export default function MenuActionTableBatch({
 }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
 
   const actions = [
-    ...(!isDeleted
-      ? [
-          {
-            label: "Chỉnh sửa",
-            icon: <EditIcon sx={{ mr: 1, color: "#9ADE7B" }} />,
-            action: () => {
-              setOpenEditDialog(true);
-            },
-          },
-        ]
-      : []),
+    {
+      label: "Chi Tiết",
+      icon: <InfoIcon sx={{ mr: 1 }} color="info" />,
+      action: () => {
+        router.push(`/admin/batch_product/${batchData.id}/detail`)
+      },
+    },
     {
       label: isDeleted === true ? "Khôi phục" : "Ngừng",
       icon:

@@ -29,11 +29,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
   //define default values
   const defaultValues = {
     name: "",
-    email: "",
-    password: "",
     phone: "",
-    address: "",
-    userImages: [],
     roleId: "2",
   };
 
@@ -61,7 +57,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
   const createUser = async (data: any) => {
     // return console.log("data", data);
     try {
-      const res: any = await userApi.createNewUser({ ...data });
+      const res: any = await userApi.createNewUser({ data });
       //console.log("data", data);
       toast.success("Tạo mới người dùng thành công");
       handleClose();

@@ -22,7 +22,6 @@ export interface CreateProductFormInput {
   categoryId: number;
   //originalPrice: number;
   sellingPrice: number;
-  sourceOfProductId: number;
   userName: string;
   //phone: string;
   //address: string;

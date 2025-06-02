@@ -22,10 +22,8 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import RestoreFromTrashOutlinedIcon from "@mui/icons-material/RestoreFromTrashOutlined";
-import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
-import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import productApi from "@/axios-clients/product_api/productAPI";
 import ProductImageGallery from "./ProductImages";
@@ -39,12 +37,6 @@ export default function DetailProduct({ id }: { id: string }) {
   const router = useRouter();
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  const [editType, setEditType] = React.useState<"Import" | "Export">("Import");
-  const [editQuantity, setEditQuantity] = React.useState<number>(0);
-  const [rawQuantity, setRawQuantity] = React.useState<string>("0");
-  const [name, setName] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [address, setAddress] = React.useState("");
 
   const statusMap: Record<
     string,
@@ -93,9 +85,6 @@ export default function DetailProduct({ id }: { id: string }) {
       </Box>
     );
   }
-  const handleOpenDeleteDialog = () => {
-    setOpenEditDialog(true);
-  };
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
   };
@@ -103,12 +92,6 @@ export default function DetailProduct({ id }: { id: string }) {
     setOpenEditDialog(true);
   };
   const handleCloseEditDialog = () => {
-    setName("");
-    setPhone("");
-    setAddress("");
-    setEditType("Import");
-    setEditQuantity(0);
-    setRawQuantity("0");
     setOpenEditDialog(!openEditDialog);
     fetchProduct();
   };
@@ -267,24 +250,6 @@ export default function DetailProduct({ id }: { id: string }) {
                     Thông tin giá
                   </Typography>
                   <Grid2 container spacing={2}>
-                    {/* <Grid2 size={12}>
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Avatar sx={{ bgcolor: "#e3f2fd" }}>
-                          <AttachMoneyOutlinedIcon />
-                        </Avatar>
-                        <Box flex={1}>
-                          <Typography variant="body2" color="text.secondary">
-                            Giá gốc
-                          </Typography>
-                          <Typography variant="h6" fontWeight={600}>
-                            {new Intl.NumberFormat("vi-VN").format(
-                              product.originalPrice
-                            )}{" "}
-                            VNĐ
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    </Grid2> */}
                     <Grid2 size={12}>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Avatar sx={{ bgcolor: "#fff3e0" }}>
@@ -358,19 +323,6 @@ export default function DetailProduct({ id }: { id: string }) {
                         badgeContent={product.stockQuantity === 0 ? "Hết" : ""}
                         color="error"
                       />
-                    </Stack>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <Avatar sx={{ bgcolor: "#ede7f6" }}>
-                        <StoreOutlinedIcon />
-                      </Avatar>
-                      <Box flex={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          Nguồn hàng
-                        </Typography>
-                        <Typography variant="h6" fontWeight={600}>
-                          {product.sourceOfProduct.name}
-                        </Typography>
-                      </Box>
                     </Stack>
                   </Stack>
                 </CardContent>

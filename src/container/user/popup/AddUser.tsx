@@ -34,7 +34,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
     phone: "",
     address: "",
     userImages: [],
-    roleId: "2",
+    roleId: 2,
   };
 
   //Yup validation schema
@@ -42,7 +42,7 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
     name: Yup.string(),
     phone: Yup.string(),
     address: Yup.string(),
-    roleId: Yup.string(),
+    roleId: Yup.number(),
   });
 
   //handle submit

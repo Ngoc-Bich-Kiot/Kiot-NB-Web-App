@@ -371,7 +371,7 @@ function Home() {
                 color="text.secondary"
                 sx={{ fontSize: "0.85rem" }}
               >
-                © 2024 Your Company. All rights reserved.
+                © 2025 Your Company. All rights reserved.
               </Typography>
             </Box>
           </Paper>

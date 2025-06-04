@@ -42,7 +42,6 @@ interface OrderDetailForm {
 interface CreateOrderForm {
   name: string;
   phone: string;
-  address: string;
   orderDetails: OrderDetailForm[];
 }
 
@@ -68,7 +67,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const defaultValues: CreateOrderForm = {
     name: "",
     phone: "",
-    address: "",
+    // address: "",
     orderDetails: [
       {
         productId: 0,
@@ -124,7 +123,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập tên người đặt"),
     phone: Yup.string().required("Vui lòng nhập số điện thoại"),
-    address: Yup.string().required("Vui lòng nhập địa chỉ"),
     orderDetails: Yup.array()
       .of(orderDetailSchema)
       .min(1, "Vui lòng chọn ít nhất một sản phẩm"),
@@ -177,7 +175,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       console.log("Thông tin khách hàng:", res); // In log thông tin khách hàng
       setUserInformation(res);
       methods.setValue("name", res.name);
-      methods.setValue("address", res.address);
       setIsPhoneNumber(true);
     } catch (error) {
       toast.error("Có lỗi xảy ra trong quá trình lấy thông tin khách hàng");
@@ -251,17 +248,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
                   <RHFTextField
                     name="name"
                     label="Tên người đặt"
-                    slotProps={{
-                      input: {
-                        readOnly: true,
-                      },
-                    }}
-                  />
-                </Grid2>
-                <Grid2 size={12}>
-                  <RHFTextField
-                    name="address"
-                    label="Địa chỉ"
                     slotProps={{
                       input: {
                         readOnly: true,

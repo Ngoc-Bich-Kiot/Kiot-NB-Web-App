@@ -14,6 +14,7 @@ import Logo from "./Logo";
 import { MenuItems } from "./SideBarMenu";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { preconnect } from "react-dom";
 
 // interface NavBarProps {
 //   openDrawer: boolean;
@@ -27,11 +28,20 @@ const NavBar = () => {
   };
 
   //handle open nested
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<{ [key: string]: boolean }>({});
 
-  const handleClick = () => {
-    setOpen(!open);
+  const handleClick = (index: number) => {
+    setOpen((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
+  // const handleClick = (index: number) => {
+  //   setOpenMenus((prev) => ({
+  //     ...prev,
+  //     [index]: !prev[index],
+  //   }));
+  // };
 
   return (
     <Box
@@ -97,7 +107,7 @@ const NavBar = () => {
               <div key={index}>
                 <ListItemButton
                   key={index}
-                  onClick={handleClick}
+                  onClick={() => handleClick(index)}
                   sx={{ color: colors.grey }}
                 >
                   <Box
@@ -113,7 +123,11 @@ const NavBar = () => {
                   {open ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
 
-                <Collapse in={open} timeout="auto" unmountOnExit>
+                <Collapse
+                  in={open[index] || false}
+                  timeout="auto"
+                  unmountOnExit
+                >
                   <List component="div" disablePadding>
                     {itemNav?.children.map((item, index) => (
                       <Link

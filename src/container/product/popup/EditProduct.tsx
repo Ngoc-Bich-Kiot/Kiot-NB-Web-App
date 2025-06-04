@@ -1,8 +1,6 @@
 import React from "react";
-import { Backdrop, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Fade, FormControl, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { Backdrop, Button, Dialog, DialogActions, DialogContent, DialogTitle, Fade, FormControl, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { toast } from "react-toastify";
@@ -45,7 +43,7 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
     };
 
     const isInvalid =
-        !name.trim() || !phone.trim() || !address.trim() || editQuantity <= 0;
+        !name.trim() || editQuantity <= 0;
 
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +94,7 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={3} sx={{ mt: 0.5 }}>
+                <Stack spacing={3} sx={{ mt: 1 }}>
                     <TextField
                         fullWidth
                         label="Tên người thực hiện"
@@ -106,36 +104,6 @@ const EditProduct: React.FC<EditProductProps> = ({ open, product, handleClose, f
                         InputProps={{
                             startAdornment: (
                                 <PersonOutlineIcon sx={{ mr: 1, color: "action.active" }} />
-                            ),
-                        }}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Số điện thoại"
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            if (/^\d*$/.test(value)) {
-                                setPhone(value);
-                            }
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <PhoneOutlinedIcon sx={{ mr: 1, color: "action.active" }} />
-                            ),
-                        }}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Địa chỉ"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <LocationOnOutlinedIcon
-                                    sx={{ mr: 1, color: "action.active" }}
-                                />
                             ),
                         }}
                     />

@@ -5,6 +5,9 @@ const dashboardApi = {
     const url = "Dashboards/GetDashboardData";
     return axiosClient.get(url, {
       params,
+      paramsSerializer: {
+        indexes: null, // by default: false
+      },
     });
   },
 };

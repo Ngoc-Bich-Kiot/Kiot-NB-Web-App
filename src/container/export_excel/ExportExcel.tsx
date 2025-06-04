@@ -205,7 +205,7 @@ export default function ExcelExportUI() {
                           <DatePicker
                             label="Từ ngày *"
                             value={fromDate}
-                            onChange={(newValue) => setFromDate(newValue)}
+                            onChange={(newValue) => setFromDate(newValue as Dayjs)}
                             slotProps={{
                               textField: {
                                 fullWidth: true,
@@ -239,7 +239,7 @@ export default function ExcelExportUI() {
                           <DatePicker
                             label="Đến ngày (tùy chọn)"
                             value={toDate}
-                            onChange={(newValue) => setToDate(newValue)}
+                            onChange={(newValue) => setToDate(newValue as Dayjs)}
                             slotProps={{
                               textField: {
                                 fullWidth: true,

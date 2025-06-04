@@ -30,7 +30,7 @@ interface CTbaleProps {
   selectedData?: any;
   searchTool?: ReactNode;
   eventAction?: ReactNode;
-  tableContainerId?: string
+  tableContainerId?: string;
   handleChangePage: (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -99,6 +99,15 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
     if (column.format && column.format == "date") {
       if (value) {
         return moment(value).format("DD/MM/YYYY");
+      }
+      return "-";
+    }
+
+    // bathchNumber
+
+    if (column.format && column.format == "bathchNumber") {
+      if (value) {
+        return "BATCH " + value;
       }
       return "-";
     }
@@ -331,9 +340,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           />
           <Box sx={{ pr: 2 }}>{eventAction}</Box>
         </Box>
-        <Box >{searchTool}</Box>
+        <Box>{searchTool}</Box>
         <CardContent>
-          <StyledTableContainer id={tableContainerId}
+          <StyledTableContainer
+            id={tableContainerId}
             sx={(theme) => ({
               [theme.breakpoints.up("desktop")]: {
                 minWidth: 650,
@@ -373,6 +383,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                       </TableCell>
                     ))}
                     <TableCell
+                      align="center"
                       onClick={() => selectedData && selectedData(row)}
                     >
                       {menuAction}
@@ -391,8 +402,9 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelRowsPerPage="Số hàng trên trang"
               labelDisplayedRows={({ from, to, count }) => {
-                return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
-                  }`;
+                return `${from}–${to} trên ${
+                  count !== -1 ? count : `nhiều hơn ${to}`
+                }`;
               }}
             />
           </StyledTableContainer>

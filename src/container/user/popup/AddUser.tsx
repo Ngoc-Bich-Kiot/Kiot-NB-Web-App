@@ -29,8 +29,6 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
   //define default values
   const defaultValues = {
     name: "",
-    email: "",
-    password: "",
     phone: "",
     address: "",
     userImages: [],
@@ -61,8 +59,8 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
   const createUser = async (data: any) => {
     // return console.log("data", data);
     try {
-      const res: any = await userApi.createNewUser({ ...data });
-      console.log("data", data);
+      const res: any = await userApi.createNewUser({ data });
+      //console.log("data", data);
       toast.success("Tạo mới người dùng thành công");
       handleClose();
     } catch (error) {
@@ -104,9 +102,9 @@ const AddUser: React.FC<AddUserProps> = ({ open, handleClose, fetchData }) => {
             <Grid2 size={12}>
               <RHFTextField name="phone" label="SDT" />
             </Grid2>
-            <Grid2 size={12}>
+            {/* <Grid2 size={12}>
               <RHFTextField name="address" label="Địa chỉ" />
-            </Grid2>
+            </Grid2> */}
             {/* <Grid2 size={12}>
               <RHFTextField name="UserImages" label="Hình ảnh" />
             </Grid2> */}

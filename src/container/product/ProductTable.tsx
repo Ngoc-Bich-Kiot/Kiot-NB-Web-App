@@ -1,17 +1,27 @@
 "use client";
 
 import React from "react";
-import CustomizeTable from "@/components/table/customize-table";
-import productApi from "@/axios-clients/product_api/productAPI";
-import { Product, ProductListResponse } from "@/types/ProductType";
-import useDebounce from "@/hook/useDebounce";
 import { useRouter } from "next/navigation";
+
+// MUI
 import { Box, Button, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+
+// library
 import { toast } from "react-toastify";
-import MenuActionTableProduct from "../menu_action/Product/MenuActionProduct";
+
+// Components
+import CustomizeTable from "@/components/table/customize-table";
 import IntroTour from "@/components/intro/IntroTour";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import MenuActionTableProduct from "../menu_action/Product/MenuActionProduct";
+
+// Hooks & API
+import useDebounce from "@/hook/useDebounce";
+import productApi from "@/axios-clients/product_api/productAPI";
+
+// Types
+import { Product } from "@/types/ProductType";
 
 interface SearchToolProps {
   filter: any;
@@ -187,6 +197,7 @@ const ProductTable = () => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
         <Button
+          id="create-order-btn"
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}

@@ -27,7 +27,8 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import exportApi from "@/axios-clients/export_excel_api/ExportExcelAPI";
 import IntroTour from "@/components/intro/IntroTour";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import withAuth from "@/hook/checkRoute";
 
 const exportExcelIntroSteps = [
   {
@@ -45,8 +46,7 @@ const exportExcelIntroSteps = [
   {
     element: "#date-picker-to",
     title: "Chọn ngày kết thúc ",
-    intro:
-      "Chọn ngày kết thúc cho khoảng thời gian xuất báo cáo.",
+    intro: "Chọn ngày kết thúc cho khoảng thời gian xuất báo cáo.",
     position: "top",
   },
   {
@@ -63,7 +63,7 @@ const exportExcelIntroSteps = [
   },
 ];
 
-export default function ExcelExportUI() {
+function ExcelExportUI() {
   const [fromDate, setFromDate] = useState<Dayjs | null>(null);
   const [toDate, setToDate] = useState<Dayjs | null>(null);
   const [loading, setLoading] = useState(false);
@@ -170,7 +170,14 @@ export default function ExcelExportUI() {
                   }}
                 >
                   <CardContent sx={{ p: 4 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        mb: 3,
+                        gap: 2,
+                      }}
+                    >
                       <CalendarTodayIcon
                         color="primary"
                         sx={{ fontSize: 28 }}
@@ -181,7 +188,7 @@ export default function ExcelExportUI() {
                       <IntroTour
                         steps={exportExcelIntroSteps}
                         buttonContent={
-                          <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
+                          <InfoOutlinedIcon sx={{ cursor: "pointer" }} />
                         }
                       />
                     </Box>
@@ -205,7 +212,9 @@ export default function ExcelExportUI() {
                           <DatePicker
                             label="Từ ngày *"
                             value={fromDate}
-                            onChange={(newValue) => setFromDate(newValue as Dayjs)}
+                            onChange={(newValue) =>
+                              setFromDate(newValue as Dayjs)
+                            }
                             slotProps={{
                               textField: {
                                 fullWidth: true,
@@ -239,7 +248,9 @@ export default function ExcelExportUI() {
                           <DatePicker
                             label="Đến ngày (tùy chọn)"
                             value={toDate}
-                            onChange={(newValue) => setToDate(newValue as Dayjs)}
+                            onChange={(newValue) =>
+                              setToDate(newValue as Dayjs)
+                            }
                             slotProps={{
                               textField: {
                                 fullWidth: true,
@@ -406,3 +417,5 @@ export default function ExcelExportUI() {
     </LocalizationProvider>
   );
 }
+
+export default withAuth(ExcelExportUI);

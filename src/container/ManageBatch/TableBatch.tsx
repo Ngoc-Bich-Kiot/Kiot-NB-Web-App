@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import CustomizeTable from "@/components/table/customize-table";
 import BatchAPI from "@/axios-clients/batch_api/batchAPI";
 import MenuActionTableBatch from "../menu_action/Batch/MenuActionTableBatch";
+import withAuth from "@/hook/checkRoute";
 
 // Define the Batch model interface
 interface BatchModel {
@@ -106,4 +107,4 @@ const TableBatch = () => {
   );
 };
 
-export default TableBatch;
+export default withAuth(TableBatch);

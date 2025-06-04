@@ -39,6 +39,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import dashboardApi from "@/axios-clients/dashboard_api/dashboardAPI";
 import IntroTour from "@/components/intro/IntroTour";
 import { title } from "process";
+import withAuth from "@/hook/checkRoute";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -587,4 +588,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

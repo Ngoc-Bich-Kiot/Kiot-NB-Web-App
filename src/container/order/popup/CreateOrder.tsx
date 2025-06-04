@@ -11,6 +11,11 @@ import { colors, font_weight } from "@/styles/config-file";
 import { Product } from "@/types/ProductType";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import PersonIcon from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   Box,
   Button,
@@ -20,6 +25,14 @@ import {
   DialogTitle,
   Grid2,
   IconButton,
+  Paper,
+  Typography,
+  Divider,
+  Card,
+  CardContent,
+  Chip,
+  Fade,
+  Stack,
 } from "@mui/material";
 import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -61,17 +74,16 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
   const [userInformation, setUserInformation] =
     React.useState<userInformationType>();
-  const [usersList, setUsersList] = React.useState<User[]>([]); // Thay đổi kiểu dữ liệu nếu cần
+  const [usersList, setUsersList] = React.useState<User[]>([]);
 
   // Define default values
   const defaultValues: CreateOrderForm = {
     name: "",
     phone: "",
-    // address: "",
     orderDetails: [
       {
         productId: 0,
-        quantity: 1, // Đặt giá trị mặc định cho số lượng là 1
+        quantity: 1,
       },
     ],
   };
@@ -86,7 +98,7 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
       setListProduct(res.items);
     } catch (error) {
       toast.error("Có lỗi xảy ra trong quá trình lấy danh sách sản phẩm");
-      console.error("Lỗi khi lấy danh sách sản phẩm:", error); // Thêm log lỗi chi tiết
+      console.error("Lỗi khi lấy danh sách sản phẩm:", error);
     }
   };
 
@@ -98,10 +110,10 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
         pageSize: 1000,
       });
       setUsersList(res.items);
-      console.log("Danh sách người dùng:", res.items); // In log danh sách người dùng
+      console.log("Danh sách người dùng:", res.items);
     } catch (error) {
       toast.error("Có lỗi xảy ra trong quá trình lấy danh sách người dùng");
-      console.error("Lỗi khi lấy danh sách người dùng:", error); // Thêm log lỗi chi tiết
+      console.error("Lỗi khi lấy danh sách người dùng:", error);
     }
   };
 
@@ -136,14 +148,13 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
 
   const {
     handleSubmit,
-    control, // Thêm control để sử dụng với useFieldArray
+    control,
     getValues,
     watch,
     formState: { isSubmitting },
   } = methods;
 
   const { fields, append, remove } = useFieldArray({
-    // Sử dụng useFieldArray để quản lý mảng orderDetails
     control,
     name: "orderDetails",
   });
@@ -152,19 +163,19 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     console.log("Dữ liệu đơn hàng:", data);
     try {
       const res = await orderApi.createOrder(data);
-      console.log("Phản hồi từ API:", res); // In log phản hồi từ API
+      console.log("Phản hồi từ API:", res);
       toast.success("Tạo đơn hàng thành công");
       handleClose();
       fetchData();
     } catch (error: any) {
       toast.error("Tạo đơn hàng thất bại");
-      console.error("Lỗi tạo đơn hàng:", error.response?.data || error.message); // Log lỗi chi tiết từ response hoặc message
+      console.error("Lỗi tạo đơn hàng:", error.response?.data || error.message);
     }
   };
 
   //func add field product
   const handleAddProduct = () => {
-    append({ productId: 0, quantity: 1 }); // Thêm một sản phẩm mới vào form
+    append({ productId: 0, quantity: 1 });
   };
 
   //func check phone number
@@ -172,13 +183,13 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
     const phone = getValues("phone");
     try {
       const res: any = await userApi.getUserByPhone({ phone });
-      console.log("Thông tin khách hàng:", res); // In log thông tin khách hàng
+      console.log("Thông tin khách hàng:", res);
       setUserInformation(res);
       methods.setValue("name", res.name);
       setIsPhoneNumber(true);
     } catch (error) {
       toast.error("Có lỗi xảy ra trong quá trình lấy thông tin khách hàng");
-      console.error("Lỗi khi lấy thông tin khách hàng:", error); // Thêm log lỗi chi tiết
+      console.error("Lỗi khi lấy thông tin khách hàng:", error);
     }
   };
 
@@ -192,119 +203,357 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   }, [phoneValue]);
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          overflow: "hidden",
+        },
+      }}
+    >
       <FormProvider methods={methods} onSubmit={handleSubmit(createOrder)}>
+        {/* Enhanced Header */}
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 1,
-            bgcolor: colors.primary,
+            background: `linear-gradient(135deg, ${colors.originPrimary} 0%, ${colors.originPrimary}cc 100%)`,
             color: colors.white,
+            position: "relative",
           }}
         >
-          <DialogTitle
+          <Box
             sx={{
-              textTransform: "uppercase",
-              fontWeight: font_weight.regular,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              p: 3,
             }}
           >
-            Tạo đơn hàng
-          </DialogTitle>
-          <IconButton onClick={handleClose} color="inherit">
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <DialogContent>
-          <Grid2 container spacing={4} sx={{ mt: 1 }}>
-            <Grid2 size={12}>
-              <Grid2
-                container
-                spacing={4}
-                sx={{ mt: 1, display: "flex", alignItems: "center" }}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <ShoppingCartIcon sx={{ fontSize: 28 }} />
+              <DialogTitle
+                sx={{
+                  p: 0,
+                  fontSize: "1.5rem",
+                  fontWeight: font_weight.regular,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                }}
               >
-                <Grid2 size={10}>
-                  <RHFAutoComplete
-                    name="phone"
-                    label="Số điện thoại"
-                    options={usersList}
-                  />
-                </Grid2>
-                <Grid2 size={2}>
-                  <Button
-                    variant="contained"
-                    sx={{ bgcolor: colors.green_400 }}
-                    onClick={() => handleCheckPhoneNumber()}
-                  >
-                    Chọn
-                  </Button>
-                </Grid2>
-              </Grid2>
-            </Grid2>
-            {isPhoneNumber === true ? (
-              <>
+                Tạo đơn hàng
+              </DialogTitle>
+            </Box>
+            <IconButton
+              onClick={handleClose}
+              sx={{
+                color: "inherit",
+                backgroundColor: "rgba(255,255,255,0.1)",
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  transform: "scale(1.05)",
+                },
+                transition: "all 0.2s ease",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </Box>
+
+        <DialogContent sx={{ p: 0, maxHeight: "70vh", overflowY: "auto" }}>
+          <Box sx={{ p: 3 }}>
+            {/* Customer Information Section */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                mb: 3,
+                backgroundColor: colors.grey_200,
+                border: "1px solid #e9ecef",
+                borderRadius: 2,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 2,
+                  color: colors.originPrimary,
+                  fontWeight: 600,
+                }}
+              >
+                <PersonIcon />
+                Thông tin khách hàng
+              </Typography>
+
+              <Grid2 container spacing={3}>
                 <Grid2 size={12}>
-                  <RHFTextField
-                    name="name"
-                    label="Tên người đặt"
-                    slotProps={{
-                      input: {
-                        readOnly: true,
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Box sx={{ flex: 1 }}>
+                      <RHFAutoComplete
+                        name="phone"
+                        label="Số điện thoại"
+                        options={usersList}
+                      />
+                    </Box>
+                    <Button
+                      variant="contained"
+                      onClick={handleCheckPhoneNumber}
+                      sx={{
+                        bgcolor: colors.green_400,
+                        px: 3,
+                        py: 1.5,
+                        borderRadius: 2,
+                        textTransform: "none",
+                        fontWeight: 600,
+                        minWidth: "auto",
+                        "&:hover": {
+                          bgcolor: colors.green_400,
+                          transform: "translateY(-1px)",
+                          boxShadow: 3,
+                        },
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      Chọn
+                    </Button>
+                  </Stack>
+                </Grid2>
+
+                <Fade in={isPhoneNumber} timeout={500}>
+                  <Grid2 size={12}>
+                    {isPhoneNumber && (
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
+                        <CheckCircleIcon sx={{ color: colors.green_400 }} />
+                        <RHFTextField
+                          name="name"
+                          label="Tên người đặt"
+                          slotProps={{
+                            input: {
+                              readOnly: true,
+                            },
+                          }}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              backgroundColor: "#e8f5e8",
+                            },
+                          }}
+                        />
+                      </Box>
+                    )}
+                  </Grid2>
+                </Fade>
+              </Grid2>
+            </Paper>
+
+            {/* Products Section */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                backgroundColor: colors.grey_200,
+                border: "1px solid #e9ecef",
+                borderRadius: 2,
+                // maxHeight: "500px",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 3,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    color: colors.originPrimary,
+                    fontWeight: 600,
+                  }}
+                >
+                  <ShoppingCartIcon />
+                  Danh sách sản phẩm
+                </Typography>
+                <Chip
+                  label={`${fields.length} sản phẩm`}
+                  color="primary"
+                  size="small"
+                  sx={{ fontWeight: 600 }}
+                />
+              </Box>
+
+              <Stack spacing={2}>
+                {fields.map((item, index) => (
+                  <Card
+                    key={item.id}
+                    sx={{
+                      border: "1px solid #e0e0e0",
+                      borderRadius: 2,
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        boxShadow: 2,
+                        transform: "translateY(-1px)",
                       },
                     }}
-                  />
-                </Grid2>
-              </>
-            ) : null}
-            {fields.map((item, index) => (
-              <React.Fragment key={item.id}>
-                <Grid2 container spacing={2} alignItems="center">
-                  <Grid2 size={8}>
-                    <RHFSelect
-                      name={`orderDetails.${index}.productId`}
-                      label="Sản Phẩm"
-                      fullWidth
-                    >
-                      <option value={0}>Chọn sản phẩm</option>
-                      {listProduct?.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name}
-                        </option>
-                      ))}
-                    </RHFSelect>
-                  </Grid2>
-                  <Grid2 size={3}>
-                    <RHFTextField
-                      name={`orderDetails.${index}.quantity`}
-                      label="Số lượng"
-                      type="number"
-                    />
-                  </Grid2>
-                  <Grid2 size={1}>
-                    <IconButton onClick={() => remove(index)} color="error">
-                      <CloseIcon />
-                    </IconButton>
-                  </Grid2>
-                </Grid2>
-              </React.Fragment>
-            ))}
-            <Grid2 size={12}>
-              <Button onClick={handleAddProduct} variant="outlined">
-                Thêm sản phẩm
-              </Button>
-            </Grid2>
-          </Grid2>
+                  >
+                    <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                      <Grid2 container spacing={2} alignItems="center">
+                        <Grid2 size={0.5}>
+                          <Box
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                              backgroundColor: colors.originPrimary,
+                              color: "white",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontWeight: "bold",
+                              fontSize: "0.875rem",
+                            }}
+                          >
+                            {index + 1}
+                          </Box>
+                        </Grid2>
+                        <Grid2 size={7.5}>
+                          <RHFSelect
+                            name={`orderDetails.${index}.productId`}
+                            label="Sản Phẩm"
+                            fullWidth
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: 2,
+                              },
+                            }}
+                          >
+                            <option value={0}>Chọn sản phẩm</option>
+                            {listProduct?.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                              </option>
+                            ))}
+                          </RHFSelect>
+                        </Grid2>
+                        <Grid2 size={3}>
+                          <RHFTextField
+                            name={`orderDetails.${index}.quantity`}
+                            label="Số lượng"
+                            type="number"
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: 2,
+                              },
+                            }}
+                          />
+                        </Grid2>
+                        <Grid2 size={1}>
+                          <IconButton
+                            onClick={() => remove(index)}
+                            color="error"
+                            sx={{
+                              "&:hover": {
+                                backgroundColor: "rgba(244, 67, 54, 0.1)",
+                                transform: "scale(1.1)",
+                              },
+                              transition: "all 0.2s ease",
+                            }}
+                            disabled={fields.length === 1}
+                          >
+                            <CloseIcon />
+                          </IconButton>
+                        </Grid2>
+                      </Grid2>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Stack>
+
+              <Box sx={{ mt: 3, textAlign: "center" }}>
+                <Button
+                  onClick={handleAddProduct}
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  sx={{
+                    borderRadius: 2,
+                    px: 3,
+                    py: 1,
+                    textTransform: "none",
+                    fontWeight: 600,
+                    borderColor: colors.originPrimary,
+                    color: colors.originPrimary,
+                    "&:hover": {
+                      backgroundColor: `${colors.originPrimary}10`,
+                      borderColor: colors.originPrimary,
+                      transform: "translateY(-1px)",
+                    },
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  Thêm sản phẩm
+                </Button>
+              </Box>
+            </Paper>
+          </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
+
+        <Divider />
+
+        <DialogActions sx={{ p: 3, backgroundColor: "#fafafa" }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ width: "100%", justifyContent: "flex-end" }}
           >
-            {isSubmitting ? "Đang tạo..." : "Tạo đơn hàng"}
-          </Button>
+            <Button
+              onClick={handleClose}
+              variant="outlined"
+              sx={{
+                px: 3,
+                py: 1,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              Hủy
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+              sx={{
+                px: 4,
+                py: 1,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+                backgroundColor: colors.originPrimary,
+                "&:hover": {
+                  backgroundColor: colors.originPrimary,
+                  transform: "translateY(-1px)",
+                  boxShadow: 3,
+                },
+                "&:disabled": {
+                  backgroundColor: "#ccc",
+                },
+                transition: "all 0.2s ease",
+              }}
+            >
+              {isSubmitting ? "Đang tạo..." : "Tạo đơn hàng"}
+            </Button>
+          </Stack>
         </DialogActions>
       </FormProvider>
     </Dialog>

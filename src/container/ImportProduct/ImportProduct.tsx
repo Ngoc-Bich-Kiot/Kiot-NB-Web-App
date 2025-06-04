@@ -47,6 +47,7 @@ import { useRouter } from "next/navigation";
 import { ProductBatch } from "@/types/BatchType";
 import { convertDateToISO, formatMoney, isDateInFuture } from "@/utils/fn";
 import sourceOfProductApi from "@/axios-clients/source_of_product_api/sourceOfProductAPI";
+import withAuth from "@/hook/checkRoute";
 
 interface BatchDetail {
   productId: number;
@@ -799,4 +800,4 @@ const ImportProduct: React.FC = () => {
   );
 };
 
-export default ImportProduct;
+export default withAuth(ImportProduct);

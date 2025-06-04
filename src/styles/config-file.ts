@@ -1,6 +1,7 @@
-import { green } from "@mui/material/colors";
+import { green, orange } from "@mui/material/colors";
 
 export const colors = {
+  originPrimary: "#0d47a1",
   primary: "#9EDDFF",
   secondary: "#BEFFF7",
   tertiary: "#F7F7F7",
@@ -37,8 +38,14 @@ export const colors = {
   green_700: "#388e3c",
   green_800: "#2e7d32",
   cyan_300: "#55BDC3",
+  orange_100: "#FFBFA0",
+  orange_200: "#F9A76C",
   orange_300: "#F38332",
+  orange_400: "#F26D1F",
   orange_500: "#f56811",
+  orange_600: "#f55c00",
+  orange_700: "#f44f00",
+  orange_800: "#f33f00",
   blue_100: "#E5F1FF",
   blue_200: "#BBE1FF",
   blue_300: "#8CB4FF",

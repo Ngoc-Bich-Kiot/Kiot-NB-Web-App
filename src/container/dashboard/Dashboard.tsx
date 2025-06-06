@@ -35,10 +35,11 @@ import {
   MonthlyStats,
   Product,
 } from "@/types/DashboardType";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import dashboardApi from "@/axios-clients/dashboard_api/dashboardAPI";
 import IntroTour from "@/components/intro/IntroTour";
 import { title } from "process";
+import withAuth from "@/hook/checkRoute";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -128,7 +129,11 @@ const StatsSummary: React.FC<{ dashboardData: DashboardData }> = ({
   return (
     <Grid container spacing={3}>
       {stats.map((stat, index) => (
-        <Grid size={{ xs: 12, md: 3, sm: 6 }} key={index} id={`stat-${stat.title.toLowerCase().replace(/\s/g, '-')}`}>
+        <Grid
+          size={{ xs: 12, md: 3, sm: 6 }}
+          key={index}
+          id={`stat-${stat.title.toLowerCase().replace(/\s/g, "-")}`}
+        >
           <StyledCard>
             <StatsCardContent>
               <Box
@@ -158,7 +163,7 @@ const StatsSummary: React.FC<{ dashboardData: DashboardData }> = ({
   );
 };
 
-// Top selling products chart with larger images
+// Top selling products chart
 const TopSellingProductsChart: React.FC<{ products: Product[] }> = ({
   products,
 }) => {
@@ -315,11 +320,15 @@ const TopSellingProductsChart: React.FC<{ products: Product[] }> = ({
 const MonthlyRevenueChart: React.FC<{ monthlyStats: MonthlyStats[] }> = ({
   monthlyStats,
 }) => {
+  console.log(monthlyStats, " dữ liệu tháng");
+
   const data = monthlyStats.map((stat) => ({
     name: monthNames[stat.month - 1],
     donHang: stat.orderCount,
     doanhThu: stat.totalRevenue,
   }));
+
+  console.log(data, " dữ liệu");
 
   return (
     <StyledCard>
@@ -432,59 +441,62 @@ const Dashboard: React.FC = () => {
 
   const dashBoardIntroSteps = [
     {
-      element: '#summary-stats',
-      title: 'Tổng quan',
-      intro: 'Thống kê tổng quan cửa hàng.',
-      position: "bottom"
+      element: "#summary-stats",
+      title: "Tổng quan",
+      intro: "Thống kê tổng quan cửa hàng.",
+      position: "bottom",
     },
     {
-      element: '#stat-total-revenue',
-      title: 'Tổng doanh thu',
-      intro: 'Tổng doanh thu của cửa hàng trong tháng.',
-      position: "bottom"
+      element: "#stat-total-revenue",
+      title: "Tổng doanh thu",
+      intro: "Tổng doanh thu của cửa hàng trong tháng.",
+      position: "bottom",
     },
     {
-      element: '#stat-total-orders',
-      title: 'Tổng số đơn hàng',
-      intro: 'Tổng số đơn hàng đã hoàn thành trong tháng.',
-      position: "bottom"
+      element: "#stat-total-orders",
+      title: "Tổng số đơn hàng",
+      intro: "Tổng số đơn hàng đã hoàn thành trong tháng.",
+      position: "bottom",
     },
     {
-      element: '#stat-products-sold',
-      title: 'Sản phẩm đã bán',
-      intro: 'Tổng số sản phẩm đã bán.',
-      position: "bottom"
+      element: "#stat-products-sold",
+      title: "Sản phẩm đã bán",
+      intro: "Tổng số sản phẩm đã bán.",
+      position: "bottom",
     },
     {
-      element: '#stat-customers',
-      title: 'Tổng số khách hàng',
-      intro: 'Tổng số khách hàng đã mua hàng.',
-      position: "bottom"
+      element: "#stat-customers",
+      title: "Tổng số khách hàng",
+      intro: "Tổng số khách hàng đã mua hàng.",
+      position: "bottom",
     },
     {
-      element: '#monthly-revenue',
-      title: 'Doanh thu hàng tháng',
-      intro: 'Biểu đồ doanh thu hàng tháng.',
-      position: "bottom"
+      element: "#monthly-revenue",
+      title: "Doanh thu hàng tháng",
+      intro: "Biểu đồ doanh thu hàng tháng.",
+      position: "bottom",
     },
     {
-      element: '#top-customers',
-      title: 'Khách hàng hàng đầu',
-      intro: 'Khách hàng hàng đầu theo doanh.',
-      position: "bottom"
+      element: "#top-customers",
+      title: "Khách hàng hàng đầu",
+      intro: "Khách hàng hàng đầu theo doanh.",
+      position: "bottom",
     },
     {
-      element: '#top-products',
-      title: 'Sản phẩm bán chạy nhất',
-      intro: 'Sản phẩm bán chạy nhất theo số lượng.',
-      position: "top"
-    }
+      element: "#top-products",
+      title: "Sản phẩm bán chạy nhất",
+      intro: "Sản phẩm bán chạy nhất theo số lượng.",
+      position: "top",
+    },
   ];
   useEffect(() => {
     // Simulate API fetch
     const fetchData = async () => {
       try {
-        const response: any = await dashboardApi.dashboard();
+        const param = {
+          year: 2025,
+        };
+        const response: any = await dashboardApi.dashboard(param);
         setDashboardData(response);
         setLoading(false);
       } catch (e) {
@@ -524,16 +536,21 @@ const Dashboard: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1,
+          }}
+        >
           <Typography variant="h4" component="h1" gutterBottom>
             Bảng thống kê cửa hàng
           </Typography>
 
           <IntroTour
             steps={dashBoardIntroSteps}
-            buttonContent={
-              <InfoOutlinedIcon sx={{ cursor: 'pointer' }} />
-            }
+            buttonContent={<InfoOutlinedIcon sx={{ cursor: "pointer" }} />}
           />
         </Box>
         <Typography variant="subtitle1" color="text.secondary">
@@ -542,7 +559,7 @@ const Dashboard: React.FC = () => {
       </Box>
 
       {/* Summary Statistics */}
-      <Box id="summary-stats" sx={{ mb: 4 }} >
+      <Box id="summary-stats" sx={{ mb: 4 }}>
         <StatsSummary dashboardData={dashboardData} />
       </Box>
 
@@ -571,4 +588,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

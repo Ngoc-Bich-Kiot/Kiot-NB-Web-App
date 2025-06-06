@@ -5,7 +5,7 @@ import { AxiosResponse } from "axios";
 const productApi = {
     //GET api
     getProductList: (params?: any): Promise<ProductListResponse> => {
-        const url = "/Products/GetProductPagination";
+        const url = "/Products/GetProductPagination?IsDescending=true";
         return axiosClient.get(url, {
             params,
         });
@@ -24,7 +24,7 @@ const productApi = {
     },
 
     //POST api
-    CreateProduct: (body: any): Promise<AxiosResponse<Product>> => {
+    CreateProduct: (body: any) => {
         const url = "/Products/CreateProduct";
         return axiosClient.post<Product>(url, body);
     },

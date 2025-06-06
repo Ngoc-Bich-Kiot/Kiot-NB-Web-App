@@ -16,32 +16,23 @@ import {
 } from "@mui/material";
 import {
   FormProvider,
+  RHFSelect,
   RHFTextField,
   RHFTextFieldNumber,
 } from "@/components/hook_form";
-import RHFPhoneField from "@/components/text_field/RHFTextFieldPhone";
 import productApi from "@/axios-clients/product_api/productAPI";
 import { toast } from "react-toastify";
 import {
   RHFUploadMultiFile,
   RHFUploadSingleFile,
 } from "@/components/text_field";
-import { log } from "console";
 import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
+import { Category } from "@/types/CategoryType";
+import categoryApi from "@/axios-clients/category_api/categoryAPI";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
-  category: Yup.string().required("Loại là bắt buộc"),
-  // originalPrice: Yup.number()
-  //   .transform((value, originalValue) => {
-  //     if (typeof originalValue === "string") {
-  //       const normalized = originalValue.replace(/,/g, "");
-  //       return parseFloat(normalized);
-  //     }
-  //     return value;
-  //   })
-  //   .typeError("Phải là số")
-  //   .required("Giá gốc là bắt buộc"),
+  categoryId: Yup.number().required("Loại là bắt buộc"),
   sellingPrice: Yup.number()
     .transform((value, originalValue) => {
       if (typeof originalValue === "string") {
@@ -52,13 +43,7 @@ const validationSchema = Yup.object().shape({
     })
     .typeError("Phải là số")
     .required("Giá bán là bắt buộc"),
-  sourceOfProducts: Yup.string().required("Nguồn nhập là bắt buộc"),
   userName: Yup.string().required("Tên người dùng là bắt buộc"),
-  // phone: Yup.string()
-  //   .required("Số điện thoại là bắt buộc")
-  //   .transform((value) => value.replace(/\D/g, ""))
-  //   .matches(/^\d{10}$/, "Số điện thoại không hợp lệ"),
-  // address: Yup.string().required("Địa chỉ là bắt buộc"),
   importCosts: Yup.number()
     .transform((value, originalValue) => {
       if (typeof originalValue === "string") {
@@ -96,19 +81,16 @@ const capitalizedWords = (str: string): string => {
 
 const CreateProduct = () => {
   const router = useRouter();
+  const [categories, setCategories] = React.useState<Category[]>([]);
 
   const methods = useForm<CreateProductFormInput>({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
     defaultValues: {
       name: "",
-      category: "",
-      //originalPrice: 0,
+      categoryId: 0,
       sellingPrice: 0,
-      sourceOfProducts: "",
       userName: "",
-      // phone: "",
-      // address: "",
       importCosts: 0,
       stockQuantity: 0,
       unit: "",
@@ -170,12 +152,25 @@ const CreateProduct = () => {
   //    [setValue]
   //  );
 
+  // call api get categories
+  React.useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const res = await categoryApi.getCategoryActive();
+        setCategories(res.items);
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách loại sản phẩm:", error);
+      }
+    };
+
+    getCategories();
+  }, []);
+
   const onSubmit = async (data: CreateProductFormInput) => {
     try {
       await productApi.CreateProduct(data);
       toast.success("Nhập sản phẩm thành công");
       router.push("/admin/manage_product");
-      console.log(data)
     } catch (error) {
       toast.error("Nhập sản phẩm thất bại");
       console.error("Nhập sản phẩm thất bại:", error);
@@ -209,19 +204,15 @@ const CreateProduct = () => {
               />
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFTextField
-                name="category"
-                label="Loại"
-                placeholder="Nhập loại sản phẩm"
-              />
+              <RHFSelect name="categoryId" label="Loại sản phẩm">
+                <option value={0}>Chọn loại sản phẩm</option>
+                {categories?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </RHFSelect>
             </Grid2>
-            {/* <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFTextFieldNumber
-                name="originalPrice"
-                label="Giá gốc"
-                placeholder="Ví dụ: 100000"
-              />
-            </Grid2> */}
             <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFTextFieldNumber
                 name="importCosts"
@@ -249,40 +240,11 @@ const CreateProduct = () => {
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
               <RHFTextField
-                name="sourceOfProducts"
-                label="Nguồn nhập"
-                placeholder="Tên nhà cung cấp hoặc nguồn hàng"
-              />
-            </Grid2>
-            {/* <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFTextFieldNumber
-                name="stockQuantity"
-                label="Số lượng tồn"
-                placeholder="Ví dụ: 50"
-              />
-            </Grid2> */}
-            <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFTextField
                 name="userName"
                 label="Người nhập"
                 placeholder="Tên nhân viên nhập hàng"
               />
             </Grid2>
-            {/* <Grid2 size={{ xs: 12, md: 6 }}>
-              <RHFPhoneField
-                name="phone"
-                label="Số điện thoại"
-                placeholder="Ví dụ: 0797302367"
-              />
-            </Grid2>
-            <Grid2 size={{ xs: 12 }}>
-              <RHFTextField
-                name="address"
-                label="Địa chỉ"
-                placeholder="Địa chỉ kho hoặc nơi nhập hàng"
-              />
-            </Grid2> */}
-
             <Grid2 size={{ xs: 12 }}>
               <RHFUploadMultiFile
                 name="productImages"
@@ -292,7 +254,6 @@ const CreateProduct = () => {
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
               />
-
               {/* <RHFUploadSingleFile
                 name="productImages"
                 label="Ảnh sản phẩm"

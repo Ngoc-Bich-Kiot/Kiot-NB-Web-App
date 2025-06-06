@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AddUser from "./popup/AddUser";
 import IntroTour from "@/components/intro/IntroTour";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import withAuth from "@/hook/checkRoute";
 
 interface STProps {
   filter: any;
@@ -218,4 +219,4 @@ const ManageUserTable = () => {
   );
 };
 
-export default ManageUserTable;
+export default withAuth(ManageUserTable);

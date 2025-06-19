@@ -24,29 +24,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <html lang="en">
-        <body>
-          <AuthProviderClientOnly>
-            <OverrideMuiTheme>
-              <Box>
-                <Suspense fallback={<LoadingRoot />}>{children}</Suspense>
-                <ToastContainer
-                  position="top-center"
-                  autoClose={3000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                />
-              </Box>
-            </OverrideMuiTheme>
-          </AuthProviderClientOnly>
-        </body>
-      </html>
-    </>
+    <html lang="en">
+      <body>
+        <AuthProviderClientOnly>
+          <OverrideMuiTheme>
+            <Box>
+              <Suspense fallback={<LoadingRoot />}>{children}</Suspense>
+              <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </Box>
+          </OverrideMuiTheme>
+        </AuthProviderClientOnly>
+      </body>
+    </html>
   );
 }

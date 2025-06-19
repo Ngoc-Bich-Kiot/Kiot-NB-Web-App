@@ -4,8 +4,9 @@ import React from "react";
 import CustomizeTable from "@/components/table/customize-table";
 import { ProductLog } from "@/types/ProductType";
 import { Tabs, Tab, Box } from "@mui/material";
+import withAuth from "@/hook/checkRoute";
 
-export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
+const LogTableTabs = ({ logs }: { logs: ProductLog[] }) => {
     const [tabIndex, setTabIndex] = React.useState(0);
     const [page, setPage] = React.useState(0);
     const [pageSize, setPageSize] = React.useState(5);
@@ -23,24 +24,28 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
         }, {});
     }, [logs]);
 
-    const tabKeys = ["Import", "Export", "UpdatePrice"].filter((key) => key in groupedLogs);
-
+    const tabKeys = ["Export", "Expired", "Rollback", "UpdatePrice"].filter((key) => key in groupedLogs);
+    console.log(tabKeys)
     const tabLabels: Record<string, string> = {
-        "Import": "Nhập kho",
         "Export": "Xuất kho",
+        "Expired": "Hết hạn",
+        "Rollback": "Trả hàng",
         "UpdatePrice": "Cập nhật giá",
     };
 
-    const importExportHeaders = [
-        { id: "name", label: "Tên", align: "center" },
-        { id: "quantity", label: "Số lượng", align: "center" },
-        { id: "type", label: "Nhập/Xuất", align: "center", format: "type" },
-        { id: "createDate", label: "Thời gian", align: "center", format: "date" },
-    ];
-
     const headerByType: Record<string, any[]> = {
-        "Import": importExportHeaders,
-        "Export": importExportHeaders,
+        "Export": [
+            { id: "batchId", label: "Lô hàng", align: "center" },
+            { id: "quantity", label: "Số lượng", align: "center" },
+        ],
+        "Expired": [
+            { id: "batchId", label: "Lô hàng", align: "center" },
+            { id: "quantity", label: "Số lượng", align: "center" },
+        ],
+        "Rollback": [
+            { id: "batchId", label: "Lô hàng", align: "center" },
+            { id: "quantity", label: "Số lượng", align: "center" },
+        ],
         "UpdatePrice": [
             { id: "oldImportCost", label: "Giá nhập cũ", align: "center" },
             { id: "newImportCost", label: "Giá nhập mới", align: "center" },
@@ -94,3 +99,4 @@ export default function LogTableTabs({ logs }: { logs: ProductLog[] }) {
         </Box>
     );
 }
+export default withAuth(LogTableTabs);

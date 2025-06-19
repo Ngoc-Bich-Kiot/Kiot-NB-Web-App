@@ -33,18 +33,18 @@ export default function MenuActionTableBatch({
         router.push(`/admin/batch_product/${batchData.id}/detail`)
       },
     },
-    {
-      label: isDeleted === true ? "Khôi phục" : "Ngừng",
-      icon:
-        isDeleted === true ? (
-          <AddIcon sx={{ mr: 1 }} color="success" />
-        ) : (
-          <BlockIcon sx={{ mr: 1 }} color="error" />
-        ),
-      action: () => {
-        setOpenDeleteDialog(true);
-      },
-    },
+    // {
+    //   label: isDeleted === true ? "Khôi phục" : "Ngừng",
+    //   icon:
+    //     isDeleted === true ? (
+    //       <AddIcon sx={{ mr: 1 }} color="success" />
+    //     ) : (
+    //       <BlockIcon sx={{ mr: 1 }} color="error" />
+    //     ),
+    //   action: () => {
+    //     setOpenDeleteDialog(true);
+    //   },
+    // },
   ];
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

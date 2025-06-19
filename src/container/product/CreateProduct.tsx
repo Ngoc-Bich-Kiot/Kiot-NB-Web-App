@@ -29,6 +29,7 @@ import {
 import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
 import { Category } from "@/types/CategoryType";
 import categoryApi from "@/axios-clients/category_api/categoryAPI";
+import withAuth from "@/hook/checkRoute";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Tên sản phẩm là bắt buộc"),
@@ -306,4 +307,4 @@ const CreateProduct = () => {
     </Container>
   );
 };
-export default CreateProduct;
+export default withAuth(CreateProduct);

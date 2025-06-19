@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { Box, Grid2, Card, CardMedia } from '@mui/material';
 import { ProductImage } from '@/types/ProductType';
+import withAuth from '@/hook/checkRoute';
 
 
-export default function ProductImageGallery({ images }: { images: ProductImage[] }) {
+const ProductImageGallery = ({ images }: { images: ProductImage[] }) => {
     const [selectedImage, setSelectedImage] = useState(images[0]?.urlPath || '');
 
     return (
@@ -48,3 +49,4 @@ export default function ProductImageGallery({ images }: { images: ProductImage[]
         </Box>
     );
 }
+export default withAuth(ProductImageGallery);

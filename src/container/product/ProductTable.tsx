@@ -68,18 +68,6 @@ const productTableIntroSteps = [
     intro: "Giá bán của sản phẩm.",
     position: "left",
   },
-  // {
-  //   element: "#import-costs-header",
-  //   title: "Cột Giá nhập",
-  //   intro: "Giá nhập của sản phẩm.",
-  //   position: "left"
-  // },
-  {
-    element: "#stock-quantity-header",
-    title: "Cột Số lượng tồn",
-    intro: "Số lượng tồn của sản phẩm.",
-    position: "left",
-  },
   {
     element: "#unit-header",
     title: "Cột Đơn vị",
@@ -193,13 +181,6 @@ const ProductTable = () => {
       introId: "selling-price-header",
     },
     //{ id: "importCosts", label: "Giá nhập", align: "center", format: "price", introId: "import-costs-header" },
-    {
-      id: "stockQuantity",
-      label: "Số lượng tồn",
-      align: "center",
-      format: "quantity",
-      introId: "stock-quantity-header",
-    },
     { id: "unit", label: "Đơn vị", align: "center", introId: "unit-header" },
     {
       id: "createDate",

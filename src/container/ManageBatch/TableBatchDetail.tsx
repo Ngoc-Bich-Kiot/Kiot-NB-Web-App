@@ -28,6 +28,8 @@ import { useParams } from "next/navigation";
 import BatchAPI from "@/axios-clients/batch_api/batchAPI";
 import CustomizeTable from "@/components/table/customize-table";
 import { Batch, BatchDetail } from "@/types/BatchType";
+import withAuth from "@/hook/checkRoute";
+import { format } from "path";
 
 
 const TableBatchDetail = ({ id }: { id: string }) => {
@@ -43,12 +45,12 @@ const TableBatchDetail = ({ id }: { id: string }) => {
   // Calculate summary statistics
   const summary = {
     totalItems: dataBatchDetail.length,
-    //expiredItems: dataBatchDetail.filter((item) => item.isExpired).length,
-    // expiringSoon: dataBatchDetail.filter(
-    //   (item) => !item.isExpired && item.daysUntilExpiration <= 7
-    // ).length,
+    expiredItems: dataBatchDetail.filter((item) => item.isExpiredLogged).length,
+    expiringSoon: dataBatchDetail.filter(
+      (item) => !item.isExpiredLogged && item.daysUntilExpiration <= 7
+    ).length,
   };
-
+  console.log(dataBatchDetail);
   // Fetch batch data
   const fetchBatchData = async () => {
 
@@ -81,7 +83,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
     {
       id: "productDTO.name",
       label: "Tên nguyên liệu",
-      align: "left" as const,
+      align: "center" as const,
       minWidth: 140,
       maxWidth: 180,
       render: (value: string) => (
@@ -108,7 +110,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
     {
       id: "batchId",
       label: "Số lô",
-      align: "left" as const,
+      align: "center" as const,
       minWidth: 120,
       maxWidth: 140,
       render: (value: string) => (
@@ -132,7 +134,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
     {
       id: "sourceOfProductDTO.name",
       label: "Nhà cung cấp",
-      align: "left" as const,
+      align: "center" as const,
       minWidth: 120,
       maxWidth: 150,
       render: (value: string) => (
@@ -153,7 +155,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
     {
       id: "quantity",
       label: "SL ban đầu",
-      align: "right" as const,
+      align: "center" as const,
       minWidth: 90,
       render: (value: number, row: BatchDetail) => (
         <Typography
@@ -172,202 +174,59 @@ const TableBatchDetail = ({ id }: { id: string }) => {
     {
       id: "remainingQuantity",
       label: "SL còn lại",
-      align: "right" as const,
+      align: "center" as const,
       minWidth: 90,
-      render: (value: number, row: BatchDetail) => {
-        const percentage = (value / row.quantity) * 100;
-        const color =
-          percentage > 50
-            ? "success.main"
-            : percentage > 20
-              ? "warning.main"
-              : "error.main";
-
-        return (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-          >
-            <Typography
-              variant="body2"
-              fontWeight="bold"
-              sx={{ color, fontSize: "0.8rem" }}
-            >
-              {value.toLocaleString()}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Đơn vị
-            </Typography>
-          </Box>
-        );
-      },
+      format: "checkNumber",
     },
+    // {
+    //   id: "formattedQuantity",
+    //   label: "Khối lượng",
+    //   align: "right" as const,
+    //   minWidth: 80,
+    //   render: (value: string) => (
+    //     <Typography
+    //       variant="body2"
+    //       fontWeight="medium"
+    //       color="primary.main"
+    //       sx={{ fontSize: "0.8rem" }}
+    //     >
+    //       {value}
+    //     </Typography>
+    //   ),
+    // },
+    // {
+    //   id: "createDate",
+    //   label: "Ngày nhận",
+    //   align: "center" as const,
+    //   minWidth: 100,
+    //   format: "date" as const,
+    //   render: (value: string) => (
+    //     <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
+    //       {value}
+    //     </Typography>
+    //   ),
+    // },
     {
-      id: "formattedQuantity",
-      label: "Khối lượng",
-      align: "right" as const,
-      minWidth: 80,
-      render: (value: string) => (
-        <Typography
-          variant="body2"
-          fontWeight="medium"
-          color="primary.main"
-          sx={{ fontSize: "0.8rem" }}
-        >
-          {value}
-        </Typography>
-      ),
-    },
-    {
-      id: "createDate",
-      label: "Ngày nhận",
+      id: "expiredDate",
+      label: "HSD",
       align: "center" as const,
       minWidth: 100,
       format: "date" as const,
-      render: (value: string) => (
-        <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-          {value}
-        </Typography>
-      ),
     },
-    // {
-    //   id: "bestBeforeDate",
-    //   label: "HSD",
-    //   align: "center" as const,
-    //   minWidth: 100,
-    //   render: (value: string, row: BatchDetail) => {
-    //     const date = new Date(value).toLocaleDateString("vi-VN", {
-    //       day: "2-digit",
-    //       month: "2-digit",
-    //       year: "2-digit",
-    //     });
-    //     //const isExpired = row.isExpired;
-    //    // const isExpiringSoon = !isExpired && row.daysUntilExpiration <= 7;
-
-    //     return (
-    //       <Box
-    //         sx={{
-    //           display: "flex",
-    //           flexDirection: "column",
-    //           alignItems: "center",
-    //           gap: 0.5,
-    //         }}
-    //       >
-    //         <Typography
-    //           variant="body2"
-    //           sx={{
-    //             color: isExpired
-    //               ? "error.main"
-    //               : isExpiringSoon
-    //                 ? "warning.main"
-    //                 : "text.primary",
-    //             fontWeight: isExpired || isExpiringSoon ? "bold" : "normal",
-    //             fontSize: "0.75rem",
-    //           }}
-    //         >
-    //           {date}
-    //         </Typography>
-    //         {(isExpired || isExpiringSoon) && (
-    //           <WarningIcon
-    //             sx={{
-    //               fontSize: 14,
-    //               color: isExpired ? "error.main" : "warning.main",
-    //             }}
-    //           />
-    //         )}
-    //       </Box>
-    //     );
-    //   },
-    // },
-    // {
-    //   id: "daysUntilExpiration",
-    //   label: "Còn lại",
-    //   align: "center" as const,
-    //   minWidth: 80,
-    //   render: (value: number, row: IngredientBatchDetail) => {
-    //     if (row.isExpired) {
-    //       return (
-    //         <Chip
-    //           label="Hết hạn"
-    //           size="small"
-    //           color="error"
-    //           sx={{ fontSize: "0.7rem", height: "20px" }}
-    //         />
-    //       );
-    //     }
-
-    //     const color = value <= 3 ? "error" : value <= 7 ? "warning" : "success";
-    //     return (
-    //       <Chip
-    //         label={`${value}d`}
-    //         size="small"
-    //         color={color}
-    //         variant={value <= 7 ? "filled" : "outlined"}
-    //         sx={{ fontSize: "0.7rem", height: "20px" }}
-    //       />
-    //     );
-    //   },
-    // },
-    // {
-    //   id: "isExpired",
-    //   label: "Trạng thái",
-    //   align: "center" as const,
-    //   minWidth: 100,
-    //   render: (value: boolean, row: IngredientBatchDetail) => {
-    //     if (value) {
-    //       return (
-    //         <Chip
-    //           label="HẾT HẠN"
-    //           size="small"
-    //           color="error"
-    //           variant="filled"
-    //           sx={{
-    //             fontWeight: "bold",
-    //             fontSize: "0.65rem",
-    //             height: "24px",
-    //             animation: "pulse 2s infinite",
-    //             "@keyframes pulse": {
-    //               "0%": { opacity: 1 },
-    //               "50%": { opacity: 0.7 },
-    //               "100%": { opacity: 1 },
-    //             },
-    //           }}
-    //         />
-    //       );
-    //     } else if (row.daysUntilExpiration <= 7) {
-    //       return (
-    //         <Chip
-    //           label="SẮP HẾT"
-    //           size="small"
-    //           color="warning"
-    //           variant="filled"
-    //           sx={{
-    //             fontWeight: "bold",
-    //             fontSize: "0.65rem",
-    //             height: "24px",
-    //           }}
-    //         />
-    //       );
-    //     } else {
-    //       return (
-    //         <Chip
-    //           label="CÒN HẠN"
-    //           size="small"
-    //           color="success"
-    //           variant="filled"
-    //           sx={{
-    //             fontWeight: "bold",
-    //             fontSize: "0.65rem",
-    //             height: "24px",
-    //           }}
-    //         />
-    //       );
-    //     }
-    //   },
-    // },
+    {
+      id: "daysUntilExpiration",
+      label: "Ngày còn lại",
+      align: "center" as const,
+      minWidth: 80,
+      format: "checkNumber",
+    },
+    {
+      id: "isExpiredLogged",
+      label: "Trạng thái",
+      align: "center" as const,
+      minWidth: 100,
+      format: "expired"
+    },
   ];
 
   // Handle pagination change
@@ -519,7 +378,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
               <CardContent sx={{ color: "white", textAlign: "center", p: 2 }}>
                 <WarningIcon sx={{ fontSize: 32, mb: 1, opacity: 0.9 }} />
                 <Typography variant="h5" component="div" fontWeight="bold">
-                  {/* {summary.expiredItems} */}
+                  {summary.expiredItems}
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   Đã hết hạn
@@ -538,7 +397,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
               <CardContent sx={{ color: "white", textAlign: "center", p: 2 }}>
                 <WarningIcon sx={{ fontSize: 32, mb: 1, opacity: 0.9 }} />
                 <Typography variant="h5" component="div" fontWeight="bold">
-                  {/* {summary.expiringSoon} */}
+                  {summary.expiringSoon}
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   Sắp hết hạn (≤7 ngày)
@@ -594,13 +453,13 @@ const TableBatchDetail = ({ id }: { id: string }) => {
 
             <CustomizeTable
               tableHeaderTitle={tableHeader}
-              // data={paginatedData.map((item) => ({
-              //   ...item,
-              //   "data-expired": item.isExpired,
-              //   "data-expiring-soon":
-              //     !item.isExpired && item.daysUntilExpiration <= 7,
-              // }))}
-              data={dataBatchDetail}
+              data={paginatedData.map((item) => ({
+                ...item,
+                "data-expired": item.isExpiredLogged,
+                "data-expiring-soon":
+                  !item.isExpiredLogged && item.daysUntilExpiration <= 7,
+              }))}
+              // data={dataBatchDetail}
               total={total}
               page={page}
               size={size}
@@ -661,4 +520,4 @@ const TableBatchDetail = ({ id }: { id: string }) => {
   );
 };
 
-export default TableBatchDetail;
+export default withAuth(TableBatchDetail);

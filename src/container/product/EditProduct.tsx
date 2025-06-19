@@ -17,7 +17,7 @@ import {
 
 
 import productApi from "@/axios-clients/product_api/productAPI";
-import { EditProductFormInput, ProductImage } from "@/types/ProductType";
+import { EditProductFormInput, Product, ProductImage } from "@/types/ProductType";
 import {
     FormProvider,
     RHFSelect,
@@ -27,6 +27,8 @@ import {
 import { toast } from "react-toastify";
 import { RHFUploadMultiFile } from "@/components/text_field";
 import uploadImageToFirebase from "@/firebase/uploadImageToFirebase";
+import withAuth from "@/hook/checkRoute";
+import { set } from "date-fns";
 
 const productStatusOptions = [
     { value: "", label: "Chọn trạng thái" },
@@ -41,6 +43,9 @@ const productStatusOptions = [
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Tên sản phẩm là bắt buộc"),
+    categoryId: Yup.number()
+        .typeError("Phải là số")
+        .required("Danh mục sản phẩm là bắt buộc"),
     sellingPrice: Yup.number()
         .transform((value, originalValue) => {
             if (typeof originalValue === "string") {
@@ -61,6 +66,7 @@ const validationSchema = Yup.object().shape({
         })
         .typeError("Phải là số")
         .required("Giá nhập là bắt buộc"),
+    unit: Yup.string().required("Đơn vị là bắt buộc"),
     status: Yup.string().required("Trạng thái là bắt buộc"),
     productImages: Yup.array()
         .min(1, "Images is required")
@@ -68,15 +74,17 @@ const validationSchema = Yup.object().shape({
     // productImages: Yup.mixed().required("Cover is required"),
 });
 
-export default function EditProduct({ id }: { id: string }) {
+const EditProduct = ({ id }: { id: string }) => {
     const router = useRouter();
     const methods = useForm<EditProductFormInput>({
         resolver: yupResolver(validationSchema),
         mode: "onChange",
         defaultValues: {
             name: "",
+            categoryId: 0,
             sellingPrice: 0,
             importCosts: 0,
+            unit: "",
             status: "",
             productImages: [],
         },
@@ -236,3 +244,4 @@ export default function EditProduct({ id }: { id: string }) {
         </Container>
     );
 }
+export default withAuth(EditProduct);

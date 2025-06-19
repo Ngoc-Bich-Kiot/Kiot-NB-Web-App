@@ -298,6 +298,26 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
       return "-";
     }
 
+    if (column.format && column.format === "bathchNumber") {
+      if (value) {
+        return (
+          <Chip
+            label={`BATCH ${value}`}
+            size="small"
+            variant="outlined"
+            sx={{
+              bgcolor: alpha(theme.palette.info.main, 0.1),
+              color: theme.palette.info.main,
+              borderColor: alpha(theme.palette.info.main, 0.3),
+              fontWeight: 600,
+            }}
+          />
+        );
+      }
+      return "-";
+    }
+
+
     // Role formatting
     if (column.format && column.format === "role") {
       const roleConfig = {
@@ -445,6 +465,22 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
       }
     }
 
+
+    if (column.format && column.format === "checkNumber") {
+      if (value <= 0) {
+        return (
+          <Typography
+            variant="body2"
+            fontWeight="bold"
+            sx={{ color: colors.red_600 }}
+          >
+            0
+          </Typography>
+
+        );
+      }
+    }
+
     // Import/Export type
     if (column.format && column.format === "type") {
       const typeConfig = {
@@ -497,6 +533,48 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                 bgcolor: alpha(colors.green_200, 0.9),
                 color: colors.green_800,
                 borderColor: colors.green_400,
+              }}
+            />
+          );
+        default:
+          return "-";
+      }
+    }
+
+    // expired
+    if (column.format && column.format === "expired") {
+      switch (value) {
+        case true:
+          return (
+            <Chip
+              label="HẾT HẠN"
+              size="small"
+              color="error"
+              variant="filled"
+              sx={{
+                fontWeight: "bold",
+                fontSize: "0.65rem",
+                height: "24px",
+                animation: "pulse 2s infinite",
+                "@keyframes pulse": {
+                  "0%": { opacity: 1 },
+                  "50%": { opacity: 0.7 },
+                  "100%": { opacity: 1 },
+                },
+              }}
+            />
+          );
+        case false:
+          return (
+            <Chip
+              label="CÒN HẠN"
+              size="small"
+              color="success"
+              variant="filled"
+              sx={{
+                fontWeight: "bold",
+                fontSize: "0.65rem",
+                height: "24px",
               }}
             />
           );
@@ -640,49 +718,51 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                         {column.label}
                       </TableCell>
                     ))}
-                    <TableCell align="center">Thao tác</TableCell>
+                    {menuAction && (
+                      <TableCell align="center">Thao tác</TableCell>
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {loading
                     ? renderSkeletonRows()
                     : data?.map((row: any, index: number) => (
-                        <Zoom in key={index} timeout={300 + index * 50}>
-                          <TableRow>
-                            <TableCell>
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  fontWeight: 600,
-                                  color: theme.palette.text.secondary,
-                                }}
-                              >
-                                {page * size + index + 1}
-                              </Typography>
+                      <Zoom in key={index} timeout={300 + index * 50}>
+                        <TableRow>
+                          <TableCell>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 600,
+                                color: theme.palette.text.secondary,
+                              }}
+                            >
+                              {page * size + index + 1}
+                            </Typography>
+                          </TableCell>
+                          {tableHeaderTitle.map((column: any) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align || "left"}
+                            >
+                              {formatValue(
+                                getNestedValue(row, column.id),
+                                column
+                              )}
                             </TableCell>
-                            {tableHeaderTitle.map((column: any) => (
-                              <TableCell
-                                key={column.id}
-                                align={column.align || "left"}
-                              >
-                                {formatValue(
-                                  getNestedValue(row, column.id),
-                                  column
-                                )}
-                              </TableCell>
-                            ))}
+                          ))}
+                          {menuAction && (
                             <ActionCell
                               align="center"
                               onClick={() => selectedData && selectedData(row)}
-                              sx={{
-                                cursor: selectedData ? "pointer" : "default",
-                              }}
+                              sx={{ cursor: selectedData ? "pointer" : "default" }}
                             >
                               {menuAction}
                             </ActionCell>
-                          </TableRow>
-                        </Zoom>
-                      ))}
+                          )}
+                        </TableRow>
+                      </Zoom>
+                    ))}
                 </TableBody>
               </Table>
               <TablePagination
@@ -695,9 +775,8 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage="Số hàng trên trang"
                 labelDisplayedRows={({ from, to, count }) => {
-                  return `${from}–${to} trên ${
-                    count !== -1 ? count : `nhiều hơn ${to}`
-                  }`;
+                  return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
+                    }`;
                 }}
                 sx={{
                   borderTop: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
@@ -707,10 +786,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     paddingRight: 2,
                   },
                   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
-                    {
-                      fontWeight: 500,
-                      color: theme.palette.text.secondary,
-                    },
+                  {
+                    fontWeight: 500,
+                    color: theme.palette.text.secondary,
+                  },
                 }}
               />
             </StyledTableContainer>

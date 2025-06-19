@@ -1,6 +1,7 @@
 "use client";
 import orderApi from "@/axios-clients/order_api/orderAPI";
 import { OrderStatus } from "@/enum/OrderStatus";
+import withAuth from "@/hook/checkRoute";
 import { colors, font_weight } from "@/styles/config-file";
 import { OrderDetailType } from "@/types/OrderDetailType";
 import {
@@ -445,4 +446,4 @@ const DetailOrder: React.FC<DetailOrderProps> = ({ orderId }) => {
   );
 };
 
-export default DetailOrder;
+export default withAuth(DetailOrder);

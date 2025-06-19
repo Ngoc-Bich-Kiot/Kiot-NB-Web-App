@@ -31,8 +31,10 @@ import LogTable from "./LogTable";
 import { toast } from "react-toastify";
 import DeleteProduct from "./popup/DeleteProduct";
 import EditProduct from "./popup/EditProduct";
+import withAuth from "@/hook/checkRoute";
+import BatchProductTable from "./BatchProductTable";
 
-export default function DetailProduct({ id }: { id: string }) {
+const DetailProduct = ({ id }: { id: string }) => {
   const [product, setProduct] = React.useState<Product | null>(null);
   const router = useRouter();
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
@@ -140,16 +142,6 @@ export default function DetailProduct({ id }: { id: string }) {
                   sx={{ borderRadius: 3 }}
                 >
                   Chỉnh sửa
-                </Button>
-              </Tooltip>
-              <Tooltip title="Xuất/Nhập kho">
-                <Button
-                  variant="contained"
-                  startIcon={<InventoryOutlinedIcon />}
-                  onClick={handleOpenEditDialog}
-                  sx={{ borderRadius: 3 }}
-                >
-                  Xuất/Nhập
                 </Button>
               </Tooltip>
             </Stack>
@@ -294,40 +286,6 @@ export default function DetailProduct({ id }: { id: string }) {
                 </CardContent>
               </Card>
 
-              {/* Inventory */}
-              <Card
-                elevation={0}
-                sx={{ border: "1px solid #e2e8f0", borderRadius: 3 }}
-              >
-                <CardContent>
-                  <Typography variant="h6" fontWeight={600} mb={3}>
-                    Thông tin kho
-                  </Typography>
-                  <Stack spacing={3}>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <Avatar sx={{ bgcolor: "#e8f5e9" }}>
-                        <InventoryOutlinedIcon />
-                      </Avatar>
-                      <Box flex={1}>
-                        <Typography variant="body2" color="text.secondary">
-                          Tồn kho
-                        </Typography>
-                        <Typography variant="h6" fontWeight={600}>
-                          {typeof product.stockQuantity === "number"
-                            ? new Intl.NumberFormat("vi-VN").format(product.stockQuantity)
-                            : "Chưa cập nhật"}{" "}
-                          sản phẩm
-                        </Typography>
-                      </Box>
-                      <Badge
-                        badgeContent={product.stockQuantity === 0 ? "Hết" : ""}
-                        color="error"
-                      />
-                    </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
-
               {/* Action Buttons */}
               <Card
                 elevation={0}
@@ -359,20 +317,34 @@ export default function DetailProduct({ id }: { id: string }) {
           </Grid2>
         </Grid2>
 
+        {/* Batch Section */}
+        {product.batchDetails && product.batchDetails.length > 0 && (
+          <Box mt={5}>
+            <Card
+              elevation={0}
+              sx={{ border: "1px solid #e2e8f0", borderRadius: 3 }}
+            >
+              <CardContent>
+                <BatchProductTable batchDetails={product.batchDetails} />
+              </CardContent>
+            </Card>
+          </Box>
+        )}
+
+
         {/* History Section */}
-        <Box mt={5}>
-          <Card
-            elevation={0}
-            sx={{ border: "1px solid #e2e8f0", borderRadius: 3 }}
-          >
-            <CardContent>
-              <Typography variant="h5" fontWeight={600} gutterBottom>
-                Lịch sử sản phẩm
-              </Typography>
-              <LogTable logs={product.logs} />
-            </CardContent>
-          </Card>
-        </Box>
+        {product.logs && product.logs.length > 0 && (
+          <Box mt={5}>
+            <Card
+              elevation={0}
+              sx={{ border: "1px solid #e2e8f0", borderRadius: 3 }}
+            >
+              <CardContent>
+                <LogTable logs={product.logs} />
+              </CardContent>
+            </Card>
+          </Box>
+        )}
       </Box>
 
       {/* Edit Dialog */}
@@ -397,3 +369,4 @@ export default function DetailProduct({ id }: { id: string }) {
     </Box>
   );
 }
+export default withAuth(DetailProduct);

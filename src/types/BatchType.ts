@@ -37,8 +37,11 @@ export interface BatchDetail {
   batchId: number;
   productId: number;
   SourceOfProductId: number;
+  remainingQuantity: number;
+  daysUntilExpiration: number;
   createDate: string;
   expiredDate: string;
+  isExpiredLogged: boolean;
   quantity: number;
   productDTO: Product;
   sourceOfProductDTO: SourceOfProduct;

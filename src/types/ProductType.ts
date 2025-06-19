@@ -1,3 +1,4 @@
+import { BatchDetail } from "./BatchType";
 import { Category } from "./CategoryType";
 import { SourceOfProduct } from "./SourceOfProduct";
 
@@ -34,12 +35,12 @@ export interface CreateProductFormInput {
 
 export interface EditProductFormInput {
   name: string;
-  //categoryId: number;
+  categoryId: number;
   //originalPrice: number;
   sellingPrice: number;
-  //sourceOfProductId: number;
   importCosts: number;
   //stockQuantity: number;
+  unit: string;
   status: string;
   productImages: (File | string)[];
 }
@@ -60,6 +61,8 @@ export interface Product {
   unit: string;
   images: ProductImage[];
   logs: ProductLog[];
+  createDate: string;
+  batchDetails: BatchDetail[];
 }
 
 export interface ProductListResponse {

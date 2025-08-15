@@ -28,6 +28,10 @@ const orderApi = {
     return axiosClient.post(url, body);
   },
 
+   createOrderNoInfor: (body: any) => {
+    const url = "/Orders/CreateOrderNoInfor";
+    return axiosClient.post(url, body);
+  },
   //PUT api
   updateOrder: (id: any, body: any) => {
     const url = `/Orders/UpdateOrder/${id}`;

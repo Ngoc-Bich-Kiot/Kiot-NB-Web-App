@@ -53,8 +53,6 @@ interface OrderDetailForm {
 }
 
 interface CreateOrderForm {
-  name: string;
-  phone: string;
   orderDetails: OrderDetailForm[];
 }
 
@@ -71,15 +69,9 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
 }) => {
   // Define state
   const [listProduct, setListProduct] = React.useState<Product[]>([]);
-  const [isPhoneNumber, setIsPhoneNumber] = React.useState<boolean>(false);
-  const [userInformation, setUserInformation] =
-    React.useState<userInformationType>();
-  const [usersList, setUsersList] = React.useState<User[]>([]);
 
   // Define default values
   const defaultValues: CreateOrderForm = {
-    name: "",
-    phone: "",
     orderDetails: [
       {
         productId: 0,
@@ -103,23 +95,9 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   };
 
   // Call api to get list user
-  const getListUser = async () => {
-    try {
-      const res: any = await userApi.getListUsers({
-        pageIndex: 0,
-        pageSize: 1000,
-      });
-      setUsersList(res.items);
-      console.log("Danh sách người dùng:", res.items);
-    } catch (error) {
-      toast.error("Có lỗi xảy ra trong quá trình lấy danh sách người dùng");
-      console.error("Lỗi khi lấy danh sách người dùng:", error);
-    }
-  };
 
   React.useEffect(() => {
     getListProduct();
-    getListUser();
   }, []);
 
   // Yup validation schema
@@ -133,8 +111,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   });
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Vui lòng nhập tên người đặt"),
-    phone: Yup.string().required("Vui lòng nhập số điện thoại"),
     orderDetails: Yup.array()
       .of(orderDetailSchema)
       .min(1, "Vui lòng chọn ít nhất một sản phẩm"),
@@ -177,30 +153,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
   const handleAddProduct = () => {
     append({ productId: 0, quantity: 1 });
   };
-
-  //func check phone number
-  const handleCheckPhoneNumber = async () => {
-    const phone = getValues("phone");
-    try {
-      const res: any = await userApi.getUserByPhone({ phone });
-      console.log("Thông tin khách hàng:", res);
-      setUserInformation(res);
-      methods.setValue("name", res.name);
-      setIsPhoneNumber(true);
-    } catch (error) {
-      toast.error("Có lỗi xảy ra trong quá trình lấy thông tin khách hàng");
-      console.error("Lỗi khi lấy thông tin khách hàng:", error);
-    }
-  };
-
-  // Watch the phone field for changes and reset isPhoneNumber if it changes
-  const phoneValue = watch("phone");
-
-  React.useEffect(() => {
-    if (!phoneValue) {
-      setIsPhoneNumber(false);
-    }
-  }, [phoneValue]);
 
   return (
     <Dialog
@@ -266,92 +218,6 @@ const CreateOrder: React.FC<CreateOrderProps> = ({
         <DialogContent sx={{ p: 0, maxHeight: "70vh", overflowY: "auto" }}>
           <Box sx={{ p: 3 }}>
             {/* Customer Information Section */}
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                mb: 3,
-                backgroundColor: colors.grey_200,
-                border: "1px solid #e9ecef",
-                borderRadius: 2,
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  mb: 2,
-                  color: colors.originPrimary,
-                  fontWeight: 600,
-                }}
-              >
-                <PersonIcon />
-                Thông tin khách hàng
-              </Typography>
-
-              <Grid2 container spacing={3}>
-                <Grid2 size={12}>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <Box sx={{ flex: 1 }}>
-                      <RHFAutoComplete
-                        name="phone"
-                        label="Số điện thoại"
-                        options={usersList}
-                      />
-                    </Box>
-                    <Button
-                      variant="contained"
-                      onClick={handleCheckPhoneNumber}
-                      sx={{
-                        bgcolor: colors.green_400,
-                        px: 3,
-                        py: 1.5,
-                        borderRadius: 2,
-                        textTransform: "none",
-                        fontWeight: 600,
-                        minWidth: "auto",
-                        "&:hover": {
-                          bgcolor: colors.green_400,
-                          transform: "translateY(-1px)",
-                          boxShadow: 3,
-                        },
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      Chọn
-                    </Button>
-                  </Stack>
-                </Grid2>
-
-                <Fade in={isPhoneNumber} timeout={500}>
-                  <Grid2 size={12}>
-                    {isPhoneNumber && (
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
-                      >
-                        <CheckCircleIcon sx={{ color: colors.green_400 }} />
-                        <RHFTextField
-                          name="name"
-                          label="Tên người đặt"
-                          slotProps={{
-                            input: {
-                              readOnly: true,
-                            },
-                          }}
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              backgroundColor: "#e8f5e8",
-                            },
-                          }}
-                        />
-                      </Box>
-                    )}
-                  </Grid2>
-                </Fade>
-              </Grid2>
-            </Paper>
 
             {/* Products Section */}
             <Paper

@@ -24,13 +24,11 @@ import {
   Warning as WarningIcon,
   Info as InfoIcon,
 } from "@mui/icons-material";
-import { useParams } from "next/navigation";
 import BatchAPI from "@/axios-clients/batch_api/batchAPI";
 import CustomizeTable from "@/components/table/customize-table";
 import { Batch, BatchDetail } from "@/types/BatchType";
 import withAuth from "@/hook/checkRoute";
-import { format } from "path";
-
+import MenuActionTableBatchDetail from "../menu_action/BatchDetail/MenuActionTableBatchDetail";
 
 const TableBatchDetail = ({ id }: { id: string }) => {
   // State declarations with proper typing
@@ -41,6 +39,11 @@ const TableBatchDetail = ({ id }: { id: string }) => {
   const [dataBatchDetail, setDataBatchDetail] = useState<BatchDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedData, setSelectedData] = useState<any | null>(null);
+
+  const selectData = (row: any) => {
+    setSelectedData(row);
+  };
 
   // Calculate summary statistics
   const summary = {
@@ -50,10 +53,8 @@ const TableBatchDetail = ({ id }: { id: string }) => {
       (item) => !item.isExpiredLogged && item.daysUntilExpiration <= 7
     ).length,
   };
-  console.log(dataBatchDetail);
   // Fetch batch data
   const fetchBatchData = async () => {
-
     setLoading(true);
     setError(null);
 
@@ -178,34 +179,6 @@ const TableBatchDetail = ({ id }: { id: string }) => {
       minWidth: 90,
       format: "checkNumber",
     },
-    // {
-    //   id: "formattedQuantity",
-    //   label: "Khối lượng",
-    //   align: "right" as const,
-    //   minWidth: 80,
-    //   render: (value: string) => (
-    //     <Typography
-    //       variant="body2"
-    //       fontWeight="medium"
-    //       color="primary.main"
-    //       sx={{ fontSize: "0.8rem" }}
-    //     >
-    //       {value}
-    //     </Typography>
-    //   ),
-    // },
-    // {
-    //   id: "createDate",
-    //   label: "Ngày nhận",
-    //   align: "center" as const,
-    //   minWidth: 100,
-    //   format: "date" as const,
-    //   render: (value: string) => (
-    //     <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-    //       {value}
-    //     </Typography>
-    //   ),
-    // },
     {
       id: "expiredDate",
       label: "HSD",
@@ -225,7 +198,7 @@ const TableBatchDetail = ({ id }: { id: string }) => {
       label: "Trạng thái",
       align: "center" as const,
       minWidth: 100,
-      format: "expired"
+      format: "expired",
     },
   ];
 
@@ -459,59 +432,19 @@ const TableBatchDetail = ({ id }: { id: string }) => {
                 "data-expiring-soon":
                   !item.isExpiredLogged && item.daysUntilExpiration <= 7,
               }))}
-              // data={dataBatchDetail}
               total={total}
               page={page}
               size={size}
               handleChangePage={handleChangePage}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
-            // emptyMessage={
-            //   error
-            //     ? "Có lỗi xảy ra khi tải dữ liệu"
-            //     : "Không có dữ liệu chi tiết lô hàng"
-            // }
-            // sx={{
-            //   "& .MuiTable-root": {
-            //     minWidth: "800px", // Ensure minimum width
-            //   },
-            //   "& .MuiTableHead-root": {
-            //     "& .MuiTableCell-head": {
-            //       color: "black",
-            //       fontWeight: "bold",
-            //       fontSize: "0.8rem",
-            //       padding: "8px 4px",
-            //       whiteSpace: "nowrap",
-            //     },
-            //   },
-            //   "& .MuiTableBody-root": {
-            //     "& .MuiTableCell-body": {
-            //       padding: "8px 4px",
-            //       fontSize: "0.8rem",
-            //     },
-            //   },
-            //   "& .MuiTableRow-root:hover": {
-            //     bgcolor: "action.hover",
-            //     transform: "scale(1.001)",
-            //     transition: "all 0.2s ease-in-out",
-            //   },
-            //   "& .MuiTableRow-root": {
-            //     '&[data-expired="true"]': {
-            //       bgcolor: "rgba(244, 67, 54, 0.05)",
-            //       "&:hover": {
-            //         bgcolor: "rgba(244, 67, 54, 0.1)",
-            //       },
-            //     },
-            //     '&[data-expiring-soon="true"]': {
-            //       bgcolor: "rgba(255, 152, 0, 0.05)",
-            //       "&:hover": {
-            //         bgcolor: "rgba(255, 152, 0, 0.1)",
-            //       },
-            //     },
-            //   },
-            //   "& .MuiTableCell-root": {
-            //     borderBottom: "1px solid rgba(224, 224, 224, 0.5)",
-            //   },
-            // }}
+              selectedData={selectData}
+              menuAction={
+                <MenuActionTableBatchDetail
+                  batchData={selectedData} // Pass the selected data here
+                  onOpenDetail={selectData} // Pass the function here
+                  fetchData={fetchBatchData}
+                />
+              }
             />
           </Box>
         </TableContainer>

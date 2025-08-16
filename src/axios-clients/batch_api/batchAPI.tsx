@@ -1,6 +1,4 @@
-import { get } from "http";
 import axiosClient from "../axiosClient";
-import { AxiosResponse } from "axios";
 
 const BatchAPI = {
   //GET api
@@ -22,6 +20,11 @@ const BatchAPI = {
   CreateBatch: (params?: any) => {
     const url = "/Batch/CreateBatch";
     return axiosClient.post(url, params);
+  },
+
+  UpdateBatchDetailWhenCanNotSoldOut: (body?: any, params?: any) => {
+    const url = "/BatchDetail/UpdateBatchStock";
+    return axiosClient.put(url, body, { params });
   },
 };
 

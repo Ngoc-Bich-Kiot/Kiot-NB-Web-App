@@ -278,6 +278,13 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
       return "-";
     }
 
+    if (column.format && column.format === "datetime") {
+      if (value) {
+        return moment(value).format("DD/MM/YYYY HH:mm");
+      }
+      return "-";
+    }
+
     // Batch number
     if (column.format && column.format === "bathchNumber") {
       if (value) {
@@ -316,7 +323,6 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
       }
       return "-";
     }
-
 
     // Role formatting
     if (column.format && column.format === "role") {
@@ -465,7 +471,6 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
       }
     }
 
-
     if (column.format && column.format === "checkNumber") {
       if (value <= 0) {
         return (
@@ -476,7 +481,6 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
           >
             0
           </Typography>
-
         );
       }
     }
@@ -727,42 +731,46 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                   {loading
                     ? renderSkeletonRows()
                     : data?.map((row: any, index: number) => (
-                      <Zoom in key={index} timeout={300 + index * 50}>
-                        <TableRow>
-                          <TableCell>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                fontWeight: 600,
-                                color: theme.palette.text.secondary,
-                              }}
-                            >
-                              {page * size + index + 1}
-                            </Typography>
-                          </TableCell>
-                          {tableHeaderTitle.map((column: any) => (
-                            <TableCell
-                              key={column.id}
-                              align={column.align || "left"}
-                            >
-                              {formatValue(
-                                getNestedValue(row, column.id),
-                                column
-                              )}
+                        <Zoom in key={index} timeout={300 + index * 50}>
+                          <TableRow>
+                            <TableCell>
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  fontWeight: 600,
+                                  color: theme.palette.text.secondary,
+                                }}
+                              >
+                                {page * size + index + 1}
+                              </Typography>
                             </TableCell>
-                          ))}
-                          {menuAction && (
-                            <ActionCell
-                              align="center"
-                              onClick={() => selectedData && selectedData(row)}
-                              sx={{ cursor: selectedData ? "pointer" : "default" }}
-                            >
-                              {menuAction}
-                            </ActionCell>
-                          )}
-                        </TableRow>
-                      </Zoom>
-                    ))}
+                            {tableHeaderTitle.map((column: any) => (
+                              <TableCell
+                                key={column.id}
+                                align={column.align || "left"}
+                              >
+                                {formatValue(
+                                  getNestedValue(row, column.id),
+                                  column
+                                )}
+                              </TableCell>
+                            ))}
+                            {menuAction && (
+                              <ActionCell
+                                align="center"
+                                onClick={() =>
+                                  selectedData && selectedData(row)
+                                }
+                                sx={{
+                                  cursor: selectedData ? "pointer" : "default",
+                                }}
+                              >
+                                {menuAction}
+                              </ActionCell>
+                            )}
+                          </TableRow>
+                        </Zoom>
+                      ))}
                 </TableBody>
               </Table>
               <TablePagination
@@ -775,8 +783,9 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage="Số hàng trên trang"
                 labelDisplayedRows={({ from, to, count }) => {
-                  return `${from}–${to} trên ${count !== -1 ? count : `nhiều hơn ${to}`
-                    }`;
+                  return `${from}–${to} trên ${
+                    count !== -1 ? count : `nhiều hơn ${to}`
+                  }`;
                 }}
                 sx={{
                   borderTop: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
@@ -786,10 +795,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     paddingRight: 2,
                   },
                   "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
-                  {
-                    fontWeight: 500,
-                    color: theme.palette.text.secondary,
-                  },
+                    {
+                      fontWeight: 500,
+                      color: theme.palette.text.secondary,
+                    },
                 }}
               />
             </StyledTableContainer>

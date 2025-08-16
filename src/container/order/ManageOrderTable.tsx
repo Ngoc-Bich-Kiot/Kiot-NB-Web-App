@@ -99,6 +99,7 @@ const ManageOrderTable = () => {
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [totalItemsCount, setTotalItemsCount] = React.useState<number>(0);
   const debounce = useDebounce(filter, 1000);
+  const IsDescending: boolean = true;
 
   //Call the API to get the orders
   const getOrders = async () => {
@@ -108,6 +109,7 @@ const ManageOrderTable = () => {
         pageIndex,
         pageSize,
         totalItemsCount,
+        IsDescending,
       });
       setOrders(res.items);
       setTotalItemsCount(res.totalItemsCount);
@@ -157,7 +159,7 @@ const ManageOrderTable = () => {
     {
       id: "orderDate",
       label: "Ngày đặt",
-      format: "date",
+      format: "datetime",
       introId: "order-date-header",
       align: "center",
     },

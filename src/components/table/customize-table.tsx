@@ -17,13 +17,15 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
   useTheme,
   Zoom,
 } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import { alpha, keyframes, styled } from "@mui/material/styles";
+import { is, ta } from "date-fns/locale";
 import moment from "moment";
-import React, { ReactNode } from "react";
+import React, { ReactNode, use, useMemo } from "react";
 
 interface CTbaleProps {
   tableHeaderTitle?: any;
@@ -45,6 +47,13 @@ interface CTbaleProps {
   size: number;
   page: number;
   loading?: boolean;
+  onRowClick?: (row: any) => void;
+  responsiveConfig?: {
+    hideFormatsOnMobile?: string[];
+    hideFormatsOnTablet?: string[];
+    hideColumnsOnMobile?: string[];
+    hideColumnsOnTablet?: string[];
+  };
 }
 
 // Animations
@@ -68,15 +77,6 @@ const slideIn = keyframes`
   }
 `;
 
-// const pulse = keyframes`
-//   0%, 100% {
-//     opacity: 1;
-//   }
-//   50% {
-//     opacity: 0.7;
-//   }
-// `;
-
 // Enhanced Styled Components
 const StyledCard = styled(Card)(({ theme }) => ({
   background: `linear-gradient(145deg, ${alpha(
@@ -94,13 +94,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   position: "relative",
   overflow: "hidden",
   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  // "&:hover": {
-  //   transform: "translateY(-2px)",
-  //   boxShadow: `
-  //     0 20px 60px 0 ${alpha(theme.palette.common.black, 0.12)},
-  //     0 4px 16px 0 ${alpha(theme.palette.common.black, 0.08)}
-  //   `,
-  // },
   "&::before": {
     content: '""',
     position: "absolute",
@@ -258,8 +251,54 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
   size,
   total,
   loading = false,
+  responsiveConfig,
+  onRowClick,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
+  const defaultResponsiveConfig = useMemo(
+    () => ({
+      hideFormatsOnMobile: ["datetime", "date", "boolean"],
+      hideFormatsOnTablet: [],
+      hideColumnsOnMobile: [],
+      hideColumnsOnTablet: [],
+    }),
+    []
+  );
+
+  const finalResponsiveConfig = responsiveConfig || defaultResponsiveConfig;
+
+  const visibleColumns = useMemo(() => {
+    if (!tableHeaderTitle) return [];
+
+    return tableHeaderTitle.filter((column: any) => {
+      if (isMobile) {
+        if (finalResponsiveConfig.hideColumnsOnMobile?.includes(column.id)) {
+          return false;
+        }
+        if (
+          finalResponsiveConfig.hideFormatsOnMobile?.includes(column.format)
+        ) {
+          return false;
+        }
+      }
+
+      if (isTablet && !isMobile) {
+        if (finalResponsiveConfig.hideColumnsOnTablet?.includes(column.id)) {
+          return false;
+        }
+        if (
+          finalResponsiveConfig.hideFormatsOnTablet?.includes(column.format)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [tableHeaderTitle, isMobile, isTablet, finalResponsiveConfig]);
 
   function getNestedValue(obj: any, path: any) {
     return path
@@ -714,7 +753,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                 <TableHead>
                   <TableRow>
                     <TableCell>#</TableCell>
-                    {tableHeaderTitle?.map((column: any) => (
+                    {visibleColumns?.map((column: any) => (
                       <TableCell
                         key={column.id}
                         id={column.introId}
@@ -733,7 +772,11 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     ? renderSkeletonRows()
                     : data?.map((row: any, index: number) => (
                         <Zoom in key={index} timeout={300 + index * 50}>
-                          <TableRow>
+                          <TableRow
+                            onClick={() => {
+                              if (onRowClick) onRowClick(row);
+                            }}
+                          >
                             <TableCell>
                               <Typography
                                 variant="body2"
@@ -745,7 +788,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                                 {page * size + index + 1}
                               </Typography>
                             </TableCell>
-                            {tableHeaderTitle.map((column: any) => (
+                            {visibleColumns.map((column: any) => (
                               <TableCell
                                 key={column.id}
                                 align={column.align || "left"}
@@ -759,9 +802,10 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                             {menuAction && (
                               <ActionCell
                                 align="center"
-                                onClick={() =>
-                                  selectedData && selectedData(row)
-                                }
+                                onClick={(e) => {
+                                  selectedData && selectedData(row);
+                                  e.stopPropagation();
+                                }}
                                 sx={{
                                   cursor: selectedData ? "pointer" : "default",
                                 }}

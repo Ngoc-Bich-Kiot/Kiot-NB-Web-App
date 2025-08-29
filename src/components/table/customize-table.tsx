@@ -707,6 +707,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                 [theme.breakpoints.between("tablet", "desktop")]: {
                   minWidth: 450,
                 },
+                overflowX: "auto",
               })}
             >
               <Table>
@@ -727,7 +728,7 @@ const CustomizeTable: React.FC<CTbaleProps> = ({
                     )}
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{ overflowX: "auto" }}>
                   {loading
                     ? renderSkeletonRows()
                     : data?.map((row: any, index: number) => (

@@ -143,6 +143,10 @@ const ProductTable = () => {
     setSelectedRow(row);
   };
 
+  const navigateDetail = (row: any) => {
+    router.push(`/admin/manage_product/${row.id}/detail`);
+  };
+
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -249,6 +253,7 @@ const ProductTable = () => {
         data={products}
         title="Danh sách sản phẩm"
         tableContainerId="intro-product-table"
+        onRowClick={navigateDetail}
       />
     </div>
   );
